@@ -1,16 +1,27 @@
-import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { useFonts } from 'expo-font';
-import { Stack } from 'expo-router';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
+import { TransitionPresets } from '@react-navigation/stack';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import 'react-native-gesture-handler';
+import {
+  MD3DarkTheme,
+  MD3LightTheme,
+  PaperProvider,
+  adaptNavigationTheme,
+} from 'react-native-paper';
 import 'react-native-reanimated';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { JsStack as Stack } from '@/layouts/js-stack';
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from 'expo-router';
 
 export const unstable_settings = {
@@ -21,39 +32,51 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-export default function RootLayout() {
-  const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
-    ...FontAwesome.font,
-  });
-
-  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
-  useEffect(() => {
-    if (error) throw error;
-  }, [error]);
-
-  useEffect(() => {
-    if (loaded) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded]);
-
-  if (!loaded) {
-    return null;
-  }
-
-  return <RootLayoutNav />;
+function RootLayoutNav() {
+  return (
+    <Stack screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="modal" options={{ ...TransitionPresets.ModalPresentationIOS }} />
+    </Stack>
+  );
 }
 
-function RootLayoutNav() {
+
+export default function RootLayout() {
   const colorScheme = useColorScheme();
 
+  useEffect(() => {
+    // Hide the splash screen after the loading is complete.
+    SplashScreen.hideAsync();
+  }, []);
+
+  const {
+    DarkTheme: PaperedDarkTheme,
+    LightTheme: PaperedLightTheme,
+  } = adaptNavigationTheme({
+    reactNavigationDark: DarkTheme,
+    reactNavigationLight: DefaultTheme,
+    materialDark: MD3DarkTheme,
+    materialLight: MD3LightTheme,
+  });
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
-    </ThemeProvider>
+    <PaperProvider
+      theme={
+        colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
+      }
+    >
+      <ThemeProvider value={{
+        ...(colorScheme === 'dark'
+          ? PaperedDarkTheme : PaperedLightTheme),
+        fonts: DefaultTheme.fonts,
+      }}>
+        <StatusBar
+          translucent
+          style={colorScheme === 'dark' ? 'light' : 'dark'}
+        />
+        <RootLayoutNav />
+      </ThemeProvider>
+    </PaperProvider>
   );
 }
