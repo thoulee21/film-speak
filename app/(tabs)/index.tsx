@@ -1,19 +1,34 @@
-import { useEvent } from 'expo';
+import Slider from '@react-native-community/slider';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { useVideoPlayer, VideoView } from 'expo-video';
-import { useCallback, useEffect, useState } from 'react';
+import { OrientationLock } from 'expo-screen-orientation';
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, TextInput } from 'react-native-paper';
+import { Button, TextInput, useTheme } from 'react-native-paper';
 import ShareMenu, {
   type ShareCallback,
   type ShareData,
 } from 'react-native-share-menu';
+import Video, {
+  SelectedTrackType,
+  TextTrackType,
+  type ISO639_1,
+  type VideoRef,
+} from 'react-native-video';
+
+const VIDEO_SOURCE = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
 
 export default function VideoScreen() {
+  const appTheme = useTheme();
+  const player = useRef<VideoRef>(null);
+
   const [sharedItem, setSharedItem] = useState<ShareData>();
-  const [videoSource, setVideoSource] = useState(
-    'https://media.w3.org/2010/05/sintel/trailer.mp4'
-  );
+  const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
 
   const handleShare: ShareCallback = useCallback(async (
     item
@@ -32,28 +47,9 @@ export default function VideoScreen() {
     };
   }, []);
 
-  const player = useVideoPlayer(
-    !sharedItem
-      ? videoSource
-      : sharedItem.data as string,
-    player => {
-      player.loop = true;
-      player.showNowPlayingNotification = true;
-      player.volume = 1;
-    }
-  );
-
-  const { isPlaying } = useEvent(
-    player,
-    'playingChange',
-    { isPlaying: player.playing }
-  );
-
-  const { status } = useEvent(
-    player,
-    'statusChange',
-    { status: player.status }
-  );
+  const source = useMemo(() => (
+    sharedItem ? sharedItem.data : videoSource
+  ) as string, [sharedItem, videoSource]);
 
   return (
     <View style={styles.contentContainer}>
@@ -64,41 +60,79 @@ export default function VideoScreen() {
         onChangeText={setVideoSource}
         value={videoSource}
         textContentType='URL'
+        placeholder='Enter video source URL'
       />
-      <VideoView
+      <Video
+        ref={player}
+        source={{
+          uri: source,
+          textTracks: [{
+            title: 'test',
+            language: 'en' as ISO639_1,
+            type: TextTrackType.VTT,
+            uri: 'https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt',
+          }],
+        }}
+        selectedTextTrack={{
+          type: SelectedTrackType.INDEX,
+          value: 0,
+        }}
+        onTextTrackDataChanged={({ subtitleTracks }) => {
+          console.log('selectedTextTrack', subtitleTracks);
+        }}
+        onTextTracks={({ textTracks }) => {
+          console.log('textTracks', textTracks);
+        }}
+        subtitleStyle={{
+          fontSize: 20,
+          paddingBottom: 20,
+        }}
+        showNotificationControls
+        fullscreenOrientation='landscape'
+        fullscreenAutorotate
         style={styles.video}
-        player={player}
-        allowsFullscreen
-        allowsPictureInPicture
-        contentFit='fill'
-        requiresLinearPlayback
-        onFullscreenEnter={async () => {
-          await ScreenOrientation.unlockAsync();
+        controlsStyles={{
+          hideSettingButton: false,
+        }}
+        controls
+        onFullscreenPlayerWillPresent={async () => {
           await ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.ALL
+            OrientationLock.LANDSCAPE_RIGHT
           );
         }}
-        onFullscreenExit={async () => {
-          await ScreenOrientation.unlockAsync();
+        onFullscreenPlayerWillDismiss={async () => {
           await ScreenOrientation.lockAsync(
-            ScreenOrientation.OrientationLock.PORTRAIT_UP
+            OrientationLock.PORTRAIT_UP
           );
         }}
       />
+
       <View style={styles.controlsContainer}>
+        <Slider
+          minimumValue={0}
+          maximumValue={player.current?.nativeHtmlVideoRef?.current?.duration}
+          thumbTintColor={appTheme.colors.primary}
+          maximumTrackTintColor={appTheme.colors.onSurfaceDisabled}
+          minimumTrackTintColor={appTheme.colors.secondary}
+          value={player.current?.nativeHtmlVideoRef?.current?.currentTime}
+          onSlidingComplete={value => {
+            player.current?.seek(value);
+          }}
+        />
         <Button
           mode='contained'
-          icon={isPlaying ? 'pause' : 'play'}
-          loading={status === 'loading'}
+          icon={player.current?.nativeHtmlVideoRef?.current?.paused ? 'play' : 'pause'}
           onPress={() => {
-            if (isPlaying) {
-              player.pause();
-            } else {
-              player.play();
+            if (player.current?.nativeHtmlVideoRef?.current) {
+              if (player.current?.nativeHtmlVideoRef?.current.paused) {
+                player.current?.resume();
+              } else {
+                player.current?.pause();
+              }
             }
           }}
         >
-          {isPlaying ? 'Pause' : 'Play'}
+          {player.current?.nativeHtmlVideoRef?.current?.paused ? 'Play' : 'Pause'}
         </Button>
       </View>
     </View>
@@ -118,6 +152,8 @@ const styles = StyleSheet.create({
     height: 220,
   },
   controlsContainer: {
+    height: 130,
+    justifyContent: 'space-around',
     padding: "2%",
   },
 });

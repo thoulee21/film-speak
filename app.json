@@ -36,9 +36,19 @@
     "plugins": [
       "expo-router",
       [
-        "expo-video",
+        "react-native-video",
         {
-          "supportsPictureInPicture": true
+          "enableNotificationControls": true,
+          "enableBackgroundAudio": true,
+          "enableADSExtension": false,
+          "enableCacheExtension": false,
+          "androidExtensions": {
+            "useExoplayerRtsp": true,
+            "useExoplayerSmoothStreaming": true,
+            "useExoplayerHls": true,
+            "useExoplayerDash": true,
+            "useExoplayerIMA": false
+          }
         }
       ]
     ],
