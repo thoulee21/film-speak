@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = 'film-speak'
+rootProject.name = 'FilmSpeak'
 
 dependencyResolutionManagement {
   versionCatalogs {
