@@ -2,10 +2,10 @@ import { ExternalLink } from '@/components/ExternalLink';
 import { StyleSheet, View } from 'react-native';
 import { Button, Title } from 'react-native-paper';
 
-export default function TabOneScreen() {
+export default function TestScreen() {
   return (
     <View style={styles.container}>
-      <Title>Test Tab</Title>
+      <Title style={styles.title}>Test Tab</Title>
       <View style={styles.separator} />
 
       <ExternalLink href="https://docs.expo.dev">
