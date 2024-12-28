@@ -27,6 +27,10 @@ export default function VideoScreen() {
   const appTheme = useTheme();
   const player = useRef<VideoRef>(null);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
+
   const [sharedItem, setSharedItem] = useState<ShareData>();
   const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
 
@@ -77,11 +81,13 @@ export default function VideoScreen() {
           type: SelectedTrackType.INDEX,
           value: 0,
         }}
-        onTextTrackDataChanged={({ subtitleTracks }) => {
-          console.log('selectedTextTrack', subtitleTracks);
-        }}
-        onTextTracks={({ textTracks }) => {
-          console.log('textTracks', textTracks);
+        onTextTrackDataChanged={(
+          { subtitleTracks }
+        ) => {
+          console.debug(
+            'onTextTrackDataChanged',
+            subtitleTracks
+          );
         }}
         subtitleStyle={{
           fontSize: 20,
@@ -91,6 +97,21 @@ export default function VideoScreen() {
         fullscreenOrientation='landscape'
         fullscreenAutorotate
         style={styles.video}
+        onLoad={(
+          { duration }
+        ) => {
+          setDuration(duration);
+        }}
+        onProgress={(
+          { currentTime }
+        ) => {
+          setCurrentTime(currentTime);
+        }}
+        onPlaybackStateChanged={(
+          { isPlaying }
+        ) => {
+          setIsPlaying(isPlaying);
+        }}
         controlsStyles={{
           hideSettingButton: false,
         }}
@@ -110,29 +131,27 @@ export default function VideoScreen() {
       <View style={styles.controlsContainer}>
         <Slider
           minimumValue={0}
-          maximumValue={player.current?.nativeHtmlVideoRef?.current?.duration}
+          maximumValue={duration}
           thumbTintColor={appTheme.colors.primary}
           maximumTrackTintColor={appTheme.colors.onSurfaceDisabled}
           minimumTrackTintColor={appTheme.colors.secondary}
-          value={player.current?.nativeHtmlVideoRef?.current?.currentTime}
+          value={currentTime}
           onSlidingComplete={value => {
             player.current?.seek(value);
           }}
         />
         <Button
           mode='contained'
-          icon={player.current?.nativeHtmlVideoRef?.current?.paused ? 'play' : 'pause'}
+          icon={isPlaying ? 'pause' : 'play'}
           onPress={() => {
-            if (player.current?.nativeHtmlVideoRef?.current) {
-              if (player.current?.nativeHtmlVideoRef?.current.paused) {
-                player.current?.resume();
-              } else {
-                player.current?.pause();
-              }
+            if (isPlaying) {
+              player.current?.pause();
+            } else {
+              player.current?.resume();
             }
           }}
         >
-          {player.current?.nativeHtmlVideoRef?.current?.paused ? 'Play' : 'Pause'}
+          {isPlaying ? 'Pause' : 'Play'}
         </Button>
       </View>
     </View>
