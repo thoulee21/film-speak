@@ -1,11 +1,16 @@
 import { ExternalLink } from '@/components/ExternalLink';
+import { useUpdates } from 'expo-updates';
 import { StyleSheet, View } from 'react-native';
 import { Button, Title } from 'react-native-paper';
 
 export default function TestScreen() {
+  const { isUpdateAvailable } = useUpdates();
+
   return (
     <View style={styles.container}>
-      <Title style={styles.title}>Test Tab</Title>
+      <Title style={styles.title}>
+        Update available: {isUpdateAvailable ? 'Yes' : 'No'}
+      </Title>
       <View style={styles.separator} />
 
       <ExternalLink href="https://docs.expo.dev">
