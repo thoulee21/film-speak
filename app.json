@@ -53,6 +53,12 @@
         "projectId": "6c832a57-bb37-4208-9672-223a964aaa88"
       }
     },
-    "owner": "thoulee"
+    "owner": "thoulee",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/6c832a57-bb37-4208-9672-223a964aaa88"
+    }
   }
 }
