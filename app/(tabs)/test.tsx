@@ -1,23 +1,65 @@
 import { ExternalLink } from '@/components/ExternalLink';
-import { useUpdates } from 'expo-updates';
-import { StyleSheet, View } from 'react-native';
-import { Button, Title } from 'react-native-paper';
+import {
+  checkForUpdateAsync,
+  fetchUpdateAsync,
+  reloadAsync,
+  useUpdates,
+} from 'expo-updates';
+import { useCallback } from 'react';
+import { StyleSheet, ToastAndroid, View } from 'react-native';
+import { List } from 'react-native-paper';
 
 export default function TestScreen() {
   const { isUpdateAvailable } = useUpdates();
 
+  const renderDocumentIcon = useCallback((props: any) => (
+    <List.Icon {...props} icon="file-document" />
+  ), []);
+
+  const renderUpdateIcon = useCallback((props: any) => (
+    <List.Icon {...props} icon="cloud-download" />
+  ), []);
+
+  const checkForUpdate = useCallback(async () => {
+    try {
+      const update = await checkForUpdateAsync();
+      if (update.isAvailable) {
+        await fetchUpdateAsync();
+        ToastAndroid.show(
+          'Update downloaded',
+          ToastAndroid.SHORT
+        );
+        await reloadAsync();
+      } else {
+        ToastAndroid.show(
+          'No update available',
+          ToastAndroid.SHORT
+        );
+      }
+    } catch (error) {
+      ToastAndroid.show(
+        'An error occurred while checking for updates',
+        ToastAndroid.SHORT
+      );
+    }
+  }, []);
+
   return (
     <View style={styles.container}>
-      <Title style={styles.title}>
-        Update available: {isUpdateAvailable ? 'Yes' : 'No'}
-      </Title>
-      <View style={styles.separator} />
-
-      <ExternalLink href="https://docs.expo.dev">
-        <Button>
-          Read the Expo documentation
-        </Button>
-      </ExternalLink>
+      <List.Section>
+        <List.Item
+          title="Check for updates"
+          description={isUpdateAvailable ? 'Update available' : 'No update available'}
+          left={renderUpdateIcon}
+          onPress={checkForUpdate}
+        />
+        <ExternalLink href="https://docs.expo.dev">
+          <List.Item
+            title="Read the Expo documentation"
+            left={renderDocumentIcon}
+          />
+        </ExternalLink>
+      </List.Section>
     </View>
   );
 }
@@ -25,16 +67,5 @@ export default function TestScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
   },
 });
