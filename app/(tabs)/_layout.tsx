@@ -26,17 +26,17 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-        animation: 'shift',
+        animation: 'fade',
       }}
       backBehavior='none'
     >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
+          title: 'Video',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? 'home' : 'home-outline'}
+              name={focused ? 'video' : 'video-outline'}
               color={color}
             />
           ),
@@ -53,12 +53,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="video"
+        name="test"
         options={{
-          title: 'Video',
-          tabBarIcon: ({ color, focused }) => (
+          title: 'Test',
+          tabBarIcon: ({ color }) => (
             <TabBarIcon
-              name={focused ? 'video' : 'video-outline'}
+              name="test-tube"
               color={color}
             />
           ),
