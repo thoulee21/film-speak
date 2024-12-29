@@ -20,6 +20,7 @@ import Video, {
   type ISO639_1,
   type VideoRef,
 } from 'react-native-video';
+import type { Line } from 'srt-parser-2';
 
 const VIDEO_SOURCE = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
 
@@ -28,6 +29,7 @@ export default function VideoScreen() {
 
   const [sharedItem, setSharedItem] = useState<ShareData>();
   const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
+  const [clip, setClip] = useState<Line>();
 
   const handleShare: ShareCallback = useCallback(async (
     item
@@ -85,32 +87,38 @@ export default function VideoScreen() {
           );
         }}
         subtitleStyle={{
-          fontSize: 20,
-          paddingBottom: 20,
+          fontSize: 15,
+          paddingBottom: 50,
+          subtitlesFollowVideo: true,
+          opacity: 0.8,
         }}
         showNotificationControls
         fullscreenOrientation='landscape'
         fullscreenAutorotate
         style={styles.video}
-        // onLoad={(
-        //   { duration }
-        // ) => {
-        //   setDuration(duration);
-        // }}
-        // onProgress={(
-        //   { currentTime }
-        // ) => {
-        //   setCurrentTime(currentTime);
-        // }}
+        onLoad={() => { player.current?.pause(); }}
+        onProgress={({
+          currentTime
+        }) => {
+          if (!clip) { return; }
+
+          //在片段的开始和结束之间循环播放
+          if (
+            currentTime >= clip.startSeconds &&
+            currentTime <= clip.endSeconds
+          ) { return; }
+
+          player.current?.seek(clip.startSeconds);
+        }}
         // onPlaybackStateChanged={(
         //   { isPlaying }
         // ) => {
         //   setIsPlaying(isPlaying);
         // }}
+        controls
         controlsStyles={{
           hideSettingButton: false,
         }}
-        controls
         onFullscreenPlayerWillPresent={async () => {
           await ScreenOrientation.lockAsync(
             OrientationLock.LANDSCAPE_RIGHT
@@ -124,8 +132,9 @@ export default function VideoScreen() {
       />
 
       <Subtitle
-        onItemPress={({ startSeconds }) => {
-          player.current?.seek(startSeconds);
+        onItemPress={(item) => {
+          setClip(item);
+          player.current?.resume();
         }}
       />
     </View>

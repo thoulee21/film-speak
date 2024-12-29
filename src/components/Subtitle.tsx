@@ -1,6 +1,7 @@
-import { FlashList } from "@shopify/flash-list";
-import { useEffect, useState } from "react";
-import { Divider, List } from "react-native-paper";
+import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
+import { useCallback, useEffect, useState } from "react";
+import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
+import { ActivityIndicator, Caption, Divider, List, useTheme } from "react-native-paper";
 import SrtParser2, { type Line } from "srt-parser-2";
 
 export const SUBTITLE = 'https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt';
@@ -10,8 +11,13 @@ interface SubtitleProps {
   onItemPress: (arg0: Line) => void;
 }
 
-export default function Subtitle({ uri, onItemPress }: SubtitleProps) {
+export default function Subtitle({
+  uri, onItemPress
+}: SubtitleProps) {
+  const appTheme = useTheme();
+
   const [subtitles, setSubtitles] = useState<Line[]>([]);
+  const [selectedID, setSelectedID] = useState<string>("0");
 
   useEffect(() => {
     const getSubtitle = async () => {
@@ -27,20 +33,47 @@ export default function Subtitle({ uri, onItemPress }: SubtitleProps) {
     getSubtitle();
   }, [uri]);
 
+  const renderItem = useCallback(({
+    item
+  }: ListRenderItemInfo<Line>) => (
+    <List.Item
+      title={`${item.startSeconds} - ${item.endSeconds}`}
+      description={item.text.trim()}
+      descriptionNumberOfLines={2}
+      onPress={() => {
+        HapticFeedback.trigger(
+          HapticFeedbackTypes.effectDoubleClick
+        );
+        setSelectedID(item.id);
+
+        onItemPress(item);
+      }}
+      style={{
+        backgroundColor: selectedID === item.id
+          ? appTheme.colors.primaryContainer
+          : undefined,
+      }}
+      left={({ style }) => (
+        <Caption style={[style, { fontSize: 19 }]}>
+          {item.id}
+        </Caption>
+      )}
+      right={(props) =>
+        selectedID === item.id && (
+          <ActivityIndicator {...props} />
+        )
+      }
+    />
+  ), [appTheme.colors.primaryContainer, onItemPress, selectedID]);
+
   return (
     <FlashList
       data={subtitles}
-      renderItem={({ item }) => (
-        <List.Item
-          title={`${item.startSeconds} - ${item.endSeconds}`}
-          description={item.text.trim()}
-          descriptionNumberOfLines={2}
-          onPress={() => onItemPress(item)}
-          key={item.id}
-        />
-      )}
+      renderItem={renderItem}
       ItemSeparatorComponent={Divider}
       estimatedItemSize={84.4}
+      extraData={selectedID}
+      keyExtractor={(item) => item.id}
     />
   );
 };
