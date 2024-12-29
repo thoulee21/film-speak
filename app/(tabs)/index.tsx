@@ -1,4 +1,4 @@
-import Slider from '@react-native-community/slider';
+import Subtitle, { SUBTITLE } from '@/components/Subtitle';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { OrientationLock } from 'expo-screen-orientation';
 import {
@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, TextInput, useTheme } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import ShareMenu, {
   type ShareCallback,
   type ShareData,
@@ -24,12 +24,7 @@ import Video, {
 const VIDEO_SOURCE = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
 
 export default function VideoScreen() {
-  const appTheme = useTheme();
   const player = useRef<VideoRef>(null);
-
-  const [isPlaying, setIsPlaying] = useState(false);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
 
   const [sharedItem, setSharedItem] = useState<ShareData>();
   const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
@@ -38,7 +33,6 @@ export default function VideoScreen() {
     item
   ) => {
     if (!item) { return; }
-
     setSharedItem(item);
   }, []);
 
@@ -49,18 +43,19 @@ export default function VideoScreen() {
     return () => {
       shareListener.remove();
     };
-  }, []);
+  }, [handleShare]);
 
-  const source = useMemo(() => (
-    sharedItem ? sharedItem.data : videoSource
-  ) as string, [sharedItem, videoSource]);
+  const source = useMemo(
+    () => (
+      sharedItem ? sharedItem.data : videoSource
+    ) as string,
+    [sharedItem, videoSource]
+  );
 
   return (
     <View style={styles.contentContainer}>
       <TextInput
-        mode='outlined'
         label='Video Source'
-        style={styles.input}
         onChangeText={setVideoSource}
         value={videoSource}
         textContentType='URL'
@@ -74,7 +69,7 @@ export default function VideoScreen() {
             title: 'test',
             language: 'en' as ISO639_1,
             type: TextTrackType.VTT,
-            uri: 'https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt',
+            uri: SUBTITLE,
           }],
         }}
         selectedTextTrack={{
@@ -97,21 +92,21 @@ export default function VideoScreen() {
         fullscreenOrientation='landscape'
         fullscreenAutorotate
         style={styles.video}
-        onLoad={(
-          { duration }
-        ) => {
-          setDuration(duration);
-        }}
-        onProgress={(
-          { currentTime }
-        ) => {
-          setCurrentTime(currentTime);
-        }}
-        onPlaybackStateChanged={(
-          { isPlaying }
-        ) => {
-          setIsPlaying(isPlaying);
-        }}
+        // onLoad={(
+        //   { duration }
+        // ) => {
+        //   setDuration(duration);
+        // }}
+        // onProgress={(
+        //   { currentTime }
+        // ) => {
+        //   setCurrentTime(currentTime);
+        // }}
+        // onPlaybackStateChanged={(
+        //   { isPlaying }
+        // ) => {
+        //   setIsPlaying(isPlaying);
+        // }}
         controlsStyles={{
           hideSettingButton: false,
         }}
@@ -128,32 +123,11 @@ export default function VideoScreen() {
         }}
       />
 
-      <View style={styles.controlsContainer}>
-        <Slider
-          minimumValue={0}
-          maximumValue={duration}
-          thumbTintColor={appTheme.colors.primary}
-          maximumTrackTintColor={appTheme.colors.onSurfaceDisabled}
-          minimumTrackTintColor={appTheme.colors.secondary}
-          value={currentTime}
-          onSlidingComplete={value => {
-            player.current?.seek(value);
-          }}
-        />
-        <Button
-          mode='contained'
-          icon={isPlaying ? 'pause' : 'play'}
-          onPress={() => {
-            if (isPlaying) {
-              player.current?.pause();
-            } else {
-              player.current?.resume();
-            }
-          }}
-        >
-          {isPlaying ? 'Pause' : 'Play'}
-        </Button>
-      </View>
+      <Subtitle
+        onItemPress={({ startSeconds }) => {
+          player.current?.seek(startSeconds);
+        }}
+      />
     </View>
   );
 }
@@ -162,17 +136,8 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
   },
-  input: {
-    width: "96%",
-    margin: "2%",
-  },
   video: {
     width: "100%",
     height: 220,
-  },
-  controlsContainer: {
-    height: 130,
-    justifyContent: 'space-around',
-    padding: "2%",
   },
 });
