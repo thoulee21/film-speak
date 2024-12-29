@@ -61,8 +61,11 @@ export default function VideoScreen() {
         onChangeText={setVideoSource}
         value={videoSource}
         textContentType='URL'
+        selectTextOnFocus
         placeholder='Enter video source URL'
+        underlineStyle={{ display: 'none' }}
       />
+
       <Video
         ref={player}
         source={{
@@ -110,9 +113,9 @@ export default function VideoScreen() {
 
           player.current?.seek(clip.startSeconds);
         }}
-        // onPlaybackStateChanged={(
-        //   { isPlaying }
-        // ) => {
+        // onPlaybackStateChanged={({
+        //   isPlaying
+        // }) => {
         //   setIsPlaying(isPlaying);
         // }}
         controls
