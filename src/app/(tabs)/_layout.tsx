@@ -2,11 +2,47 @@ import { TransitionPresets } from '@react-navigation/bottom-tabs';
 import { CommonActions } from '@react-navigation/native';
 import { Link, Tabs } from 'expo-router';
 import React from 'react';
-import { Easing, Pressable } from 'react-native';
-import { BottomNavigation, Icon } from 'react-native-paper';
+import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } from 'react-native';
+import { BottomNavigation, Icon, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
+import type { BaseRoute } from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
 
-import Touchable from '@/src/components/Touchable';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+
+type TouchableProps<Route extends BaseRoute> = TouchableRippleProps & {
+  key: string;
+  route: Route;
+  children: React.ReactNode;
+  borderless?: boolean;
+  centered?: boolean;
+  rippleColor?: ColorValue;
+};
+
+const Touchable = <Route extends BaseRoute>({
+  route: _0,
+  style,
+  children,
+  borderless,
+  centered,
+  rippleColor,
+  ...rest
+}: TouchableProps<Route>) => (
+  TouchableRipple.supported ? (
+    <TouchableRipple
+      {...rest}
+      disabled={rest.disabled || undefined}
+      borderless={borderless}
+      centered={centered}
+      rippleColor={rippleColor}
+      style={style}
+    >
+      {children}
+    </TouchableRipple>
+  ) : (
+    <Pressable style={style as StyleProp<ViewStyle>} {...rest}>
+      {children}
+    </Pressable>
+  )
+);
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof Icon>['source'];
