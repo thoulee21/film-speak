@@ -16,7 +16,7 @@ import {
 } from 'react-native-paper';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/components/useColorScheme';
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { JsStack as Stack } from '@/layouts/js-stack';
 
 export {

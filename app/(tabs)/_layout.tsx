@@ -5,7 +5,7 @@ import React from 'react';
 import { Easing, Pressable } from 'react-native';
 import { BottomNavigation, Icon } from 'react-native-paper';
 
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof Icon>['source'];
