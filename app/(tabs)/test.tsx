@@ -36,7 +36,7 @@ export default function TestScreen() {
           ToastAndroid.SHORT
         );
       }
-    } catch (error) {
+    } catch {
       ToastAndroid.show(
         'An error occurred while checking for updates',
         ToastAndroid.SHORT
