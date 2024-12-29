@@ -49,6 +49,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@testing-library/react-native": "^12.9.0",
     "@types/react": "~18.3.12",
     "@types/react-native-share-menu": "^5.0.5",
     "eslint": "^8.57.0",
