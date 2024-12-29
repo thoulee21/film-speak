@@ -105,12 +105,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="test"
+        name="settings"
         options={{
-          title: 'Test',
-          tabBarIcon: ({ color, size }) => (
+          title: 'Settings',
+          tabBarIcon: ({ color, size, focused }) => (
             <TabBarIcon
-              name="test-tube"
+              name={focused ? 'cog' : 'cog-outline'}
               color={color}
               size={size}
             />

@@ -9,15 +9,15 @@ import { useCallback } from 'react';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 import { List } from 'react-native-paper';
 
-export default function TestScreen() {
+export default function Setting() {
   const { isUpdateAvailable } = useUpdates();
 
   const renderDocumentIcon = useCallback((props: any) => (
-    <List.Icon {...props} icon="file-document" />
+    <List.Icon {...props} icon="file-document-outline" />
   ), []);
 
   const renderUpdateIcon = useCallback((props: any) => (
-    <List.Icon {...props} icon="cloud-download" />
+    <List.Icon {...props} icon="cloud-download-outline" />
   ), []);
 
   const checkForUpdate = useCallback(async () => {
@@ -57,6 +57,7 @@ export default function TestScreen() {
           <List.Item
             title="Read the Expo documentation"
             left={renderDocumentIcon}
+            description="https://docs.expo.dev"
           />
         </ExternalLink>
       </List.Section>
