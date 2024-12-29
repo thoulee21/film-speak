@@ -10,7 +10,8 @@
     "test": "jest --watchAll",
     "postinstall": "patch-package",
     "build:android": "cd android && .\\gradlew clean && .\\gradlew assembleRelease",
-    "deploy:android": "adb install ./android/app/build/outputs/apk/release/app-release.apk"
+    "deploy:android": "adb install ./android/app/build/outputs/apk/release/app-release.apk",
+    "lint": "eslint ."
   },
   "jest": {
     "preset": "jest-expo"
@@ -20,6 +21,7 @@
     "@react-native-community/slider": "4.5.5",
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.1.1",
+    "@shopify/flash-list": "1.7.1",
     "expo": "~52.0.23",
     "expo-dev-client": "~5.0.7",
     "expo-font": "~13.0.2",
@@ -41,7 +43,8 @@
     "react-native-screens": "~4.4.0",
     "react-native-share-menu": "^6.0.0",
     "react-native-video": "^6.8.2",
-    "react-native-web": "~0.19.13"
+    "react-native-web": "~0.19.13",
+    "srt-parser-2": "^1.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -53,7 +56,9 @@
     "postinstall-postinstall": "^2.1.0",
     "react-native-version": "^4.0.0",
     "react-test-renderer": "18.3.1",
-    "typescript": "~5.3.3"
+    "typescript": "~5.3.3",
+    "eslint": "^8.57.0",
+    "eslint-config-expo": "~8.0.1"
   },
   "private": true,
   "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
