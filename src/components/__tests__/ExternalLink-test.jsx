@@ -2,7 +2,7 @@ import { fireEvent, render } from '@testing-library/react-native';
 import * as WebBrowser from 'expo-web-browser';
 import React from 'react';
 import { Platform } from 'react-native';
-import { ExternalLink } from '@/components/ExternalLink';
+import { ExternalLink } from '@/src/components/ExternalLink';
 
 jest.mock('expo-web-browser');
 jest.mock('expo-router', () => ({

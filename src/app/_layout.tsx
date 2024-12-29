@@ -16,8 +16,8 @@ import {
 } from 'react-native-paper';
 import 'react-native-reanimated';
 
-import { useColorScheme } from '@/hooks/useColorScheme';
-import { JsStack as Stack } from '@/layouts/js-stack';
+import { useColorScheme } from '@/src/hooks/useColorScheme';
+import { JsStack as Stack } from '@/src/layouts/js-stack';
 
 export {
   // Catch any errors thrown by the Layout component.

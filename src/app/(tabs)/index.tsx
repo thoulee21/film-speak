@@ -1,4 +1,4 @@
-import Subtitle, { SUBTITLE } from '@/components/Subtitle';
+import Subtitle, { SUBTITLE } from '@/src/components/Subtitle';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { OrientationLock } from 'expo-screen-orientation';
 import {
