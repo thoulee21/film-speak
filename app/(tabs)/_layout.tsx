@@ -5,6 +5,7 @@ import React from 'react';
 import { Easing, Pressable } from 'react-native';
 import { BottomNavigation, Icon } from 'react-native-paper';
 
+import Touchable from '@/components/Touchable';
 import { useClientOnlyValue } from '@/hooks/useClientOnlyValue';
 
 function TabBarIcon(props: {
@@ -73,6 +74,9 @@ export default function TabLayout() {
 
             return label;
           }}
+          renderTouchable={(props) => (
+            <Touchable {...props} key={props.key} />
+          )}
         />
       )}
     >
