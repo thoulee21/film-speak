@@ -49,7 +49,10 @@ function RootLayoutNav() {
       freezeOnBlur: true,
       headerTitleAlign: 'center',
     }}>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{
+        headerShown: false,
+        headerTitle: 'Home',
+      }} />
       <Stack.Screen name="modal" options={{
         ...TransitionPresets.ModalPresentationIOS,
         headerShown: false,
