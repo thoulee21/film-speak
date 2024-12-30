@@ -51,7 +51,7 @@ function RootLayoutNav() {
         ...TransitionPresets.ModalPresentationIOS,
         headerTitle: 'Modal Screen',
       }} />
-      <Stack.Screen name="dev" options={{ headerTitle: 'Developer Settings' }} />
+      <Stack.Screen name="dev" options={{ headerTitle: 'Developer Options' }} />
       <Stack.Screen name="about" options={{ headerTitle: 'About' }} />
     </Stack>
   );

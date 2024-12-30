@@ -70,7 +70,7 @@ export default function Setting() {
         {devModeEnabled && (
           <Link href="/dev" asChild>
             <List.Item
-              title="Developer Settings"
+              title="Developer Options"
               description="Enable to access additional features"
               left={renderDevIcon}
               right={renderRightIcon}
