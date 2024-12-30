@@ -36,7 +36,10 @@ function RootLayoutNav() {
   return (
     <Stack screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen name="modal" options={{ ...TransitionPresets.ModalPresentationIOS }} />
+      <Stack.Screen name="modal" options={{
+        ...TransitionPresets.ModalPresentationIOS,
+        gestureEnabled: true,
+      }} />
     </Stack>
   );
 }
