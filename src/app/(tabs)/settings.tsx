@@ -1,3 +1,4 @@
+import { Link } from 'expo-router';
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
@@ -11,7 +12,6 @@ import { List } from 'react-native-paper';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
-import { Link } from 'expo-router';
 
 export default function Setting() {
   const devModeEnabled = useAppSelector(selectDevMode);
