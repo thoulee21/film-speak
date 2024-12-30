@@ -71,7 +71,7 @@ export default function TabLayout() {
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
           compact
-          shifting
+          shifting={!__DEV__}
           animationEasing={Easing.ease}
           navigationState={state}
           safeAreaInsets={insets}
