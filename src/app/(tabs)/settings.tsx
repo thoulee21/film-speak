@@ -1,4 +1,3 @@
-import { ExternalLink } from '@/src/components/ExternalLink';
 import {
   checkForUpdateAsync,
   fetchUpdateAsync,
@@ -9,15 +8,29 @@ import { useCallback } from 'react';
 import { StyleSheet, ToastAndroid, View } from 'react-native';
 import { List } from 'react-native-paper';
 
+import { useAppSelector } from '@/src/hooks/redux';
+import { selectDevMode } from '@/src/redux/slices/devMode';
+import type ListLRProps from '@/src/types/paperListItem';
+import { Link } from 'expo-router';
+
 export default function Setting() {
+  const devModeEnabled = useAppSelector(selectDevMode);
   const { isUpdateAvailable } = useUpdates();
 
-  const renderDocumentIcon = useCallback((props: any) => (
-    <List.Icon {...props} icon="file-document-outline" />
+  const renderUpdateIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="cloud-download-outline" />
   ), []);
 
-  const renderUpdateIcon = useCallback((props: any) => (
-    <List.Icon {...props} icon="cloud-download-outline" />
+  const renderDevIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="code-tags" />
+  ), []);
+
+  const renderRightIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="chevron-right" />
+  ), []);
+
+  const renderAppIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="information-outline" />
   ), []);
 
   const checkForUpdate = useCallback(async () => {
@@ -53,13 +66,26 @@ export default function Setting() {
           left={renderUpdateIcon}
           onPress={checkForUpdate}
         />
-        <ExternalLink href="https://docs.expo.dev">
+
+        {devModeEnabled && (
+          <Link href="/dev" asChild>
+            <List.Item
+              title="Developer Settings"
+              description="Enable to access additional features"
+              left={renderDevIcon}
+              right={renderRightIcon}
+            />
+          </Link>
+        )}
+
+        <Link href="/about" asChild>
           <List.Item
-            title="Read the Expo documentation"
-            left={renderDocumentIcon}
-            description="https://docs.expo.dev"
+            title="About"
+            description="Learn more about the app"
+            left={renderAppIcon}
+            right={renderRightIcon}
           />
-        </ExternalLink>
+        </Link>
       </List.Section>
     </View>
   );

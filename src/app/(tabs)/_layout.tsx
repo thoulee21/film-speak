@@ -6,7 +6,14 @@ import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } fr
 import { BottomNavigation, Icon, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
 import type { BaseRoute } from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
 
+import { useAppSelector } from '@/src/hooks/redux';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
+import { selectDevMode } from '@/src/redux/slices/devMode';
+
+export {
+  // Catch any errors thrown by the Layout component.
+  ErrorBoundary
+} from 'expo-router';
 
 type TouchableProps<Route extends BaseRoute> = TouchableRippleProps & {
   key: string;
@@ -58,6 +65,8 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
+  const devModeEnabled = useAppSelector(selectDevMode);
+
   return (
     <Tabs
       screenOptions={{
@@ -71,7 +80,7 @@ export default function TabLayout() {
       tabBar={({ navigation, state, descriptors, insets }) => (
         <BottomNavigation.Bar
           compact
-          shifting={!__DEV__}
+          shifting={!devModeEnabled}
           animationEasing={Easing.ease}
           navigationState={state}
           safeAreaInsets={insets}
@@ -131,7 +140,7 @@ export default function TabLayout() {
             <Link href="/modal" asChild>
               <Pressable style={{ padding: 10 }}>
                 <Icon
-                  source="information-outline"
+                  source="test-tube"
                   size={25}
                   color={tintColor}
                 />

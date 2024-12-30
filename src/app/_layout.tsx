@@ -3,7 +3,10 @@ import {
   DefaultTheme,
   ThemeProvider,
 } from '@react-navigation/native';
-import { TransitionPresets } from '@react-navigation/stack';
+import {
+  HeaderStyleInterpolators,
+  TransitionPresets,
+} from '@react-navigation/stack';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -15,9 +18,12 @@ import {
   adaptNavigationTheme,
 } from 'react-native-paper';
 import 'react-native-reanimated';
+import { Provider as ReduxProvider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
+import { persister, store } from '@/src/redux/store';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -34,12 +40,19 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
   return (
-    <Stack screenOptions={{ ...TransitionPresets.SlideFromRightIOS }}>
+    <Stack screenOptions={{
+      ...TransitionPresets.SlideFromRightIOS,
+      headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+      gestureEnabled: true,
+      freezeOnBlur: true,
+    }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="modal" options={{
         ...TransitionPresets.ModalPresentationIOS,
-        gestureEnabled: true,
+        headerTitle: 'Modal Screen',
       }} />
+      <Stack.Screen name="dev" options={{ headerTitle: 'Developer Settings' }} />
+      <Stack.Screen name="about" options={{ headerTitle: 'About' }} />
     </Stack>
   );
 }
@@ -64,22 +77,24 @@ export default function RootLayout() {
   });
 
   return (
-    <PaperProvider
-      theme={
-        colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme
-      }
-    >
-      <ThemeProvider value={{
-        ...(colorScheme === 'dark'
-          ? PaperedDarkTheme : PaperedLightTheme),
-        fonts: DefaultTheme.fonts,
-      }}>
-        <StatusBar
-          translucent
-          style={colorScheme === 'dark' ? 'light' : 'dark'}
-        />
-        <RootLayoutNav />
-      </ThemeProvider>
-    </PaperProvider>
+    <ReduxProvider store={store}>
+      <PersistGate loading={null} persistor={persister}>
+        <PaperProvider
+          theme={colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme}
+        >
+          <ThemeProvider value={{
+            ...(colorScheme === 'dark'
+              ? PaperedDarkTheme : PaperedLightTheme),
+            fonts: DefaultTheme.fonts,
+          }}>
+            <StatusBar
+              translucent
+              style={colorScheme === 'dark' ? 'light' : 'dark'}
+            />
+            <RootLayoutNav />
+          </ThemeProvider>
+        </PaperProvider>
+      </PersistGate>
+    </ReduxProvider>
   );
 }
