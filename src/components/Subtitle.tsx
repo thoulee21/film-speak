@@ -1,5 +1,5 @@
-import { FlashList, type ListRenderItemInfo } from "@shopify/flash-list";
 import { useCallback, useEffect, useState } from "react";
+import { FlatList } from "react-native";
 import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
 import { ActivityIndicator, Caption, Divider, List, useTheme } from "react-native-paper";
 import SrtParser2, { type Line } from "srt-parser-2";
@@ -33,9 +33,7 @@ export default function Subtitle({
     getSubtitle();
   }, [uri]);
 
-  const renderItem = useCallback(({
-    item
-  }: ListRenderItemInfo<Line>) => (
+  const renderItem = useCallback(({ item }: { item: Line }) => (
     <List.Item
       title={`${item.startSeconds} - ${item.endSeconds}`}
       description={item.text.trim()}
@@ -64,14 +62,13 @@ export default function Subtitle({
         )
       }
     />
-  ), [appTheme.colors.primaryContainer, onItemPress, selectedID]);
+  ), [selectedID, onItemPress, appTheme.colors.primaryContainer]);
 
   return (
-    <FlashList
+    <FlatList
       data={subtitles}
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
-      estimatedItemSize={84.4}
       extraData={selectedID}
       keyExtractor={(item) => item.id}
     />
