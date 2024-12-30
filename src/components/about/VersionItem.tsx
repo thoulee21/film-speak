@@ -8,7 +8,7 @@ import HapticFeedback, {
 } from 'react-native-haptic-feedback';
 import { List, Portal, Snackbar } from 'react-native-paper';
 
-import PlatformIcon from '@/src/components/PlatformIcon';
+import PlatformIcon from '@/src/components/about/PlatformIcon';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode, setDevMode } from '@/src/redux/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
