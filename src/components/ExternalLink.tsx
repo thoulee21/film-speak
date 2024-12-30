@@ -6,15 +6,13 @@ import { Platform } from 'react-native';
 export default function ExternalLink(
   props: Omit<React.ComponentProps<typeof Link>, 'href'> & { href: string }
 ) {
-  const linkRef = React.useRef(null);
-
   return (
     <Link
-      ref={linkRef}
+      {...props}
       target="_blank"
       testID='link'
       rel="noopener noreferrer"
-      {...props}
+      asChild
       // @ts-expect-error: External URLs are not typed.
       href={props.href}
       onPress={(e) => {
