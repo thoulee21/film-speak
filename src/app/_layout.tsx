@@ -43,13 +43,16 @@ function RootLayoutNav() {
     <Stack screenOptions={{
       ...TransitionPresets.SlideFromRightIOS,
       headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+      headerBackButtonDisplayMode: 'default',
+      headerMode: 'float',
       gestureEnabled: true,
       freezeOnBlur: true,
+      headerTitleAlign: 'center',
     }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="modal" options={{
         ...TransitionPresets.ModalPresentationIOS,
-        headerTitle: 'Modal Screen',
+        headerShown: false,
       }} />
       <Stack.Screen name="dev" options={{ headerTitle: 'Developer Options' }} />
       <Stack.Screen name="about" options={{ headerTitle: 'About' }} />

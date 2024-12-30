@@ -75,6 +75,7 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
+        headerTitleAlign: 'center',
       }}
       backBehavior='none'
       tabBar={({ navigation, state, descriptors, insets }) => (
