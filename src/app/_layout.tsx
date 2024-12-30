@@ -35,7 +35,7 @@ export const unstable_settings = {
   initialRouteName: '(tabs)',
 };
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
+// Prevent the splash screen from auto-hiding before loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
@@ -56,7 +56,6 @@ function RootLayoutNav() {
     </Stack>
   );
 }
-
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
