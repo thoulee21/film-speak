@@ -1,40 +1,35 @@
-import { useAssets } from "expo-asset";
 import { useCallback, useEffect, useState } from "react";
-import { FlatList } from "react-native";
-import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
-import { ActivityIndicator, Caption, Divider, List, useTheme } from "react-native-paper";
+import { FlatList, StyleSheet, View } from "react-native";
+import HapticFeedback, {
+  HapticFeedbackTypes,
+} from "react-native-haptic-feedback";
+import {
+  ActivityIndicator,
+  Button,
+  Caption,
+  Divider,
+  List,
+  useTheme
+} from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
-  fileUri?: string;
+  fileUri: string;
   onItemPress: (arg0: Line) => void;
 }
 
 export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
   const appTheme = useTheme();
 
-  const [audioAssets] = useAssets([
-    require('@/assets/audio/audio.wav')
-  ]);
-
   const [subtitle, setSubtitle] = useState<Line[]>([]);
   const [selectedID, setSelectedID] = useState("0");
 
   useEffect(() => {
-    if (audioAssets) {
-      const DEFAULT_FILE_URI = audioAssets[0].localUri;
-      if (DEFAULT_FILE_URI) {
-
-        const wav2Subtitle = new Wav2SubtitleConverter();
-        wav2Subtitle.start(
-          fileUri || DEFAULT_FILE_URI,
-          setSubtitle
-        );
-      }
-    }
-  }, [audioAssets, fileUri]);
+    const wav2Subtitle = new Wav2SubtitleConverter();
+    wav2Subtitle.start(fileUri, setSubtitle);
+  }, [fileUri]);
 
   const renderItem = useCallback(({ item }: { item: Line }) => (
     <List.Item
@@ -73,7 +68,26 @@ export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
       extraData={selectedID}
+      contentContainerStyle={styles.container}
       keyExtractor={(item) => item.id}
+      ListEmptyComponent={
+        <View style={styles.loadingView}>
+          <Button loading>
+            Generating Subtitle...
+          </Button>
+        </View>
+      }
     />
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
+  loadingView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})

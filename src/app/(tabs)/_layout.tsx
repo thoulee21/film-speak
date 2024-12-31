@@ -1,6 +1,6 @@
 import { TransitionPresets } from '@react-navigation/bottom-tabs';
 import { CommonActions } from '@react-navigation/native';
-import { Link, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
 import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } from 'react-native';
 import { BottomNavigation, Icon, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
@@ -136,17 +136,6 @@ export default function TabLayout() {
               color={color}
               size={size}
             />
-          ),
-          headerRight: ({ tintColor }) => (
-            <Link href="/modal" asChild>
-              <Pressable style={{ padding: 10 }}>
-                <Icon
-                  source="test-tube"
-                  size={25}
-                  color={tintColor}
-                />
-              </Pressable>
-            </Link>
           ),
         }}
       />

@@ -1,41 +1,104 @@
-import Subtitle, { SUBTITLE } from '@/src/components/Subtitle';
+import * as FileSystem from 'expo-file-system';
+import { useNavigation } from 'expo-router';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { OrientationLock } from 'expo-screen-orientation';
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { FFmpegKit, type FFmpegSessionCompleteCallback } from 'ffmpeg-kit-react-native';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { TextInput } from 'react-native-paper';
-import ShareMenu, {
-  type ShareCallback,
-  type ShareData,
-} from 'react-native-share-menu';
-import Video, {
-  SelectedTrackType,
-  TextTrackType,
-  type ISO639_1,
-  type VideoRef,
-} from 'react-native-video';
+import { IconButton, Text, TextInput } from 'react-native-paper';
+import ShareMenu, { type ShareCallback, type ShareData } from 'react-native-share-menu';
+import Video, { type VideoRef } from 'react-native-video';
 import type { Line } from 'srt-parser-2';
 
+import Subtitle from '@/src/components/Subtitle';
+
 const VIDEO_SOURCE = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
+const AUDIO_URI = `${FileSystem.cacheDirectory}audio.wav`;
+
+const convertContentUriToFileUri = async (contentUri: string): Promise<string> => {
+  try {
+    const fileUri = `${FileSystem.documentDirectory}convertedFile.wav`;
+    await FileSystem.copyAsync({
+      from: contentUri,
+      to: fileUri,
+    });
+    return fileUri;
+  } catch (error) {
+    console.error(
+      'Error converting content URI to file URI:',
+      error
+    );
+    throw error;
+  }
+};
+
+const extractAudioFromVideo = async (
+  videoUri: string,
+  onComplete: FFmpegSessionCompleteCallback
+) => {
+  // 如果 videoUri 是 content:// URI，则将其转换为 file:// URI
+  if (videoUri.startsWith('content://')) {
+    videoUri = await convertContentUriToFileUri(videoUri);
+  }
+
+  await FFmpegKit.executeAsync(
+    `-i ${videoUri} -vn -c:a pcm_s16le -ar 16000 -ac 1 ${AUDIO_URI}`,
+    onComplete,
+  );
+};
 
 export default function VideoScreen() {
+  const navigation = useNavigation();
   const player = useRef<VideoRef>(null);
 
   const [sharedItem, setSharedItem] = useState<ShareData>();
-  const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
   const [clip, setClip] = useState<Line>();
+  const [generateSubtitle, setGenerateSubtitle] = useState(false);
+
+  const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
+  const [audioFileUri, setAudioFileUri] = useState<string>();
+
+  const source = useMemo(() => (
+    sharedItem
+      ? Array.isArray(sharedItem.data)
+        ? sharedItem.data[0]
+        : sharedItem.data
+      : videoSource
+  ), [sharedItem, videoSource]);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <IconButton
+          icon={generateSubtitle ? 'subtitles' : 'subtitles-outline'}
+          selected={generateSubtitle}
+          onPress={() => {
+            setGenerateSubtitle(prev => {
+              const newValue = !prev;
+
+              if (newValue === true) {
+                extractAudioFromVideo(
+                  source,
+                  () => {
+                    setAudioFileUri(AUDIO_URI);
+                  }
+                );
+              }
+
+              return newValue;
+            });
+          }}
+        />
+      )
+    })
+  }, [generateSubtitle, navigation, source])
 
   const handleShare: ShareCallback = useCallback(async (
     item
   ) => {
     if (!item) { return; }
     setSharedItem(item);
+    console.debug('Shared item:', item);
   }, []);
 
   useEffect(() => {
@@ -46,13 +109,6 @@ export default function VideoScreen() {
       shareListener.remove();
     };
   }, [handleShare]);
-
-  const source = useMemo(
-    () => (
-      sharedItem ? sharedItem.data : videoSource
-    ) as string,
-    [sharedItem, videoSource]
-  );
 
   return (
     <View style={styles.contentContainer}>
@@ -68,33 +124,7 @@ export default function VideoScreen() {
 
       <Video
         ref={player}
-        source={{
-          uri: source,
-          textTracks: [{
-            title: 'test',
-            language: 'en' as ISO639_1,
-            type: TextTrackType.VTT,
-            uri: SUBTITLE,
-          }],
-        }}
-        selectedTextTrack={{
-          type: SelectedTrackType.INDEX,
-          value: 0,
-        }}
-        onTextTrackDataChanged={(
-          { subtitleTracks }
-        ) => {
-          console.debug(
-            'onTextTrackDataChanged',
-            subtitleTracks
-          );
-        }}
-        subtitleStyle={{
-          fontSize: 15,
-          paddingBottom: 50,
-          subtitlesFollowVideo: true,
-          opacity: 0.8,
-        }}
+        source={{ uri: source }}
         showNotificationControls
         fullscreenOrientation='landscape'
         fullscreenAutorotate
@@ -113,11 +143,6 @@ export default function VideoScreen() {
 
           player.current?.seek(clip.startSeconds);
         }}
-        // onPlaybackStateChanged={({
-        //   isPlaying
-        // }) => {
-        //   setIsPlaying(isPlaying);
-        // }}
         controls
         controlsStyles={{
           hideSettingButton: false,
@@ -134,12 +159,24 @@ export default function VideoScreen() {
         }}
       />
 
-      <Subtitle
-        onItemPress={(item) => {
-          setClip(item);
-          player.current?.resume();
-        }}
-      />
+      {(generateSubtitle && audioFileUri) ? (
+        <Subtitle
+          fileUri={audioFileUri}
+          onItemPress={(item) => {
+            setClip(item);
+            player.current?.resume();
+          }}
+        />
+      ) : (
+        <View style={styles.placeholderContainer}>
+          <Text
+            variant='titleMedium'
+            style={{ fontWeight: 'bold' }}
+          >
+            Subtitle will be generated here
+          </Text>
+        </View>
+      )}
     </View>
   );
 }
@@ -151,5 +188,10 @@ const styles = StyleSheet.create({
   video: {
     width: "100%",
     height: 220,
+  },
+  placeholderContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
