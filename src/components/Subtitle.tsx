@@ -1,37 +1,40 @@
+import { useAssets } from "expo-asset";
 import { useCallback, useEffect, useState } from "react";
 import { FlatList } from "react-native";
 import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
 import { ActivityIndicator, Caption, Divider, List, useTheme } from "react-native-paper";
-import SrtParser2, { type Line } from "srt-parser-2";
+import { type Line } from "srt-parser-2";
 
-export const SUBTITLE = 'https://bitdash-a.akamaihd.net/content/sintel/subtitles/subtitles_en.vtt';
+import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
-  uri?: string;
+  fileUri?: string;
   onItemPress: (arg0: Line) => void;
 }
 
-export default function Subtitle({
-  uri, onItemPress
-}: SubtitleProps) {
+export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
   const appTheme = useTheme();
 
-  const [subtitles, setSubtitles] = useState<Line[]>([]);
-  const [selectedID, setSelectedID] = useState<string>("0");
+  const [audioAssets] = useAssets([
+    require('@/assets/audio/audio.wav')
+  ]);
+
+  const [subtitle, setSubtitle] = useState<Line[]>([]);
+  const [selectedID, setSelectedID] = useState("0");
 
   useEffect(() => {
-    const getSubtitle = async () => {
-      const response = await fetch(uri || SUBTITLE);
-      const text = await response.text();
+    if (audioAssets) {
+      const DEFAULT_FILE_URI = audioAssets[0].localUri;
+      if (DEFAULT_FILE_URI) {
 
-      const parser = new SrtParser2();
-      const json = parser.fromSrt(text);
-
-      setSubtitles(json);
-    };
-
-    getSubtitle();
-  }, [uri]);
+        const wav2Subtitle = new Wav2SubtitleConverter();
+        wav2Subtitle.start(
+          fileUri || DEFAULT_FILE_URI,
+          setSubtitle
+        );
+      }
+    }
+  }, [audioAssets, fileUri]);
 
   const renderItem = useCallback(({ item }: { item: Line }) => (
     <List.Item
@@ -66,7 +69,7 @@ export default function Subtitle({
 
   return (
     <FlatList
-      data={subtitles}
+      data={subtitle}
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
       extraData={selectedID}

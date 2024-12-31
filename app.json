@@ -52,7 +52,8 @@
             "useExoplayerIMA": false
           }
         }
-      ]
+      ],
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
