@@ -66,6 +66,9 @@ function RootLayoutNav() {
         headerTitle: 'App Data',
         gestureEnabled: false,
       }} />
+      <Stack.Screen name="cache" options={{
+        headerTitle: 'Cache',
+      }} />
     </Stack>
   );
 }
