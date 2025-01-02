@@ -71,6 +71,7 @@ export default function TabLayout() {
     <Tabs
       screenOptions={{
         ...TransitionPresets.ShiftTransition,
+        animation: 'shift',
         tabBarHideOnKeyboard: true,
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
@@ -117,7 +118,6 @@ export default function TabLayout() {
                 : typeof options.title === 'string'
                   ? options.title
                   : route.name;
-
             return label;
           }}
           renderTouchable={(props) => (
