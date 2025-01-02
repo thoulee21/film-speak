@@ -1,10 +1,11 @@
 import { Tabs as TopTab, useNavigation } from 'expo-router';
 import React, { useCallback, useEffect, useState } from 'react';
-import { useTheme } from 'react-native-paper';
+import { Button, useTheme } from 'react-native-paper';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import { MMKVStorageIndicator } from '@/src/components/appData/StorageIndicator';
 import TabBarIcon from '@/src/components/TabBarIcon';
+import { formatDataSize } from '@/src/utils/formatDataSize';
+import { reduxStorage } from '@/src/utils/mmkvStorage';
 
 const Actions = ({ routeIndex }: { routeIndex: number }) => {
   return (
@@ -13,7 +14,9 @@ const Actions = ({ routeIndex }: { routeIndex: number }) => {
         entering={FadeIn.easing(Easing.inOut(Easing.quad))}
         exiting={FadeOut.easing(Easing.inOut(Easing.quad))}
       >
-        <MMKVStorageIndicator />
+        <Button icon="database-search-outline">
+          {formatDataSize(reduxStorage.size)}
+        </Button>
       </Animated.View>
     )
   );
