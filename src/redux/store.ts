@@ -6,11 +6,13 @@ import {
 } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 
-import { MMKVStorage } from '@/src/utils/mmkvStorage';
 import { devModeSlice } from '@/src/redux/slices/devMode';
+import { MMKVStorage } from '@/src/utils/mmkvStorage';
+import { subtitlesSlice } from './slices/subtitles';
 
 const rootReducers = combineReducers({
   devMode: devModeSlice.reducer,
+  subtitles: subtitlesSlice.reducer,
 });
 
 const persistedReducer = persistReducer(

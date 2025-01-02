@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
 import HapticFeedback, {
   HapticFeedbackTypes,
@@ -13,6 +13,8 @@ import {
 } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
+import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
+import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
@@ -21,15 +23,31 @@ interface SubtitleProps {
 }
 
 export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
+  const dispatch = useAppDispatch();
   const appTheme = useTheme();
 
-  const [subtitle, setSubtitle] = useState<Line[]>([]);
+  const subtitles = useAppSelector(selectSubtitles);
   const [selectedID, setSelectedID] = useState("0");
 
-  useEffect(() => {
-    const wav2Subtitle = new Wav2SubtitleConverter();
-    wav2Subtitle.start(fileUri, setSubtitle);
-  }, [fileUri]);
+  const subtitle = useMemo(() => {
+    let subtitleValue = subtitles.find(
+      (subtitle) => subtitle.fileUri === fileUri
+    )?.value;
+
+    if (!subtitleValue) {
+      const wav2Subtitle = new Wav2SubtitleConverter();
+
+      wav2Subtitle.start(
+        fileUri,
+        (lines) => {
+          dispatch(addSubtitle({ fileUri, value: lines }));
+          subtitleValue = lines;
+        }
+      );
+    }
+
+    return subtitleValue;
+  }, [subtitles, fileUri, dispatch]);
 
   const renderItem = useCallback(({ item }: { item: Line }) => (
     <List.Item
