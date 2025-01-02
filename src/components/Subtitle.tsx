@@ -5,8 +5,8 @@ import HapticFeedback, {
 } from "react-native-haptic-feedback";
 import {
   ActivityIndicator,
+  Avatar,
   Button,
-  Caption,
   Divider,
   List,
   useTheme
@@ -51,9 +51,9 @@ export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
 
   const renderItem = useCallback(({ item }: { item: Line }) => (
     <List.Item
-      title={`${item.startSeconds} - ${item.endSeconds}`}
-      description={item.text.trim()}
-      descriptionNumberOfLines={2}
+      title={item.text.trim()}
+      titleNumberOfLines={5}
+      description={`${item.startSeconds} - ${item.endSeconds}`}
       onPress={() => {
         HapticFeedback.trigger(
           HapticFeedbackTypes.effectDoubleClick
@@ -68,23 +68,32 @@ export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
           : undefined,
       }}
       left={({ style }) => (
-        <Caption style={[style, { fontSize: 19 }]}>
-          {item.id}
-        </Caption>
-      )}
-      right={(props) =>
-        selectedID === item.id && (
-          <ActivityIndicator {...props} />
+        selectedID !== item.id ? (
+          <Avatar.Text
+            size={30}
+            label={item.id}
+            color={appTheme.colors.onSecondaryContainer}
+            style={[style, {
+              backgroundColor: appTheme.colors.secondaryContainer,
+            }]}
+          />
+        ) : (
+          <ActivityIndicator size={30} style={style} />
         )
-      }
+      )}
     />
-  ), [selectedID, onItemPress, appTheme.colors.primaryContainer]);
+  ), [selectedID, appTheme, onItemPress]);
 
   return (
     <FlatList
       data={subtitle}
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
+      ListHeaderComponent={
+        <List.Subheader style={{ color: appTheme.colors.primary }}>
+          Subtitle
+        </List.Subheader>
+      }
       extraData={selectedID}
       contentContainerStyle={styles.container}
       keyExtractor={(item) => item.id}

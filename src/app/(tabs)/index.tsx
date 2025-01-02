@@ -184,7 +184,7 @@ export default function VideoScreen() {
         />
       </View>
 
-      {audioFileUri ? (
+      {generateSubtitle && audioFileUri ? (
         <Subtitle
           fileUri={audioFileUri}
           onItemPress={(item) => {
