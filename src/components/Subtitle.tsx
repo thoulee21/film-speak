@@ -1,5 +1,11 @@
+import type { FFmpegSession } from "ffmpeg-kit-react-native";
 import { useCallback, useMemo, useState } from "react";
-import { FlatList, StyleSheet, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  View,
+  type ListRenderItemInfo,
+} from "react-native";
 import HapticFeedback, {
   HapticFeedbackTypes,
 } from "react-native-haptic-feedback";
@@ -15,14 +21,18 @@ import { type Line } from "srt-parser-2";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
+import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
-  fileUri: string;
+  videoFileUri: string;
   onItemPress: (arg0: Line) => void;
 }
 
-export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
+export default function Subtitle({
+  videoFileUri,
+  onItemPress
+}: SubtitleProps) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
 
@@ -30,26 +40,38 @@ export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
   const [selectedID, setSelectedID] = useState("0");
 
   const subtitle = useMemo(() => {
-    let subtitleValue = subtitles.find(
-      (subtitle) => subtitle.fileUri === fileUri
+    let subtitleValue = subtitles.find((subtitle) =>
+      subtitle.fileUri === videoFileUri
     )?.value;
 
-    if (!subtitleValue) {
-      const wav2Subtitle = new Wav2SubtitleConverter();
+    const save = (lines: Line[]) => {
+      dispatch(addSubtitle({
+        fileUri: videoFileUri,
+        value: lines
+      }));
+      subtitleValue = lines;
+    }
 
-      wav2Subtitle.start(
-        fileUri,
-        (lines) => {
-          dispatch(addSubtitle({ fileUri, value: lines }));
-          subtitleValue = lines;
-        }
+    const generateSubtitle = (
+      _: FFmpegSession, audioUri: string
+    ) => {
+      const wav2Subtitle = new Wav2SubtitleConverter();
+      wav2Subtitle.start(audioUri, save);
+    }
+
+    if (!subtitleValue) {
+      extractAudioFromVideo(
+        videoFileUri,
+        generateSubtitle
       );
     }
 
     return subtitleValue;
-  }, [subtitles, fileUri, dispatch]);
+  }, [subtitles, videoFileUri, dispatch]);
 
-  const renderItem = useCallback(({ item }: { item: Line }) => (
+  const renderItem = useCallback(({
+    item
+  }: ListRenderItemInfo<Line>) => (
     <List.Item
       title={item.text.trim()}
       titleNumberOfLines={5}

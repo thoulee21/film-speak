@@ -1,12 +1,4 @@
-import * as FileSystem from 'expo-file-system';
 import { useNavigation } from 'expo-router';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import { OrientationLock } from 'expo-screen-orientation';
-import {
-  FFmpegKit,
-  FFmpegKitConfig,
-  type FFmpegSessionCompleteCallback,
-} from 'ffmpeg-kit-react-native';
 import {
   useCallback,
   useEffect,
@@ -15,12 +7,14 @@ import {
   useState,
 } from 'react';
 import { StyleSheet, View } from 'react-native';
+import HapticFeedback, {
+  HapticFeedbackTypes,
+} from "react-native-haptic-feedback";
 import Video from 'react-native-media-console';
 import {
   Button,
   IconButton,
-  TextInput,
-  useTheme,
+  useTheme
 } from 'react-native-paper';
 import ShareMenu, {
   type ShareCallback,
@@ -32,25 +26,6 @@ import type { Line } from 'srt-parser-2';
 import Subtitle from '@/src/components/Subtitle';
 
 const VIDEO_SOURCE = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
-const AUDIO_URI = `${FileSystem.cacheDirectory}audio.wav`;
-
-const extractAudioFromVideo = async (
-  videoUri: string,
-  onComplete: FFmpegSessionCompleteCallback
-) => {
-  // 如果 videoUri 是 content:// URI，则将其转换为 file:// URI
-  if (videoUri.startsWith('content://')) {
-    const safUri = await FFmpegKitConfig.getSafParameterForRead(videoUri);
-    videoUri = safUri;
-
-    console.debug('Selected video URI:', videoUri);
-  }
-
-  await FFmpegKit.executeAsync(
-    `-i ${videoUri} -vn -c:a pcm_s16le -ar 16000 -ac 1 ${AUDIO_URI}`,
-    onComplete,
-  );
-};
 
 export default function VideoScreen() {
   const navigation = useNavigation();
@@ -59,46 +34,32 @@ export default function VideoScreen() {
 
   const [sharedItem, setSharedItem] = useState<ShareData>();
   const [clip, setClip] = useState<Line>();
-  const [isFullscreen, setIsFullscreen] = useState(false);
   const [generateSubtitle, setGenerateSubtitle] = useState(false);
 
-  const [videoSource, setVideoSource] = useState(VIDEO_SOURCE);
-  const [audioFileUri, setAudioFileUri] = useState<string>();
+  const toggleGenerateSubtitle = useCallback(() => {
+    setGenerateSubtitle(prev => !prev);
+  }, []);
 
   const source = useMemo(() => (
     sharedItem
       ? Array.isArray(sharedItem.data)
         ? sharedItem.data[0]
         : sharedItem.data
-      : videoSource
-  ), [sharedItem, videoSource]);
+      : VIDEO_SOURCE
+  ), [sharedItem]);
 
   const renderHeaderRight = useCallback(() => {
-    const toggleGenerateSubtitle = () => {
-      setGenerateSubtitle(prev => {
-        const newValue = !prev;
-
-        if (newValue === true) {
-          extractAudioFromVideo(
-            source,
-            () => {
-              setAudioFileUri(AUDIO_URI);
-            }
-          );
-        }
-
-        return newValue;
-      });
-    };
-
     return (
       <IconButton
         icon={generateSubtitle ? 'subtitles' : 'subtitles-outline'}
         selected={generateSubtitle}
-        onPress={toggleGenerateSubtitle}
+        onPress={() => {
+          HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+          toggleGenerateSubtitle();
+        }}
       />
     );
-  }, [generateSubtitle, source]);
+  }, [generateSubtitle, toggleGenerateSubtitle]);
 
   useEffect(() => {
     navigation.setOptions({
@@ -110,6 +71,7 @@ export default function VideoScreen() {
     item
   ) => {
     if (!item) { return; }
+
     setSharedItem(item);
     console.debug('Shared item:', item);
   }, []);
@@ -125,68 +87,60 @@ export default function VideoScreen() {
 
   return (
     <View style={styles.root}>
-      <TextInput
-        label='Video Source'
-        onChangeText={setVideoSource}
-        value={videoSource}
-        textContentType='URL'
-        selectTextOnFocus
-        placeholder='Enter video source URL'
-        underlineStyle={{ display: 'none' }}
-        dense
-      />
-
-      <View style={styles.video}>
+      <View style={styles.videoContainer}>
         <Video
           videoRef={player}
           source={{ uri: source }}
           seekColor={appTheme.colors.secondary}
           shutterColor={appTheme.colors.secondaryContainer}
           showNotificationControls
-          fullscreenOrientation='landscape'
-          fullscreenAutorotate
           automaticallyWaitsToMinimizeStalling
-          // onLoad={() => { player.current?.pause(); }}
+          onLoad={() => { player.current?.pause(); }}
           onProgress={({
             currentTime
           }) => {
             if (!clip) { return; }
-
+            
             //在片段的开始和结束之间循环播放
             if (
               currentTime >= clip.startSeconds &&
               currentTime <= clip.endSeconds
             ) { return; }
-
+            
             player.current?.seek(clip.startSeconds);
           }}
           showDuration
           showTimeRemaining
           disableBack
-          isFullscreen={isFullscreen}
-          onEnterFullscreen={async () => {
-            setIsFullscreen(true);
-            navigation.setOptions({ headerShown: false })
-            await ScreenOrientation.lockAsync(
-              OrientationLock.LANDSCAPE_RIGHT
-            );
-          }}
-          onExitFullscreen={async () => {
-            await ScreenOrientation.lockAsync(
-              OrientationLock.PORTRAIT_UP
-            );
-            setIsFullscreen(false);
-            navigation.setOptions({ headerShown: true });
-          }}
+          disableFullscreen
+          // fullscreenOrientation='landscape'
+          // fullscreenAutorotate
+          // isFullscreen={fullscreen}
+          // onEnterFullscreen={async () => {
+          //   setFullscreen(true);
+          //   navigation.setOptions({ headerShown: false })
+
+          //   await ScreenOrientation.lockAsync(
+          //     OrientationLock.LANDSCAPE_RIGHT
+          //   );
+          // }}
+          // onExitFullscreen={async () => {
+          //   await ScreenOrientation.lockAsync(
+          //     OrientationLock.PORTRAIT_UP
+          //   );
+
+          //   setFullscreen(false);
+          //   navigation.setOptions({ headerShown: true });
+          // }}
           onError={(error) => {
             console.error('Video error:', error);
           }}
         />
       </View>
 
-      {generateSubtitle && audioFileUri ? (
+      {generateSubtitle ? (
         <Subtitle
-          fileUri={audioFileUri}
+          videoFileUri={source}
           onItemPress={(item) => {
             setClip(item);
             player.current?.resume();
@@ -194,13 +148,8 @@ export default function VideoScreen() {
         />
       ) : (
         <View style={styles.placeholderContainer}>
-          <Button
-            icon='subtitles'
-            loading={generateSubtitle}
-          >
-            {!generateSubtitle
-              ? "Subtitle will be generated here"
-              : "Extracting audio from video..."}
+          <Button icon='subtitles'>
+            Subtitle will be generated here
           </Button>
         </View>
       )}
@@ -212,9 +161,9 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
-  video: {
+  videoContainer: {
     width: "100%",
-    height: 220,
+    height: 260,
   },
   placeholderContainer: {
     flex: 1,
