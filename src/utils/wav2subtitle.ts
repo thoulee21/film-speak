@@ -120,23 +120,33 @@ class Wav2SubtitleConverter {
     };
 
     this.recognizer!.canceled = (s, e) => {
+      const stop = () => {
+        this.recognizer!.stopContinuousRecognitionAsync(
+          () => {
+            console.log("Stop continuous recognition.");
+          },
+          (err) => {
+            console.warn(err);
+          }
+        );
+
+        const parser = new SrtParser2();
+        this.lines = parser.fromSrt(this.subtitle);
+        onRecognized(this.lines);
+      }
+
       if (CancellationReason.Error === e.reason) {
         console.warn(e.errorDetails);
+        stop();
       }
 
       if (CancellationReason.EndOfStream === e.reason) {
         console.log("End of speech");
+        stop();
       }
-
-      this.recognizer?.stopContinuousRecognitionAsync()
     }
 
-    // 这里是边说边识别，每次说话都会执行
-    // this.recognizer!.recognizing = (s, e) => {
-    //   console.log("Recognizing", e.result.text);
-    // }
-
-    // 这是是识别一整句话说完之后执行
+    // 识别到一整句话说完之后执行
     this.recognizer!.recognized = (s, e) => {
       sequenceNumber = sequenceNumber + 1;
 
@@ -159,22 +169,6 @@ class Wav2SubtitleConverter {
         console.warn(err);
       }
     );
-
-    // 识别结束后关闭
-    this.recognizer!.speechEndDetected = async (s, e) => {
-      await this.recognizer!.stopContinuousRecognitionAsync(
-        () => {
-          console.log("Stop continuous recognition.");
-        },
-        (err) => {
-          console.warn(err);
-        }
-      );
-
-      const parser = new SrtParser2();
-      this.lines = parser.fromSrt(this.subtitle);
-      onRecognized(this.lines);
-    }
   }
 
   public static async checkPermission() {

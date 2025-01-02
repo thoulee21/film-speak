@@ -83,7 +83,7 @@ export default function Subtitle({ fileUri, onItemPress }: SubtitleProps) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flexGrow: 1,
   },
   loadingView: {
     flex: 1,
