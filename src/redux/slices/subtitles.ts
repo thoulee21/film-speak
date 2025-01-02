@@ -4,7 +4,7 @@ import type { Line } from 'srt-parser-2';
 import StateKeys from '@/src/constants/stateKeys';
 import { RootState } from '@/src/redux/store';
 
-interface Subtitle {
+export interface Subtitle {
   fileUri: string;
   value: Line[];
 }

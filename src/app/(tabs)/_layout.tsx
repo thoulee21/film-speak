@@ -1,9 +1,9 @@
 import { TransitionPresets } from '@react-navigation/bottom-tabs';
 import { CommonActions } from '@react-navigation/native';
-import { Tabs } from 'expo-router';
+import { Link, Tabs } from 'expo-router';
 import React from 'react';
 import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } from 'react-native';
-import { BottomNavigation, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
+import { BottomNavigation, IconButton, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
 import type { BaseRoute } from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
 
 import TabBarIcon from '@/src/components/TabBarIcon';
@@ -124,6 +124,15 @@ export default function TabLayout() {
               color={color}
               size={size}
             />
+          ),
+          headerLeft: ({ tintColor, style }) => (
+            <Link href="/history" asChild>
+              <IconButton
+                icon="history"
+                style={style}
+                iconColor={tintColor}
+              />
+            </Link>
           ),
         }}
       />
