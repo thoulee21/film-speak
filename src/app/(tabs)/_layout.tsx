@@ -3,9 +3,10 @@ import { CommonActions } from '@react-navigation/native';
 import { Tabs } from 'expo-router';
 import React from 'react';
 import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } from 'react-native';
-import { BottomNavigation, Icon, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
+import { BottomNavigation, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
 import type { BaseRoute } from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
 
+import TabBarIcon from '@/src/components/TabBarIcon';
 import { useAppSelector } from '@/src/hooks/redux';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 import { selectDevMode } from '@/src/redux/slices/devMode';
@@ -50,19 +51,6 @@ const Touchable = <Route extends BaseRoute>({
     </Pressable>
   )
 );
-
-function TabBarIcon(props: {
-  name: React.ComponentProps<typeof Icon>['source'];
-  color: string;
-  size: number;
-}) {
-  return (
-    <Icon
-      source={props.name}
-      {...props}
-    />
-  );
-}
 
 export default function TabLayout() {
   const devModeEnabled = useAppSelector(selectDevMode);

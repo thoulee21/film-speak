@@ -5,6 +5,7 @@ import { List } from "react-native-paper";
 
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
+import ViewAppDataItem from "@/src/components/dev/ViewAppDataItem";
 import type ListLRProps from "@/src/types/paperListItem";
 
 export default function DevScreen() {
@@ -15,15 +16,20 @@ export default function DevScreen() {
   return (
     <View>
       <DevSwitchItem />
+      <List.Section title="Developer's view" >
+        <ViewAppDataItem />
+        <Link href="/modal" asChild>
+          <List.Item
+            title="Open Modal"
+            description="Open a modal for testing purposes"
+            left={renderModalIcon}
+          />
+        </Link>
+      </List.Section>
 
-      <RouteItem />
-      <Link href="/modal" asChild>
-        <List.Item
-          title="Open Modal"
-          description="Open a modal for testing purposes"
-          left={renderModalIcon}
-        />
-      </Link>
+      <List.Section title="Tools">
+        <RouteItem />
+      </List.Section>
     </View>
   );
 }

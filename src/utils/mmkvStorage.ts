@@ -1,7 +1,7 @@
 import { MMKV } from "react-native-mmkv"
 import { Storage } from 'redux-persist'
 
-const reduxStorage = new MMKV({ id: 'redux' })
+export const reduxStorage = new MMKV({ id: 'redux' })
 
 export const MMKVStorage: Storage = {
   setItem: (key, value) => {
