@@ -5,7 +5,7 @@ import { OrientationLock } from 'expo-screen-orientation';
 import { FFmpegKit, type FFmpegSessionCompleteCallback } from 'ffmpeg-kit-react-native';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { IconButton, Text, TextInput } from 'react-native-paper';
+import { Button, IconButton, TextInput } from 'react-native-paper';
 import ShareMenu, { type ShareCallback, type ShareData } from 'react-native-share-menu';
 import Video, { type VideoRef } from 'react-native-video';
 import type { Line } from 'srt-parser-2';
@@ -111,7 +111,7 @@ export default function VideoScreen() {
   }, [handleShare]);
 
   return (
-    <View style={styles.contentContainer}>
+    <View style={styles.root}>
       <TextInput
         label='Video Source'
         onChangeText={setVideoSource}
@@ -159,7 +159,7 @@ export default function VideoScreen() {
         }}
       />
 
-      {(generateSubtitle && audioFileUri) ? (
+      {audioFileUri ? (
         <Subtitle
           fileUri={audioFileUri}
           onItemPress={(item) => {
@@ -169,12 +169,14 @@ export default function VideoScreen() {
         />
       ) : (
         <View style={styles.placeholderContainer}>
-          <Text
-            variant='titleMedium'
-            style={{ fontWeight: 'bold' }}
+          <Button
+            icon='subtitles'
+            loading={generateSubtitle}
           >
-            Subtitle will be generated here
-          </Text>
+            {!generateSubtitle
+              ? "Subtitle will be generated here"
+              : "Extracting audio from video..."}
+          </Button>
         </View>
       )}
     </View>
@@ -182,7 +184,7 @@ export default function VideoScreen() {
 }
 
 const styles = StyleSheet.create({
-  contentContainer: {
+  root: {
     flex: 1,
   },
   video: {
