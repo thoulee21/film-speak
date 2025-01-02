@@ -9,7 +9,7 @@ export default function RouteItem() {
   const [route, setRoute] = useState("")
 
   const renderNaviIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="navigation-outline" />
+    <List.Icon {...props} icon="map-marker-path" />
   ), [])
 
   const goRoute = useCallback(() => {
@@ -23,12 +23,13 @@ export default function RouteItem() {
       style={{ backgroundColor: "transparent" }}
       contentStyle={{ paddingLeft: 0, paddingRight: 0 }}
       dense
-      placeholder="Go anywhere"
+      placeholder="/path/to/route"
       value={route}
       onChangeText={setRoute}
       onSubmitEditing={goRoute}
       submitBehavior="blurAndSubmit"
-
+      returnKeyType="go"
+      selectTextOnFocus
       right={
         <TextInput.Icon
           icon="arrow-right"
