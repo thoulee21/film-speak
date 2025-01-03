@@ -1,4 +1,4 @@
-import { useNavigation } from 'expo-router';
+import { Link, useNavigation } from 'expo-router';
 import {
   useCallback,
   useEffect,
@@ -6,7 +6,12 @@ import {
   useRef,
   useState,
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+import {
+  StyleSheet,
+  View,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
 import HapticFeedback, {
   HapticFeedbackTypes,
 } from "react-native-haptic-feedback";
@@ -48,16 +53,32 @@ export default function VideoScreen() {
       : VIDEO_SOURCE
   ), [sharedItem]);
 
-  const renderHeaderRight = useCallback(() => {
+  const renderHeaderRight = useCallback(({
+    tintColor, style
+  }: {
+    tintColor: string,
+    style: StyleProp<ViewStyle>
+  }) => {
     return (
-      <IconButton
-        icon={generateSubtitle ? 'subtitles' : 'subtitles-outline'}
-        selected={generateSubtitle}
-        onPress={() => {
-          HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
-          toggleGenerateSubtitle();
-        }}
-      />
+      <View style={{ flexDirection: 'row' }}>
+        <Link href="/history" asChild>
+          <IconButton
+            icon="history"
+            style={style}
+            iconColor={tintColor}
+          />
+        </Link>
+
+        <IconButton
+          icon={generateSubtitle ? 'subtitles' : 'subtitles-outline'}
+          selected={generateSubtitle}
+          style={style}
+          onPress={() => {
+            HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+            toggleGenerateSubtitle();
+          }}
+        />
+      </View>
     );
   }, [generateSubtitle, toggleGenerateSubtitle]);
 
@@ -100,13 +121,13 @@ export default function VideoScreen() {
             currentTime
           }) => {
             if (!clip) { return; }
-            
+
             //在片段的开始和结束之间循环播放
             if (
               currentTime >= clip.startSeconds &&
               currentTime <= clip.endSeconds
             ) { return; }
-            
+
             player.current?.seek(clip.startSeconds);
           }}
           showDuration

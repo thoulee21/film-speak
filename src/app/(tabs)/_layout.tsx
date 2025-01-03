@@ -1,9 +1,9 @@
 import { TransitionPresets } from '@react-navigation/bottom-tabs';
 import { CommonActions } from '@react-navigation/native';
-import { Link, Tabs } from 'expo-router';
+import { Tabs } from 'expo-router';
 import React from 'react';
 import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } from 'react-native';
-import { BottomNavigation, IconButton, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
+import { BottomNavigation, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
 import type { BaseRoute } from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
 
 import TabBarIcon from '@/src/components/TabBarIcon';
@@ -64,7 +64,6 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-        headerTitleAlign: 'center',
       }}
       backBehavior='none'
       tabBar={({ navigation, state, descriptors, insets }) => (
@@ -124,15 +123,6 @@ export default function TabLayout() {
               color={color}
               size={size}
             />
-          ),
-          headerLeft: ({ tintColor, style }) => (
-            <Link href="/history" asChild>
-              <IconButton
-                icon="history"
-                style={style}
-                iconColor={tintColor}
-              />
-            </Link>
           ),
         }}
       />
