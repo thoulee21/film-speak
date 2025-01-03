@@ -63,7 +63,7 @@ function RootLayoutNav() {
           headerShown: false,
         }} />
         <Stack.Screen name="dev/index" options={{
-          headerTitle: 'Developer Options',
+          headerTitle: 'DevOptions',
         }} />
         <Stack.Screen name="about" options={{
           headerTitle: 'About',
