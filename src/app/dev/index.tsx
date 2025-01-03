@@ -1,12 +1,14 @@
 import { Link } from "expo-router";
 import { useCallback } from "react";
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import { Divider, List, useTheme } from "react-native-paper";
 
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
 import ExternalLink from "@/src/components/ExternalLink";
 import type ListLRProps from "@/src/types/paperListItem";
+
+const EXPO_DOCS_URL = "https://docs.expo.dev";
 
 export default function DevScreen() {
   const appTheme = useTheme();
@@ -32,7 +34,7 @@ export default function DevScreen() {
   ), []);
 
   return (
-    <View>
+    <ScrollView>
       <DevSwitchItem />
       <Divider />
 
@@ -61,14 +63,15 @@ export default function DevScreen() {
           />
         </Link>
 
-        <ExternalLink href="https://docs.expo.dev">
+        <ExternalLink href={EXPO_DOCS_URL}>
           <List.Item
             title="Read the Expo documentation"
-            description="https://docs.expo.dev"
+            description={EXPO_DOCS_URL}
             left={renderDocumentIcon}
             right={renderOpenInBrowserIcon}
           />
         </ExternalLink>
+
         <Divider />
       </List.Section>
 
@@ -78,6 +81,6 @@ export default function DevScreen() {
       >
         <RouteItem />
       </List.Section>
-    </View>
+    </ScrollView>
   );
 }

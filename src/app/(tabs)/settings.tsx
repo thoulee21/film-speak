@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import { useCallback } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, List, useTheme } from 'react-native-paper';
 
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
@@ -25,7 +25,7 @@ export default function Setting() {
   ), []);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <List.Section>
         <ShowSubtitleSwitchItem />
         <Divider />
@@ -55,7 +55,7 @@ export default function Setting() {
           />
         </Link>
       </List.Section>
-    </View>
+    </ScrollView>
   );
 }
 

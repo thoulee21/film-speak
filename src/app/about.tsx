@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import { ScrollView } from "react-native";
 import { Divider } from "react-native-paper";
 
 import ContactMe from "@/src/components/about/ContactMe";
@@ -8,13 +8,13 @@ import VersionItem from "@/src/components/about/VersionItem";
 
 export default function AboutScreen() {
   return (
-    <View>
+    <ScrollView>
       <VersionItem />
       <UpdateChecker />
       <Divider />
 
       <ContactMe />
       <CopyrightItem />
-    </View>
+    </ScrollView>
   );
 }

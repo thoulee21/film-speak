@@ -138,6 +138,6 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     width: "100%",
-    height: 245,
+    height: "30%",
   },
 });
