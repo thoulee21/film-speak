@@ -20,6 +20,7 @@ import {
 import { type Line } from "srt-parser-2";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
+import { selectShowSubtitle } from "@/src/redux/slices/showSubtitle";
 import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
@@ -37,6 +38,7 @@ export default function Subtitle({
   const appTheme = useTheme();
 
   const subtitles = useAppSelector(selectSubtitles);
+  const showSubtitle = useAppSelector(selectShowSubtitle);
   const [selectedID, setSelectedID] = useState("0");
 
   const subtitle = useMemo(() => {
@@ -73,9 +75,9 @@ export default function Subtitle({
     item
   }: ListRenderItemInfo<Line>) => (
     <List.Item
-      title={item.text.trim()}
-      titleNumberOfLines={5}
-      description={`${item.startSeconds} - ${item.endSeconds}`}
+      title={`${item.startSeconds} - ${item.endSeconds}`}
+      description={showSubtitle && item.text.trim()}
+      descriptionNumberOfLines={5}
       onPress={() => {
         HapticFeedback.trigger(
           HapticFeedbackTypes.effectDoubleClick
@@ -92,7 +94,7 @@ export default function Subtitle({
       left={({ style }) => (
         selectedID !== item.id ? (
           <Avatar.Text
-            size={30}
+            size={35}
             label={item.id}
             color={appTheme.colors.onSecondaryContainer}
             style={[style, {
@@ -104,7 +106,14 @@ export default function Subtitle({
         )
       )}
     />
-  ), [selectedID, appTheme, onItemPress]);
+  ), [
+    showSubtitle,
+    selectedID,
+    appTheme.colors.primaryContainer,
+    appTheme.colors.onSecondaryContainer,
+    appTheme.colors.secondaryContainer,
+    onItemPress
+  ]);
 
   return (
     <FlatList
@@ -112,7 +121,9 @@ export default function Subtitle({
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={
-        <List.Subheader style={{ color: appTheme.colors.primary }}>
+        <List.Subheader
+          style={{ color: appTheme.colors.primary }}
+        >
           Subtitle
         </List.Subheader>
       }

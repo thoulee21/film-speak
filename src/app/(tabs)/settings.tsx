@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { List } from 'react-native-paper';
 
+import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
@@ -24,6 +25,10 @@ export default function Setting() {
 
   return (
     <View style={styles.container}>
+      <List.Section>
+        <ShowSubtitleSwitchItem />
+      </List.Section>
+
       <List.Section>
         {devModeEnabled && (
           <Link href="/dev" asChild>

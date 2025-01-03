@@ -16,7 +16,7 @@ import ShareMenu, {
 import { type VideoRef } from 'react-native-video';
 import type { Line } from 'srt-parser-2';
 
-import Subtitle from '@/src/components/Subtitle';
+import Subtitle from '@/src/components/video/Subtitle';
 import VIDEO_SOURCE from '@/src/constants/video-source';
 
 export default function VideoScreen() {
