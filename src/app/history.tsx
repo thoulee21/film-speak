@@ -1,8 +1,10 @@
+import Clipboard from "@react-native-clipboard/clipboard";
 import { StatusBar } from "expo-status-bar";
 import {
   FlatList,
   Platform,
   StyleSheet,
+  ToastAndroid,
   View,
   type ListRenderItemInfo,
 } from "react-native";
@@ -11,7 +13,6 @@ import HapticFeedback, {
 } from "react-native-haptic-feedback";
 import {
   Appbar,
-  Avatar,
   Chip,
   Divider,
   IconButton,
@@ -73,19 +74,9 @@ export default function Subtitles() {
             </Chip>
           </View>
         )}
-        left={({ style, color }) => (
-          <Avatar.Text
-            style={[style, {
-              backgroundColor: appTheme.colors.tertiaryContainer,
-            }]}
-            labelStyle={{ color }}
-            size={40}
-            label={item.fileUri[0].toUpperCase()}
-          />
-        )}
         style={{
           backgroundColor: videoSource === item.fileUri
-            ? appTheme.colors.primaryContainer
+            ? appTheme.colors.secondaryContainer
             : undefined
         }}
         onPress={() => {
@@ -94,11 +85,21 @@ export default function Subtitles() {
           );
           dispatch(setVideoSource(item.fileUri));
         }}
+        onLongPress={() => {
+          HapticFeedback.trigger(
+            HapticFeedbackTypes.effectHeavyClick
+          );
+          Clipboard.setString(item.fileUri);
+
+          ToastAndroid.show(
+            "Copied to clipboard",
+            ToastAndroid.SHORT
+          )
+        }}
         right={(props) => (
           <IconButton
             {...props}
             icon="delete-outline"
-            iconColor={appTheme.colors.error}
             onPress={() => {
               dispatch(removeSubtitle(item.fileUri));
             }}
