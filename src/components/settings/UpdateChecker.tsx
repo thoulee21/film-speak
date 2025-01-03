@@ -25,6 +25,7 @@ import RNRestart from 'react-native-restart';
 
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
+import type ListLRProps from '@/src/types/paperListItem';
 
 const UpdateChecker = () => {
   const appTheme = useTheme();
@@ -122,7 +123,7 @@ const UpdateChecker = () => {
         ? 'Checking for updates...'
         : 'Last check: ' + lastCheck?.toLocaleString() || 'Never checked';
 
-  const renderUpdateIcon = useCallback((props: any) => {
+  const renderUpdateIcon = useCallback((props: ListLRProps) => {
     const updateIcon = isUpdatePending
       ? 'progress-download'
       : 'cloud-download-outline';
@@ -139,7 +140,7 @@ const UpdateChecker = () => {
   }, [appTheme.colors.primary, isUpdatePending]);
 
   const isProcessing = isChecking || isDownloading;
-  const renderActivityIndicator = useCallback((props: any) => (
+  const renderActivityIndicator = useCallback((props: ListLRProps) => (
     isProcessing ? <ActivityIndicator {...props} /> : null
   ), [isProcessing]);
 
