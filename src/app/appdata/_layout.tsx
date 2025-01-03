@@ -1,7 +1,8 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { useNavigation } from '@react-navigation/native';
 import React, { useCallback } from 'react';
-import { Button } from 'react-native-paper';
+import { StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Button } from 'react-native-paper';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
 import LocalStorage from '@/src/app/appdata/localStorage';
@@ -44,7 +45,14 @@ export default function AppDataLayout() {
     <TopTab.Navigator
       backBehavior="none"
       screenListeners={screenListeners}
-      screenOptions={{ lazy: true }}
+      screenOptions={{
+        lazy: true,
+        lazyPlaceholder: () => (
+          <View style={styles.placeholder}>
+            <ActivityIndicator size='large' />
+          </View>
+        )
+      }}
     >
       <TopTab.Screen
         name="reduxState"
@@ -64,3 +72,11 @@ export default function AppDataLayout() {
     </TopTab.Navigator>
   );
 }
+
+const styles = StyleSheet.create({
+  placeholder: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+})
