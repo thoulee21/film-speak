@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { memo, useMemo } from "react";
 
 import { DataList } from "@/src/components/appData/DataList";
 import { store } from "@/src/redux/store";
@@ -18,4 +18,4 @@ const ReduxState = () => {
   return <DataList dataItems={stateList} />;
 };
 
-export default ReduxState;
+export default memo(ReduxState);

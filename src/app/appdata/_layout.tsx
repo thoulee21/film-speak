@@ -1,11 +1,16 @@
-import { Tabs as TopTab, useNavigation } from 'expo-router';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Button, useTheme } from 'react-native-paper';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { useNavigation } from '@react-navigation/native';
+import React, { useCallback } from 'react';
+import { Button } from 'react-native-paper';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import TabBarIcon from '@/src/components/TabBarIcon';
+import LocalStorage from '@/src/app/appdata/localStorage';
+import PackageData from '@/src/app/appdata/packageData';
+import ReduxState from '@/src/app/appdata/reduxState';
 import { formatDataSize } from '@/src/utils/formatDataSize';
 import { reduxStorage } from '@/src/utils/mmkvStorage';
+
+const TopTab = createMaterialTopTabNavigator();
 
 const Actions = ({ routeIndex }: { routeIndex: number }) => {
   return (
@@ -22,87 +27,39 @@ const Actions = ({ routeIndex }: { routeIndex: number }) => {
   );
 };
 
-function AppDataLayout() {
+export default function AppDataLayout() {
   const navigation = useNavigation();
-  const appTheme = useTheme();
 
-  const [routeIndex, setRouteIndex] = useState(0);
-
-  const renderActions = useCallback(() => (
-    <Actions routeIndex={routeIndex} />
-  ), [routeIndex]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: renderActions,
-    });
-  }, [appTheme.colors.background, navigation, renderActions, routeIndex]);
+  const screenListeners = useCallback(() => ({
+    state: ({ data }: { data: any }) => {
+      navigation.setOptions({
+        headerRight: () => (
+          <Actions routeIndex={data.state.index} />
+        ),
+      });
+    }
+  }), [navigation]);
 
   return (
-    <TopTab
+    <TopTab.Navigator
       backBehavior="none"
-      screenOptions={{
-        tabBarPosition: 'left',
-        headerStatusBarHeight: 0,
-        tabBarVariant: 'material',
-        headerShown: false,
-        tabBarStyle: {
-          backgroundColor: appTheme.colors.elevation.level1,
-        }
-      }}
-      screenListeners={() => ({
-        state: ({ data }) => {
-          setRouteIndex(data.state.index);
-        }
-      })}
+      screenListeners={screenListeners}
     >
       <TopTab.Screen
         name="reduxState"
-        options={{
-          title: 'State',
-          tabBarIcon: ({
-            color, size, focused
-          }) => (
-            <TabBarIcon
-              name={focused ? 'view-list' : 'view-list-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
+        component={ReduxState}
+        options={{ title: 'State' }}
       />
       <TopTab.Screen
         name="localStorage"
-        options={{
-          title: 'Storage',
-          tabBarIcon: ({
-            color, size, focused
-          }) => (
-            <TabBarIcon
-              name={focused ? 'database-cog' : 'database-cog-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
+        component={LocalStorage}
+        options={{ title: 'Storage' }}
       />
       <TopTab.Screen
         name="packageData"
-        options={{
-          title: 'Package',
-          tabBarIcon: ({
-            color, size
-          }) => (
-            <TabBarIcon
-              name="package-variant"
-              color={color}
-              size={size}
-            />
-          ),
-        }}
+        component={PackageData}
+        options={{ title: 'Package' }}
       />
-    </TopTab>
+    </TopTab.Navigator>
   );
 }
-
-export default AppDataLayout;
