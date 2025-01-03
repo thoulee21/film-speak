@@ -116,6 +116,8 @@ export default function VideoScreen() {
             dispatch(resetVideoSource());
           }}
           onLayout={SplashScreen.hideAsync}
+          disableOverlay
+          paused
         />
       </View>
 
