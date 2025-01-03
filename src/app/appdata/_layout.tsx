@@ -44,6 +44,7 @@ export default function AppDataLayout() {
     <TopTab.Navigator
       backBehavior="none"
       screenListeners={screenListeners}
+      screenOptions={{ lazy: true }}
     >
       <TopTab.Screen
         name="reduxState"
