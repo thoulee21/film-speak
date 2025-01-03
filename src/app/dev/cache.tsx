@@ -1,11 +1,12 @@
 import * as FileSystem from 'expo-file-system';
 import { useCallback, useEffect, useState } from 'react';
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import { Divider, List } from 'react-native-paper';
+import { Divider, List, useTheme } from 'react-native-paper';
 
 import type ListLRProps from '@/src/types/paperListItem';
 
 export default function CacheScreen() {
+  const appTheme = useTheme();
   const [cacheItems, setCacheItems] = useState<string[]>([]);
 
   useEffect(() => {
@@ -33,8 +34,13 @@ export default function CacheScreen() {
       title={item}
       titleNumberOfLines={2}
       left={renderIcon}
+      style={{
+        backgroundColor: item.endsWith('.wav')
+          ? appTheme.colors.tertiaryContainer
+          : undefined
+      }}
     />
-  ), [renderIcon]);
+  ), [appTheme.colors.tertiaryContainer, renderIcon]);
 
   return (
     <FlatList
