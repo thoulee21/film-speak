@@ -1,27 +1,15 @@
-import { useCallback } from "react";
 import { View } from "react-native";
-import { List } from "react-native-paper";
 
-import ExternalLink from "@/src/components/ExternalLink";
+import ContactMe from "@/src/components/about/ContactMe";
 import VersionItem from "@/src/components/about/VersionItem";
-import type ListLRProps from "@/src/types/paperListItem";
+import UpdateChecker from "@/src/components/settings/UpdateChecker";
 
 export default function AboutScreen() {
-  const renderDocumentIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="file-document-outline" />
-  ), []);
-
   return (
     <View>
       <VersionItem />
-
-      <ExternalLink href="https://docs.expo.dev">
-        <List.Item
-          title="Read the Expo documentation"
-          left={renderDocumentIcon}
-          description="https://docs.expo.dev"
-        />
-      </ExternalLink>
+      <UpdateChecker />
+      <ContactMe />
     </View>
   );
 }
