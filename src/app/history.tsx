@@ -14,6 +14,7 @@ import {
   Avatar,
   Chip,
   Divider,
+  IconButton,
   List,
   Text,
   useTheme
@@ -24,6 +25,7 @@ import {
   useAppSelector
 } from "@/src/hooks/redux";
 import {
+  removeSubtitle,
   selectSubtitles,
   type Subtitle,
 } from "@/src/redux/slices/subtitles";
@@ -57,17 +59,17 @@ export default function Subtitles() {
               style={{ marginTop: 10 }}
               ellipsizeMode={ellipsizeMode}
             >
-              {item.value.length} lines
+              {item.value.length} line(s)
             </Chip>
 
             <Chip
-              icon="file-outline"
+              icon="file-document-outline"
               mode="outlined"
               textStyle={{ color, fontSize }}
               style={{ marginTop: 10, marginLeft: 10 }}
               ellipsizeMode={ellipsizeMode}
             >
-              {item.fileUri.split('.').pop()}
+              {item.fileUri.split('.').pop()?.toLocaleUpperCase()}
             </Chip>
           </View>
         )}
@@ -92,6 +94,16 @@ export default function Subtitles() {
           );
           dispatch(setVideoSource(item.fileUri));
         }}
+        right={(props) => (
+          <IconButton
+            {...props}
+            icon="delete-outline"
+            iconColor={appTheme.colors.error}
+            onPress={() => {
+              dispatch(removeSubtitle(item.fileUri));
+            }}
+          />
+        )}
       />
     );
   };
