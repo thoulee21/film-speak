@@ -8,7 +8,6 @@ import { List, TextInput, useTheme } from "react-native-paper"
 import { useAppDispatch } from "@/src/hooks/redux"
 import { setVideoSource } from "@/src/redux/slices/videoSource"
 import type ListLRProps from "@/src/types/paperListItem"
-import { router } from "expo-router"
 
 export default function TestSourceItem() {
   const dispatch = useAppDispatch()
@@ -23,12 +22,9 @@ export default function TestSourceItem() {
   const commitSource = useCallback(() => {
     if (!showSource) { return; }
 
-    HapticFeedback.trigger(HapticFeedbackTypes.effectClick)
     dispatch(setVideoSource(showSource))
-    router.push("/")
     ToastAndroid.show(
-      "Video source set",
-      ToastAndroid.SHORT
+      "Video source set", ToastAndroid.SHORT
     )
   }, [dispatch, showSource])
 
@@ -54,7 +50,12 @@ export default function TestSourceItem() {
         <TextInput.Icon
           icon="check"
           color={appTheme.colors.primary}
-          onPress={commitSource}
+          onPress={() => {
+            HapticFeedback.trigger(
+              HapticFeedbackTypes.effectHeavyClick
+            )
+            commitSource()
+          }}
         />
       }
     />
