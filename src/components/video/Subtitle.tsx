@@ -27,7 +27,7 @@ import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
   videoFileUri: string;
-  onItemPress: (arg0: Line) => void;
+  onItemPress: (arg0?: Line) => void;
 }
 
 export default function Subtitle({
@@ -121,11 +121,28 @@ export default function Subtitle({
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={
-        <List.Subheader
-          style={{ color: appTheme.colors.primary }}
-        >
-          Subtitle
-        </List.Subheader>
+        <View style={styles.row}>
+          <List.Subheader
+            style={{ color: appTheme.colors.primary }}
+          >
+            Subtitle
+          </List.Subheader>
+
+          {selectedID !== "0" && (
+            <Button
+              icon="stop-circle-outline"
+              onPress={() => {
+                HapticFeedback.trigger(
+                  HapticFeedbackTypes.effectDoubleClick
+                );
+                onItemPress(undefined);
+                setSelectedID("0");
+              }}
+            >
+              Stop looping
+            </Button>
+          )}
+        </View>
       }
       extraData={selectedID}
       contentContainerStyle={styles.container}
@@ -149,5 +166,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingRight: 8,
   }
 })
