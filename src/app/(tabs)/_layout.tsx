@@ -1,10 +1,23 @@
 import { TransitionPresets } from '@react-navigation/bottom-tabs';
 import { CommonActions } from '@react-navigation/native';
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Easing, Pressable, type ColorValue, type StyleProp, type ViewStyle } from 'react-native';
-import { BottomNavigation, TouchableRipple, type TouchableRippleProps } from "react-native-paper";
-import type { BaseRoute } from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
+import { Link, Tabs } from 'expo-router';
+import React, { useCallback } from 'react';
+import {
+  Easing,
+  Pressable,
+  type ColorValue,
+  type StyleProp,
+  type ViewStyle,
+} from 'react-native';
+import {
+  BottomNavigation,
+  IconButton,
+  TouchableRipple,
+  type TouchableRippleProps,
+} from "react-native-paper";
+import type {
+  BaseRoute,
+} from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
 
 import TabBarIcon from '@/src/components/TabBarIcon';
 import { useAppSelector } from '@/src/hooks/redux';
@@ -54,6 +67,19 @@ const Touchable = <Route extends BaseRoute>({
 
 export default function TabLayout() {
   const devModeEnabled = useAppSelector(selectDevMode);
+
+  const renderVideoRight = useCallback(({
+    tintColor
+  }: { tintColor?: string }) => {
+    return (
+      <Link href="/history" asChild>
+        <IconButton
+          icon="history"
+          iconColor={tintColor}
+        />
+      </Link>
+    );
+  }, []);
 
   return (
     <Tabs
@@ -117,6 +143,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: 'Video',
+          headerRight: renderVideoRight,
           tabBarIcon: ({ color, focused, size }) => (
             <TabBarIcon
               name={focused ? 'video' : 'video-outline'}

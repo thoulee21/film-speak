@@ -1,4 +1,3 @@
-import { Link, useNavigation } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import {
   useCallback,
@@ -7,21 +6,9 @@ import {
   useRef,
   useState,
 } from 'react';
-import {
-  StyleSheet,
-  View,
-  type StyleProp,
-  type ViewStyle,
-} from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from "react-native-haptic-feedback";
+import { StyleSheet, View } from 'react-native';
 import Video from 'react-native-media-console';
-import {
-  Button,
-  IconButton,
-  useTheme
-} from 'react-native-paper';
+import { useTheme } from 'react-native-paper';
 import ShareMenu, {
   type ShareCallback,
   type ShareData,
@@ -33,17 +20,11 @@ import Subtitle from '@/src/components/Subtitle';
 import VIDEO_SOURCE from '@/src/constants/video-source';
 
 export default function VideoScreen() {
-  const navigation = useNavigation();
   const player = useRef<VideoRef>(null);
   const appTheme = useTheme();
 
   const [sharedItem, setSharedItem] = useState<ShareData>();
   const [clip, setClip] = useState<Line>();
-  const [generateSubtitle, setGenerateSubtitle] = useState(false);
-
-  const toggleGenerateSubtitle = useCallback(() => {
-    setGenerateSubtitle(prev => !prev);
-  }, []);
 
   const source = useMemo(() => (
     sharedItem
@@ -52,41 +33,6 @@ export default function VideoScreen() {
         : sharedItem.data
       : VIDEO_SOURCE
   ), [sharedItem]);
-
-  const renderHeaderRight = useCallback(({
-    tintColor, style
-  }: {
-    tintColor: string,
-    style: StyleProp<ViewStyle>
-  }) => {
-    return (
-      <View style={{ flexDirection: 'row' }}>
-        <Link href="/history" asChild>
-          <IconButton
-            icon="history"
-            style={style}
-            iconColor={tintColor}
-          />
-        </Link>
-
-        <IconButton
-          icon={generateSubtitle ? 'subtitles' : 'subtitles-outline'}
-          selected={generateSubtitle}
-          style={style}
-          onPress={() => {
-            HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
-            toggleGenerateSubtitle();
-          }}
-        />
-      </View>
-    );
-  }, [generateSubtitle, toggleGenerateSubtitle]);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerRight: renderHeaderRight,
-    });
-  }, [generateSubtitle, navigation, renderHeaderRight, source])
 
   const handleShare: ShareCallback = useCallback(async (
     item
@@ -156,25 +102,17 @@ export default function VideoScreen() {
           onError={(error) => {
             console.error('Video error:', error);
           }}
-          onReadyForDisplay={SplashScreen.hideAsync}
+          onLayout={SplashScreen.hideAsync}
         />
       </View>
 
-      {generateSubtitle ? (
-        <Subtitle
-          videoFileUri={source}
-          onItemPress={(item) => {
-            setClip(item);
-            player.current?.resume();
-          }}
-        />
-      ) : (
-        <View style={styles.placeholderContainer}>
-          <Button icon='subtitles'>
-            Subtitle will be generated here
-          </Button>
-        </View>
-      )}
+      <Subtitle
+        videoFileUri={source}
+        onItemPress={(item) => {
+          setClip(item);
+          player.current?.resume();
+        }}
+      />
     </View>
   );
 }
@@ -185,11 +123,6 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     width: "100%",
-    height: 260,
-  },
-  placeholderContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    height: 245,
   },
 });
