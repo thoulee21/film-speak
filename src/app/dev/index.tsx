@@ -5,6 +5,7 @@ import { Divider, List, useTheme } from "react-native-paper";
 
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
+import TestSourceItem from "@/src/components/dev/TestSourceItem";
 import ExternalLink from "@/src/components/ExternalLink";
 import type ListLRProps from "@/src/types/paperListItem";
 
@@ -80,6 +81,7 @@ export default function DevScreen() {
         titleStyle={{ color: appTheme.colors.primary }}
       >
         <RouteItem />
+        <TestSourceItem />
       </List.Section>
     </ScrollView>
   );
