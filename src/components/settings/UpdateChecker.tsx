@@ -161,9 +161,9 @@ const UpdateChecker = () => {
           visible={dialogVisible}
           onDismiss={hideUpdateDialog}
         >
-          <Dialog.Icon icon="information" size={40} />
+          <Dialog.Icon icon="information-outline" size={40} />
           <Dialog.Title>
-            New update available
+            Update available
           </Dialog.Title>
 
           <Dialog.Content>
