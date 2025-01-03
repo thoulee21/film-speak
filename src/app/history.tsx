@@ -1,4 +1,5 @@
 import Clipboard from "@react-native-clipboard/clipboard";
+import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import {
   FlatList,
@@ -80,10 +81,10 @@ export default function Subtitles() {
             : undefined
         }}
         onPress={() => {
-          HapticFeedback.trigger(
-            HapticFeedbackTypes.effectClick
-          );
+          HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+
           dispatch(setVideoSource(item.fileUri));
+          router.back();
         }}
         onLongPress={() => {
           HapticFeedback.trigger(
