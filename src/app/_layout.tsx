@@ -9,13 +9,14 @@ import {
 } from '@react-navigation/stack';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect } from 'react';
+import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import {
   MD3DarkTheme,
   MD3LightTheme,
   PaperProvider,
   adaptNavigationTheme,
+  useTheme,
 } from 'react-native-paper';
 import 'react-native-reanimated';
 import { Provider as ReduxProvider } from 'react-redux';
@@ -38,48 +39,49 @@ export const unstable_settings = {
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
+  const appTheme = useTheme();
   return (
-    <Stack screenOptions={{
-      ...TransitionPresets.SlideFromRightIOS,
-      headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
-      headerBackButtonDisplayMode: 'default',
-      headerMode: 'float',
-      gestureEnabled: true,
-      freezeOnBlur: true,
-      headerTitleAlign: 'center',
+    <View style={{
+      flex: 1,
+      backgroundColor: appTheme.colors.background,
     }}>
-      <Stack.Screen name="(tabs)" options={{
-        headerShown: false,
-        headerTitle: 'Home',
-      }} />
-      <Stack.Screen name="history" options={{
-        ...TransitionPresets.ModalPresentationIOS,
-        headerShown: false,
-      }} />
-      <Stack.Screen name="dev/index" options={{
-        headerTitle: 'Developer Options',
-      }} />
-      <Stack.Screen name="about" options={{
-        headerTitle: 'About',
-      }} />
-      <Stack.Screen name="appdata" options={{
-        headerTitle: 'App Data',
-        gestureEnabled: false,
-      }} />
-      <Stack.Screen name="dev/cache" options={{
-        headerTitle: 'Cache',
-      }} />
-    </Stack>
+      <Stack screenOptions={{
+        ...TransitionPresets.SlideFromRightIOS,
+        headerStyleInterpolator: HeaderStyleInterpolators.forUIKit,
+        headerBackButtonDisplayMode: 'default',
+        headerMode: 'float',
+        gestureEnabled: true,
+        freezeOnBlur: true,
+        headerTitleAlign: 'center',
+      }}>
+        <Stack.Screen name="(tabs)" options={{
+          headerShown: false,
+          headerTitle: 'Home',
+        }} />
+        <Stack.Screen name="history" options={{
+          ...TransitionPresets.ModalPresentationIOS,
+          headerShown: false,
+        }} />
+        <Stack.Screen name="dev/index" options={{
+          headerTitle: 'Developer Options',
+        }} />
+        <Stack.Screen name="about" options={{
+          headerTitle: 'About',
+        }} />
+        <Stack.Screen name="appdata" options={{
+          headerTitle: 'App Data',
+          gestureEnabled: false,
+        }} />
+        <Stack.Screen name="dev/cache" options={{
+          headerTitle: 'Cache',
+        }} />
+      </Stack>
+    </View>
   );
 }
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-
-  useEffect(() => {
-    // Hide the splash screen after the loading is complete.
-    SplashScreen.hideAsync();
-  }, []);
 
   const {
     DarkTheme: PaperedDarkTheme,

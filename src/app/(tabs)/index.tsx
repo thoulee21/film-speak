@@ -1,4 +1,5 @@
 import { Link, useNavigation } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import {
   useCallback,
   useEffect,
@@ -156,6 +157,7 @@ export default function VideoScreen() {
           onError={(error) => {
             console.error('Video error:', error);
           }}
+          onReadyForDisplay={SplashScreen.hideAsync}
         />
       </View>
 
