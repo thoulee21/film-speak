@@ -8,7 +8,7 @@ const initialState = {
 };
 
 export const showSubtitleSlice = createSlice({
-  name: StateKeys.showSubtitle,
+  name: StateKeys.ShowSubtitle,
   initialState,
   reducers: {
     toggleShowSubtitle: (state) => {

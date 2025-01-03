@@ -1,7 +1,7 @@
 enum StateKeys {
   DevMode = 'devMode',
   Subtitles = 'subtitles',
-  showSubtitle = 'showSubtitle',
+  ShowSubtitle = 'showSubtitle',
 }
 
 export default StateKeys;
