@@ -1,7 +1,7 @@
 import { Link } from "expo-router";
 import { useCallback } from "react";
 import { View } from "react-native";
-import { List, useTheme } from "react-native-paper";
+import { Divider, List, useTheme } from "react-native-paper";
 
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
@@ -34,12 +34,7 @@ export default function DevScreen() {
   return (
     <View>
       <DevSwitchItem />
-      <List.Section
-        title="Tools"
-        titleStyle={{ color: appTheme.colors.primary }}
-      >
-        <RouteItem />
-      </List.Section>
+      <Divider />
 
       <List.Section
         title="Developer's view"
@@ -60,7 +55,7 @@ export default function DevScreen() {
         <Link href="/dev/cache" asChild>
           <List.Item
             title="Cache"
-            description="View cached files"
+            description="View files and directories that are under the cache directory"
             left={renderCacheIcon}
             right={renderRightIcon}
           />
@@ -74,6 +69,14 @@ export default function DevScreen() {
             right={renderOpenInBrowserIcon}
           />
         </ExternalLink>
+        <Divider />
+      </List.Section>
+
+      <List.Section
+        title="Tools"
+        titleStyle={{ color: appTheme.colors.primary }}
+      >
+        <RouteItem />
       </List.Section>
     </View>
   );
