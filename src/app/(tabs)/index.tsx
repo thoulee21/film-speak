@@ -30,8 +30,7 @@ import { type VideoRef } from 'react-native-video';
 import type { Line } from 'srt-parser-2';
 
 import Subtitle from '@/src/components/Subtitle';
-
-const VIDEO_SOURCE = 'https://media.w3.org/2010/05/sintel/trailer.mp4';
+import VIDEO_SOURCE from '@/src/constants/video-source';
 
 export default function VideoScreen() {
   const navigation = useNavigation();
