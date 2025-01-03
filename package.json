@@ -6,6 +6,7 @@
     "name": "thouLee",
     "email": "thou_lee@outlook.com"
   },
+  "displayName": "Film Speak",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
