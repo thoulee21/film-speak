@@ -18,7 +18,7 @@ const ContactMe = () => {
   return (
     <List.Section
       title="Contact Me"
-      titleStyle={{ color: appTheme.colors.secondary }}
+      titleStyle={{ color: appTheme.colors.primary }}
     >
       <List.Item
         title="Email"

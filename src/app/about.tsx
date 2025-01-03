@@ -1,4 +1,5 @@
 import { View } from "react-native";
+import { Divider } from "react-native-paper";
 
 import ContactMe from "@/src/components/about/ContactMe";
 import CopyrightItem from "@/src/components/about/Copyright";
@@ -10,6 +11,7 @@ export default function AboutScreen() {
     <View>
       <VersionItem />
       <UpdateChecker />
+      <Divider />
 
       <ContactMe />
       <CopyrightItem />
