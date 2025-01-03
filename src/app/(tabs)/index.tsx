@@ -2,53 +2,54 @@ import * as SplashScreen from 'expo-splash-screen';
 import {
   useCallback,
   useEffect,
-  useMemo,
   useRef,
-  useState,
+  useState
 } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, ToastAndroid, View } from 'react-native';
 import Video from 'react-native-media-console';
 import { useTheme } from 'react-native-paper';
 import ShareMenu, {
-  type ShareCallback,
-  type ShareData,
+  type ShareCallback
 } from 'react-native-share-menu';
 import { type VideoRef } from 'react-native-video';
 import type { Line } from 'srt-parser-2';
 
 import Subtitle from '@/src/components/video/Subtitle';
-import VIDEO_SOURCE from '@/src/constants/video-source';
+import {
+  useAppDispatch,
+  useAppSelector,
+} from '@/src/hooks/redux';
+import {
+  resetVideoSource,
+  selectVideoSource,
+  setVideoSource,
+} from '@/src/redux/slices/videoSource';
 
 export default function VideoScreen() {
+  const dispatch = useAppDispatch();
   const player = useRef<VideoRef>(null);
   const appTheme = useTheme();
 
-  const [sharedItem, setSharedItem] = useState<ShareData>();
+  const source = useAppSelector(selectVideoSource);
   const [clip, setClip] = useState<Line>();
-
-  const source = useMemo(() => (
-    sharedItem
-      ? Array.isArray(sharedItem.data)
-        ? sharedItem.data[0]
-        : sharedItem.data
-      : VIDEO_SOURCE
-  ), [sharedItem]);
 
   const handleShare: ShareCallback = useCallback(async (
     item
   ) => {
     if (!item) { return; }
 
-    setSharedItem(item);
+    dispatch(setVideoSource(
+      Array.isArray(item.data) ? item.data[0] : item.data
+    ));
     console.debug('Shared item:', item);
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
-    const shareListener = ShareMenu.addNewShareListener(handleShare);
+    const listener = ShareMenu.addNewShareListener(handleShare);
     ShareMenu.getInitialShare(handleShare);
 
     return () => {
-      shareListener.remove();
+      listener.remove();
     };
   }, [handleShare]);
 
@@ -99,8 +100,20 @@ export default function VideoScreen() {
           //   setFullscreen(false);
           //   navigation.setOptions({ headerShown: true });
           // }}
-          onError={(error) => {
+          onError={({ error }) => {
+            ToastAndroid.showWithGravity(
+              'Video error: ' + error.errorException,
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
             console.error('Video error:', error);
+
+            ToastAndroid.showWithGravity(
+              'Resetting video source ...',
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
+            dispatch(resetVideoSource());
           }}
           onLayout={SplashScreen.hideAsync}
         />

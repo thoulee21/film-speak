@@ -6,6 +6,9 @@ import {
   View,
   type ListRenderItemInfo,
 } from "react-native";
+import HapticFeedback, {
+  HapticFeedbackTypes,
+} from "react-native-haptic-feedback";
 import {
   Appbar,
   Avatar,
@@ -16,15 +19,25 @@ import {
   useTheme
 } from "react-native-paper";
 
-import { useAppSelector } from "@/src/hooks/redux";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "@/src/hooks/redux";
 import {
   selectSubtitles,
   type Subtitle,
 } from "@/src/redux/slices/subtitles";
+import {
+  selectVideoSource,
+  setVideoSource
+} from "@/src/redux/slices/videoSource";
 
 export default function Subtitles() {
+  const dispatch = useAppDispatch();
   const appTheme = useTheme();
+
   const subtitles = useAppSelector(selectSubtitles);
+  const videoSource = useAppSelector(selectVideoSource);
 
   const renderItem = ({
     item
@@ -61,13 +74,24 @@ export default function Subtitles() {
         left={({ style, color }) => (
           <Avatar.Text
             style={[style, {
-              backgroundColor: appTheme.colors.primaryContainer,
+              backgroundColor: appTheme.colors.tertiaryContainer,
             }]}
             labelStyle={{ color }}
             size={40}
             label={item.fileUri[0].toUpperCase()}
           />
         )}
+        style={{
+          backgroundColor: videoSource === item.fileUri
+            ? appTheme.colors.primaryContainer
+            : undefined
+        }}
+        onPress={() => {
+          HapticFeedback.trigger(
+            HapticFeedbackTypes.effectClick
+          );
+          dispatch(setVideoSource(item.fileUri));
+        }}
       />
     );
   };
