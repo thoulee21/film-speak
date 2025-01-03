@@ -56,7 +56,7 @@ function RootLayoutNav() {
         ...TransitionPresets.ModalPresentationIOS,
         headerShown: false,
       }} />
-      <Stack.Screen name="dev" options={{
+      <Stack.Screen name="dev/index" options={{
         headerTitle: 'Developer Options',
       }} />
       <Stack.Screen name="about" options={{
@@ -66,7 +66,7 @@ function RootLayoutNav() {
         headerTitle: 'App Data',
         gestureEnabled: false,
       }} />
-      <Stack.Screen name="cache" options={{
+      <Stack.Screen name="dev/cache" options={{
         headerTitle: 'Cache',
       }} />
     </Stack>

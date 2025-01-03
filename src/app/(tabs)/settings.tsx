@@ -33,10 +33,6 @@ export default function Setting() {
     <List.Icon {...props} icon="information-outline" />
   ), []);
 
-  const renderCacheIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="folder-outline" />
-  ), []);
-
   const checkForUpdate = useCallback(async () => {
     try {
       const update = await checkForUpdateAsync();
@@ -70,15 +66,6 @@ export default function Setting() {
           left={renderUpdateIcon}
           onPress={checkForUpdate}
         />
-
-        <Link href="/cache" asChild>
-          <List.Item
-            title="Cache"
-            description="View cached files"
-            left={renderCacheIcon}
-            right={renderRightIcon}
-          />
-        </Link>
 
         {devModeEnabled && (
           <Link href="/dev" asChild>
