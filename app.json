@@ -41,19 +41,21 @@
         "react-native-video",
         {
           "enableNotificationControls": true,
-          "enableBackgroundAudio": true,
-          "enableADSExtension": false,
+          "enableBackgroundAudio": false,
+          "enableADSExtension": true,
           "enableCacheExtension": false,
           "androidExtensions": {
             "useExoplayerRtsp": true,
             "useExoplayerSmoothStreaming": true,
             "useExoplayerHls": true,
             "useExoplayerDash": true,
-            "useExoplayerIMA": false
+            "useExoplayerIMA": true
           }
         }
       ],
-      "expo-asset"
+      "expo-asset",
+      "./plugin/gradle-properties",
+      "./plugin/android-manifest"
     ],
     "experiments": {
       "typedRoutes": true
