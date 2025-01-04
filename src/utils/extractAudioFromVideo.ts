@@ -18,9 +18,7 @@ export default async function (
 
   // 如果 videoUri 是 content:// URI，则将其转换为 file:// URI
   if (videoUri.startsWith('content://')) {
-    const safUri = await FFmpegKitConfig.getSafParameterForRead(videoUri);
-    videoUri = safUri;
-
+    videoUri = await FFmpegKitConfig.getSafParameterForRead(videoUri);
     console.debug('Selected video URI:', videoUri);
   }
 

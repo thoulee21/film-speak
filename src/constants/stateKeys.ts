@@ -3,6 +3,7 @@ enum StateKeys {
   Subtitles = 'subtitles',
   ShowSubtitle = 'showSubtitle',
   VideoSource = 'videoSource',
+  VolumeFactor = 'volumeFactor',
 }
 
 export default StateKeys;

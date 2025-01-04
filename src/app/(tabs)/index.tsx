@@ -1,11 +1,21 @@
+import * as Crypto from 'expo-crypto';
+import * as FileSystem from 'expo-file-system';
 import * as SplashScreen from 'expo-splash-screen';
+import {
+  FFmpegKit,
+  FFmpegKitConfig,
+} from 'ffmpeg-kit-react-native';
 import {
   useCallback,
   useEffect,
   useRef,
   useState
 } from 'react';
-import { StyleSheet, ToastAndroid, View } from 'react-native';
+import {
+  StyleSheet,
+  ToastAndroid,
+  View,
+} from 'react-native';
 import Video from 'react-native-media-console';
 import { useTheme } from 'react-native-paper';
 import ShareMenu, {
@@ -24,25 +34,41 @@ import {
   selectVideoSource,
   setVideoSource,
 } from '@/src/redux/slices/videoSource';
+import {
+  selectVolumeFactor,
+} from '@/src/redux/slices/volumeFactor';
 
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
   const player = useRef<VideoRef>(null);
   const appTheme = useTheme();
 
+  const volumeFactor = useAppSelector(selectVolumeFactor);
   const source = useAppSelector(selectVideoSource);
   const [clip, setClip] = useState<Line>();
 
   const handleShare: ShareCallback = useCallback(async (
     item
   ) => {
+    console.debug('Shared item:', item);
     if (!item) { return; }
 
-    dispatch(setVideoSource(
-      Array.isArray(item.data) ? item.data[0] : item.data
-    ));
-    console.debug('Shared item:', item);
-  }, [dispatch]);
+    const shareSource = Array.isArray(item.data) ? item.data[0] : item.data;
+    const fileUri = await FFmpegKitConfig.getSafParameterForRead(shareSource);
+
+    const hash = await Crypto.digestStringAsync(
+      Crypto.CryptoDigestAlgorithm.SHA256, shareSource
+    );
+    const destination = `${FileSystem.cacheDirectory}${hash.slice(0, 6)}.mp4`;
+
+    ToastAndroid.show(`Processing video in background ...`, ToastAndroid.LONG);
+    await FFmpegKit.executeAsync(
+      `-y -i ${fileUri} -af "volume=${volumeFactor}" -c:v copy -c:a aac ${destination}`,
+      () => {
+        dispatch(setVideoSource(destination));
+      },
+    );
+  }, [dispatch, volumeFactor]);
 
   useEffect(() => {
     const listener = ShareMenu.addNewShareListener(handleShare);
@@ -118,11 +144,11 @@ export default function VideoScreen() {
           onLayout={SplashScreen.hideAsync}
           disableOverlay
           paused
+          volume={1 / volumeFactor}
         />
       </View>
 
       <Subtitle
-        videoFileUri={source}
         onItemPress={(item) => {
           setClip(item);
           player.current?.resume();

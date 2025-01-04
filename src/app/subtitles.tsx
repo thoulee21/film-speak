@@ -15,10 +15,11 @@ import HapticFeedback, {
 } from "react-native-haptic-feedback";
 import {
   Appbar,
-  Chip,
+  Caption,
   Divider,
   IconButton,
   List,
+  Text,
   useTheme
 } from "react-native-paper";
 import Reanimated, {
@@ -49,95 +50,79 @@ export default function Subtitles() {
 
   const renderItem = ({
     item
-  }: ListRenderItemInfo<Subtitle>) => {
-    return (
-      <List.Item
-        title={item.fileUri}
-        titleNumberOfLines={2}
-        description={({
-          color, fontSize, ellipsizeMode
-        }) => (
-          <View style={styles.chips}>
-            <Chip
-              icon="protocol"
-              mode="outlined"
-              compact
-              textStyle={{ color, fontSize }}
-              style={styles.chip}
-              ellipsizeMode={ellipsizeMode}
-            >
-              {item.fileUri.split(':').shift()}
-            </Chip>
+  }: ListRenderItemInfo<Subtitle>) => (
+    <List.Item
+      title={(props) => (
+        <View style={styles.titleSection}>
+          <Text {...props}>
+            {new Date(item.createAt).toLocaleString()}
+          </Text>
+          <Caption>
+            {item.value.length} line(s)
+          </Caption>
+        </View>
+      )}
+      description={item.fileUri}
+      style={{
+        backgroundColor: videoSource === item.fileUri
+          ? appTheme.colors.secondaryContainer
+          : undefined
+      }}
+      onPress={() => {
+        HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
 
-            <Chip
-              icon="subtitles-outline"
-              mode="outlined"
-              compact
-              textStyle={{ color, fontSize }}
-              style={styles.chip}
-              ellipsizeMode={ellipsizeMode}
-            >
-              {item.value.length} line(s)
-            </Chip>
+        if (videoSource !== item.fileUri) {
+          dispatch(setVideoSource(item.fileUri));
+          router.back();
+        }
+      }}
+      onLongPress={() => {
+        HapticFeedback.trigger(
+          HapticFeedbackTypes.effectHeavyClick
+        );
+        Clipboard.setString(item.fileUri);
 
-            <Chip
-              icon="file-video-outline"
-              mode="outlined"
-              compact
-              textStyle={{ color, fontSize }}
-              style={styles.chip}
-              ellipsizeMode={ellipsizeMode}
-            >
-              {item.fileUri.split('.').pop()}
-            </Chip>
-          </View>
-        )}
-        style={{
-          backgroundColor: videoSource === item.fileUri
-            ? appTheme.colors.secondaryContainer
-            : undefined
-        }}
-        onPress={() => {
-          HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+        ToastAndroid.show(
+          "Copied to clipboard",
+          ToastAndroid.SHORT
+        )
+      }}
+      left={(props) => (
+        <List.Image
+          variant="video"
+          source={{ uri: item.coverUri }}
+          {...props}
+        />
+      )}
+      right={(props) => (
+        <IconButton
+          {...props}
+          icon="delete-forever-outline"
+          disabled={videoSource === item.fileUri}
+          onPress={async () => {
+            HapticFeedback.trigger(
+              HapticFeedbackTypes.effectClick
+            );
+            const fileHash = await Crypto.digestStringAsync(
+              Crypto.CryptoDigestAlgorithm.SHA256,
+              item.fileUri
+            );
+            const file2delete = new File(
+              Paths.cache,
+              `${fileHash.slice(0, 6)}.wav`
+            );
 
-          if (videoSource !== item.fileUri) {
-            dispatch(setVideoSource(item.fileUri));
-            router.back();
-          }
-        }}
-        onLongPress={() => {
-          HapticFeedback.trigger(
-            HapticFeedbackTypes.effectHeavyClick
-          );
-          Clipboard.setString(item.fileUri);
-
-          ToastAndroid.show(
-            "Copied to clipboard",
-            ToastAndroid.SHORT
-          )
-        }}
-        right={(props) => (
-          <IconButton
-            {...props}
-            icon="delete-forever-outline"
-            disabled={videoSource === item.fileUri}
-            onPress={async () => {
-              HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
-              const fileHash = (await Crypto.digestStringAsync(
-                Crypto.CryptoDigestAlgorithm.SHA256,
-                item.fileUri
-              )).slice(0, 6);
-              const file2delete = new File(Paths.cache, `${fileHash}.wav`);
-
-              file2delete.exists && file2delete.delete();
-              dispatch(removeSubtitle(item.fileUri));
-              ToastAndroid.show("Subtitle removed", ToastAndroid.SHORT)
-            }}
-          />
-        )}
-      />
-    );
-  };
+            file2delete.exists && file2delete.delete();
+            dispatch(removeSubtitle(item.fileUri));
+            ToastAndroid.show(
+              "Subtitle removed",
+              ToastAndroid.SHORT
+            );
+          }}
+        />
+      )}
+    />
+  );
 
   return (
     <View style={styles.root}>
@@ -173,11 +158,8 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
-  chips: {
-    marginTop: 5,
+  titleSection: {
     flexDirection: "row",
-  },
-  chip: {
-    marginRight: 4,
+    justifyContent: "space-between",
   }
 })

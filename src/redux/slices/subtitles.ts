@@ -7,6 +7,8 @@ import { RootState } from '@/src/redux/store';
 export interface Subtitle {
   fileUri: string;
   value: Line[];
+  createAt: number;
+  coverUri: string;
 }
 
 const initialState = {
@@ -17,15 +19,15 @@ export const subtitlesSlice = createSlice({
   name: StateKeys.Subtitles,
   initialState,
   reducers: {
-    setSubtitles: (state) => {
-      state.value = state.value;
+    setSubtitles: (state, action: { payload: Subtitle[] }) => {
+      state.value = action.payload;
     },
 
-    addSubtitle: (state, action) => {
+    addSubtitle: (state, action: { payload: Subtitle }) => {
       state.value.push(action.payload);
     },
 
-    removeSubtitle: (state, action) => {
+    removeSubtitle: (state, action: { payload: string }) => {
       state.value = state.value.filter(
         (subtitle) => subtitle.fileUri !== action.payload
       );
@@ -35,7 +37,7 @@ export const subtitlesSlice = createSlice({
       state.value = [];
     },
 
-    updateSubtitle: (state, action) => {
+    updateSubtitle: (state, action: { payload: Subtitle }) => {
       const index = state.value.findIndex(
         (subtitle) => subtitle.fileUri === action.payload.fileUri
       );

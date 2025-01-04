@@ -1,4 +1,10 @@
-import type { FFmpegSession } from "ffmpeg-kit-react-native";
+import * as Crypto from "expo-crypto";
+import { cacheDirectory } from "expo-file-system";
+import { File, Paths } from "expo-file-system/next";
+import {
+  FFmpegKit,
+  type FFmpegSession,
+} from "ffmpeg-kit-react-native";
 import { useCallback, useMemo, useState } from "react";
 import {
   FlatList,
@@ -23,21 +29,21 @@ import LottieAnimation from "@/src/components/LottieAnimation";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { selectShowSubtitle } from "@/src/redux/slices/showSubtitle";
 import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
+import { selectVideoSource } from "@/src/redux/slices/videoSource";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
-  videoFileUri: string;
   onItemPress: (arg0?: Line) => void;
 }
 
 export default function Subtitle({
-  videoFileUri,
   onItemPress
 }: SubtitleProps) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
 
+  const videoFileUri = useAppSelector(selectVideoSource);
   const subtitles = useAppSelector(selectSubtitles);
   const showSubtitle = useAppSelector(selectShowSubtitle);
   const [selectedID, setSelectedID] = useState("0");
@@ -47,12 +53,34 @@ export default function Subtitle({
       subtitle.fileUri === videoFileUri
     )?.value;
 
-    const save = (lines: Line[]) => {
-      dispatch(addSubtitle({
-        fileUri: videoFileUri,
-        value: lines
-      }));
+    const save = async (lines: Line[]) => {
       subtitleValue = lines;
+
+      const uriHash = await Crypto.digestStringAsync(
+        Crypto.CryptoDigestAlgorithm.SHA256,
+        videoFileUri
+      );
+      const coverFile = new File(
+        Paths.cache,
+        `cover_${uriHash.slice(0, 6)}_001.jpg`
+      );
+
+      const saveSubtitleMetadata = () => {
+        const subtitleMatedata = {
+          fileUri: videoFileUri,
+          value: lines,
+          createAt: Date.now(),
+          coverUri: coverFile.uri
+        };
+
+        dispatch(addSubtitle(subtitleMatedata));
+      }
+
+      const outputPattern = `${cacheDirectory}cover_${uriHash.slice(0, 6)}_%03d.jpg`;
+      await FFmpegKit.executeAsync(
+        `-i ${videoFileUri} -y -f image2 -frames 1 ${outputPattern}`,
+        saveSubtitleMetadata
+      )
     }
 
     const generateSubtitle = (
@@ -122,7 +150,10 @@ export default function Subtitle({
       renderItem={renderItem}
       ItemSeparatorComponent={Divider}
       ListHeaderComponent={
-        <View style={styles.row}>
+        <View style={[
+          styles.row,
+          { backgroundColor: appTheme.colors.background }
+        ]}>
           <List.Subheader
             style={{ color: appTheme.colors.primary }}
           >
@@ -145,6 +176,7 @@ export default function Subtitle({
           )}
         </View>
       }
+      stickyHeaderIndices={[0]}
       extraData={selectedID}
       contentContainerStyle={styles.container}
       keyExtractor={(item) => item.id}
