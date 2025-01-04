@@ -4,6 +4,7 @@
         "Exoplayer",
         "mmkv",
         "myapp",
-        "Rtsp"
+        "Rtsp",
+        "temurin"
     ]
 }
