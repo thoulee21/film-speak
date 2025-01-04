@@ -19,6 +19,7 @@ import {
 } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
+import LottieAnimation from "@/src/components/LottieAnimation";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { selectShowSubtitle } from "@/src/redux/slices/showSubtitle";
 import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
@@ -148,11 +149,10 @@ export default function Subtitle({
       contentContainerStyle={styles.container}
       keyExtractor={(item) => item.id}
       ListEmptyComponent={
-        <View style={styles.loadingView}>
-          <Button loading>
-            Generating Subtitle...
-          </Button>
-        </View>
+        <LottieAnimation
+          animation="stackLoading"
+          caption="Generating subtitle..."
+        />
       }
     />
   );
@@ -161,11 +161,6 @@ export default function Subtitle({
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
-  },
-  loadingView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
   },
   row: {
     flexDirection: 'row',
