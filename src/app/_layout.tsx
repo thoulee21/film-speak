@@ -58,7 +58,7 @@ function RootLayoutNav() {
           headerShown: false,
           headerTitle: 'Home',
         }} />
-        <Stack.Screen name="history" options={{
+        <Stack.Screen name="subtitles" options={{
           ...TransitionPresets.ModalPresentationIOS,
           headerShown: false,
         }} />

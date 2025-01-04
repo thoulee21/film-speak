@@ -26,7 +26,6 @@ import Reanimated, {
 } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
-import VIDEO_SOURCE from "@/src/constants/video-source";
 import {
   useAppDispatch,
   useAppSelector
@@ -101,8 +100,10 @@ export default function Subtitles() {
         onPress={() => {
           HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
 
-          dispatch(setVideoSource(item.fileUri));
-          router.back();
+          if (videoSource !== item.fileUri) {
+            dispatch(setVideoSource(item.fileUri));
+            router.back();
+          }
         }}
         onLongPress={() => {
           HapticFeedback.trigger(
@@ -118,7 +119,8 @@ export default function Subtitles() {
         right={(props) => (
           <IconButton
             {...props}
-            icon="delete-outline"
+            icon="delete-forever-outline"
+            disabled={videoSource === item.fileUri}
             onPress={async () => {
               HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
               const fileHash = (await Crypto.digestStringAsync(
@@ -146,22 +148,19 @@ export default function Subtitles() {
         statusBarHeight={0}
         elevated
       >
-        <Appbar.Content title="History" />
+        <Appbar.Content title="Subtitles" />
         <Appbar.Action icon="drag" />
       </Appbar.Header>
 
       <Reanimated.FlatList
-        data={subtitles.filter(
-          (subtitle) =>
-            subtitle.fileUri !== VIDEO_SOURCE
-        )}
+        data={subtitles}
         renderItem={renderItem}
         ItemSeparatorComponent={Divider}
         contentContainerStyle={{ flexGrow: 1 }}
         ListEmptyComponent={
           <LottieAnimation
             animation="teapot"
-            caption="No history subtitles found"
+            caption="No subtitles found"
           />
         }
         itemLayoutAnimation={LinearTransition}

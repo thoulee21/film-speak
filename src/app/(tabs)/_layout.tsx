@@ -72,9 +72,9 @@ export default function TabLayout() {
     tintColor
   }: { tintColor?: string }) => {
     return (
-      <Link href="/history" asChild>
+      <Link href="/subtitles" asChild>
         <IconButton
-          icon="history"
+          icon="subtitles-outline"
           iconColor={tintColor}
         />
       </Link>
