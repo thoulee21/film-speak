@@ -1,8 +1,9 @@
 import Clipboard from "@react-native-clipboard/clipboard";
+import * as Crypto from "expo-crypto";
+import { File, Paths } from "expo-file-system/next";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import {
-  FlatList,
   Platform,
   StyleSheet,
   ToastAndroid,
@@ -21,7 +22,11 @@ import {
   Text,
   useTheme
 } from "react-native-paper";
+import Reanimated, {
+  LinearTransition,
+} from 'react-native-reanimated';
 
+import VIDEO_SOURCE from "@/src/constants/video-source";
 import {
   useAppDispatch,
   useAppSelector
@@ -49,29 +54,42 @@ export default function Subtitles() {
     return (
       <List.Item
         title={item.fileUri}
-        titleNumberOfLines={5}
+        titleNumberOfLines={2}
         description={({
           color, fontSize, ellipsizeMode
         }) => (
-          <View style={{ flexDirection: "row" }}>
+          <View style={styles.chips}>
+            <Chip
+              icon="protocol"
+              mode="outlined"
+              compact
+              textStyle={{ color, fontSize }}
+              style={styles.chip}
+              ellipsizeMode={ellipsizeMode}
+            >
+              {item.fileUri.split(':').shift()}
+            </Chip>
+
             <Chip
               icon="subtitles-outline"
               mode="outlined"
+              compact
               textStyle={{ color, fontSize }}
-              style={{ marginTop: 10 }}
+              style={styles.chip}
               ellipsizeMode={ellipsizeMode}
             >
               {item.value.length} line(s)
             </Chip>
 
             <Chip
-              icon="file-document-outline"
+              icon="file-video-outline"
               mode="outlined"
+              compact
               textStyle={{ color, fontSize }}
-              style={{ marginTop: 10, marginLeft: 10 }}
+              style={styles.chip}
               ellipsizeMode={ellipsizeMode}
             >
-              {item.fileUri.split('.').pop()?.toLocaleUpperCase()}
+              {item.fileUri.split('.').pop()}
             </Chip>
           </View>
         )}
@@ -101,8 +119,17 @@ export default function Subtitles() {
           <IconButton
             {...props}
             icon="delete-outline"
-            onPress={() => {
+            onPress={async () => {
+              HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+              const fileHash = (await Crypto.digestStringAsync(
+                Crypto.CryptoDigestAlgorithm.SHA256,
+                item.fileUri
+              )).slice(0, 6);
+              const file2delete = new File(Paths.cache, `${fileHash}.wav`);
+
+              file2delete.exists && file2delete.delete();
               dispatch(removeSubtitle(item.fileUri));
+              ToastAndroid.show("Subtitle removed", ToastAndroid.SHORT)
             }}
           />
         )}
@@ -123,8 +150,11 @@ export default function Subtitles() {
         <Appbar.Action icon="drag" />
       </Appbar.Header>
 
-      <FlatList
-        data={subtitles}
+      <Reanimated.FlatList
+        data={subtitles.filter(
+          (subtitle) =>
+            subtitle.fileUri !== VIDEO_SOURCE
+        )}
         renderItem={renderItem}
         ItemSeparatorComponent={Divider}
         contentContainerStyle={{ flexGrow: 1 }}
@@ -135,6 +165,7 @@ export default function Subtitles() {
             </Text>
           </View>
         }
+        itemLayoutAnimation={LinearTransition}
       />
     </View>
   );
@@ -148,5 +179,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center"
+  },
+  chips: {
+    marginTop: 5,
+    flexDirection: "row",
+  },
+  chip: {
+    marginRight: 4,
   }
 })
