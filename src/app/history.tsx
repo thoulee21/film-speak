@@ -161,7 +161,7 @@ export default function Subtitles() {
         ListEmptyComponent={
           <LottieAnimation
             animation="teapot"
-            caption="No subtitles found"
+            caption="No history subtitles found"
           />
         }
         itemLayoutAnimation={LinearTransition}
@@ -173,11 +173,6 @@ export default function Subtitles() {
 const styles = StyleSheet.create({
   root: {
     flex: 1,
-  },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center"
   },
   chips: {
     marginTop: 5,
