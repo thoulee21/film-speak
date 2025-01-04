@@ -186,6 +186,10 @@ export default function Subtitle({
           caption="Generating subtitle..."
         />
       }
+      // 避免字幕项被 FAB 遮挡
+      ListFooterComponent={
+        <View style={{ height: 100 }} />
+      }
     />
   );
 };

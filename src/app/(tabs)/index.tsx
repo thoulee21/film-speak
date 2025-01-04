@@ -18,6 +18,9 @@ import {
 } from 'react-native';
 import Video from 'react-native-media-console';
 import { useTheme } from 'react-native-paper';
+import {
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import ShareMenu, {
   type ShareCallback
 } from 'react-native-share-menu';
@@ -41,6 +44,7 @@ import {
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
   const player = useRef<VideoRef>(null);
+  const insets = useSafeAreaInsets();
   const appTheme = useTheme();
 
   const volumeFactor = useAppSelector(selectVolumeFactor);
@@ -80,7 +84,10 @@ export default function VideoScreen() {
   }, [handleShare]);
 
   return (
-    <View style={styles.root}>
+    <View style={[
+      styles.root,
+      { paddingTop: insets.top }
+    ]}>
       <View style={styles.videoContainer}>
         <Video
           videoRef={player}
@@ -164,6 +171,6 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     width: "100%",
-    height: "30%",
+    height: "35%",
   },
 });
