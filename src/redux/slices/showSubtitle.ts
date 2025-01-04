@@ -4,7 +4,7 @@ import StateKeys from '@/src/constants/stateKeys';
 import { RootState } from '@/src/redux/store';
 
 const initialState = {
-  value: false,
+  value: __DEV__,
 };
 
 export const showSubtitleSlice = createSlice({
