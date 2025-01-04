@@ -65,7 +65,8 @@
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
-    "srt-parser-2": "^1.2.3"
+    "srt-parser-2": "^1.2.3",
+    "lottie-react-native": "7.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

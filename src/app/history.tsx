@@ -19,13 +19,13 @@ import {
   Divider,
   IconButton,
   List,
-  Text,
   useTheme
 } from "react-native-paper";
 import Reanimated, {
   LinearTransition,
 } from 'react-native-reanimated';
 
+import LottieAnimation from "@/src/components/LottieAnimation";
 import VIDEO_SOURCE from "@/src/constants/video-source";
 import {
   useAppDispatch,
@@ -159,11 +159,10 @@ export default function Subtitles() {
         ItemSeparatorComponent={Divider}
         contentContainerStyle={{ flexGrow: 1 }}
         ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text variant="bodyLarge">
-              No subtitles found
-            </Text>
-          </View>
+          <LottieAnimation
+            animation="teapot"
+            caption="No subtitles found"
+          />
         }
         itemLayoutAnimation={LinearTransition}
       />
