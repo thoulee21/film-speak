@@ -2,9 +2,11 @@ name: Release
 
 on:
   pull_request: 
+  
   push:
     tags:
       - 'v*'
+  
   workflow_dispatch:
     inputs:
       tag:
@@ -23,6 +25,12 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v4
 
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Generate android/
+        run: npx expo prebuild
+
       - name: Setup Java JDK 17 
       # 需要 Java 17 才能编译 apk, 
       # 且默认情况下该环境（ubuntu-latest）只有 Java 11
@@ -32,12 +40,8 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      - name: Install Dependencies
-        run: npm install
-          
       - name: Build Android Release
         run: |
-          npx expo prebuild
           cd android
           chmod +x ./gradlew
           ./gradlew assembleRelease
