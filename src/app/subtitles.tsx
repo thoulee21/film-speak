@@ -98,6 +98,7 @@ export default function Subtitles() {
         <IconButton
           {...props}
           icon="delete-forever-outline"
+          iconColor={appTheme.colors.error}
           disabled={videoSource === item.fileUri}
           onPress={async () => {
             HapticFeedback.trigger(
