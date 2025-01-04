@@ -2,15 +2,58 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "npm",
-			"script": "build:android",
+			"type": "shell",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
+			"dependsOn": [
+				"clean: build:android",
+				"eslint: lint"
+			],
 			"problemMatcher": [],
-			"label": "npm: build:android",
-			"detail": "cd android && .\\gradlew assembleRelease"
+			"label": "shell: build:android",
+			"detail": ".\\gradlew assembleRelease",
+			"windows": {
+				"command": "cd android && .\\gradlew assembleRelease",
+			}
+		},
+		{
+			"type": "shell",
+			"problemMatcher": [],
+			"label": "clean: build:android",
+			"detail": "rm -Recurse -Force .\\app\\.cxx && .\\gradlew clean",
+			"windows": {
+				"command": "cd android && rm -Recurse -Force .\\app\\.cxx && .\\gradlew clean",
+			}
+		},
+		{
+			"type": "eslint",
+			"problemMatcher": [
+				"$eslint-stylish"
+			],
+			"label": "eslint: lint",
+			"detail": "eslint . --ext .js,.jsx,.ts,.tsx",
+			"options": {
+				"cwd": "${workspaceFolder}"
+			}
+		},
+		{
+			"type": "npm",
+			"script": "test",
+			"problemMatcher": [],
+			"label": "npm: test",
+			"detail": "npx jest --watchAll",
+			"group": {
+				"kind": "test",
+				"isDefault": true
+			},
+			"options": {
+				"cwd": "${workspaceFolder}"
+			},
+			"dependsOn": [
+				"eslint: lint"
+			],
 		}
 	]
 }
