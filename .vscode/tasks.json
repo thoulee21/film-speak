@@ -2,29 +2,27 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"type": "shell",
+			"type": "npm",
+			"script": "build:android",
 			"group": {
 				"kind": "build",
 				"isDefault": true
 			},
 			"dependsOn": [
-				"clean: build:android",
-				"eslint: lint"
+				"eslint: lint",
+				"clean: build:android"
 			],
 			"problemMatcher": [],
-			"label": "shell: build:android",
-			"detail": ".\\gradlew assembleRelease",
-			"windows": {
-				"command": "cd android && .\\gradlew assembleRelease",
-			}
+			"label": "npm: build:android",
+			"detail": "cd android && .\\gradlew assembleRelease"
 		},
 		{
 			"type": "shell",
 			"problemMatcher": [],
 			"label": "clean: build:android",
-			"detail": "rm -Recurse -Force .\\app\\.cxx && .\\gradlew clean",
+			"detail": "rm -rf .\\android\\app\\.cxx",
 			"windows": {
-				"command": "cd android && rm -Recurse -Force .\\app\\.cxx && .\\gradlew clean",
+				"command": "rm -Recurse -Force .\\android\\app\\.cxx",
 			}
 		},
 		{
