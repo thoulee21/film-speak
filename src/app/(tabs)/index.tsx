@@ -37,6 +37,7 @@ import {
   selectVideoSource,
   setVideoSource,
 } from '@/src/redux/slices/videoSource';
+import { selectVolume, setVolume } from '@/src/redux/slices/volume';
 import {
   selectVolumeFactor,
 } from '@/src/redux/slices/volumeFactor';
@@ -47,6 +48,7 @@ export default function VideoScreen() {
   const insets = useSafeAreaInsets();
   const appTheme = useTheme();
 
+  const volume = useAppSelector(selectVolume);
   const volumeFactor = useAppSelector(selectVolumeFactor);
   const source = useAppSelector(selectVideoSource);
   const [clip, setClip] = useState<Line>();
@@ -151,7 +153,11 @@ export default function VideoScreen() {
           onLayout={SplashScreen.hideAsync}
           disableOverlay
           paused
-          volume={1 / volumeFactor}
+          // if volume is unset(-1), play at original volume
+          volume={volume === -1 ? (1 / volumeFactor) : volume}
+          onVolumeChange={({ volume }) => {
+            dispatch(setVolume(volume));
+          }}
         />
       </View>
 

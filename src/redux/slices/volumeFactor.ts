@@ -20,6 +20,6 @@ export const volumeFactorSlice = createSlice({
   },
 });
 
-export const { setVolumeFactor } = volumeFactorSlice.actions;
+export const { setVolumeFactor, resetVolumeFactor } = volumeFactorSlice.actions;
 
 export const selectVolumeFactor = (state: RootState) => state.volumeFactor.value;

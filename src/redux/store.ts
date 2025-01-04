@@ -11,6 +11,7 @@ import { MMKVStorage } from '@/src/utils/mmkvStorage';
 import { showSubtitleSlice } from './slices/showSubtitle';
 import { subtitlesSlice } from './slices/subtitles';
 import { videoSourceSlice } from './slices/videoSource';
+import { volumeSlice } from './slices/volume';
 import { volumeFactorSlice } from './slices/volumeFactor';
 
 const rootReducers = combineReducers({
@@ -19,6 +20,7 @@ const rootReducers = combineReducers({
   showSubtitle: showSubtitleSlice.reducer,
   videoSource: videoSourceSlice.reducer,
   volumeFactor: volumeFactorSlice.reducer,
+  volume: volumeSlice.reducer,
 });
 
 const persistedReducer = persistReducer(
