@@ -2,6 +2,13 @@ import * as Crypto from "expo-crypto";
 import * as FileSystem from "expo-file-system";
 import { FFmpegKit, FFmpegKitConfig } from "ffmpeg-kit-react-native";
 
+/**
+ * @param fileSource 视频文件路径
+ * @param volumeFactor 音量增幅
+ * @param onComplete 完成回调
+ * @returns void
+ * @description 增幅音量+缓存视频
+ **/
 const handleInputVideo = async (
   fileSource: string,
   volumeFactor: number,
