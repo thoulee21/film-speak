@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { StyleSheet, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import HapticFeedback, {
   HapticFeedbackTypes,
 } from "react-native-haptic-feedback";
@@ -89,7 +89,6 @@ const SubtitleItem = ({
     <List.Item
       title={renderTitleSection}
       description={showSubtitle && item.text.trim()}
-      descriptionNumberOfLines={3}
       style={{
         backgroundColor: selectedID === item.id
           ? appTheme.colors.secondaryContainer
@@ -101,6 +100,12 @@ const SubtitleItem = ({
           HapticFeedbackTypes.effectDoubleClick
         );
         toggleSelected();
+      }}
+      onLongPress={() => {
+        HapticFeedback.trigger(
+          HapticFeedbackTypes.effectClick
+        );
+        Alert.alert("Subtitle", item.text)
       }}
     />
   )
