@@ -1,7 +1,7 @@
 import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
-import { Divider, List, useTheme } from 'react-native-paper';
+import { ScrollView, StyleSheet, ToastAndroid } from 'react-native';
+import { Divider, IconButton, List, useTheme } from 'react-native-paper';
 
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
@@ -28,6 +28,15 @@ export default function Setting() {
     <List.Icon {...props} icon="folder-outline" />
   ), []);
 
+  const renderExploreIconButton = useCallback((props: ListLRProps) => (
+    <IconButton
+      {...props}
+      icon="file-eye-outline"
+      mode='contained'
+      onPress={() => router.push('/dev/cache')}
+    />
+  ), []);
+
   return (
     <ScrollView style={styles.container}>
       <List.Section>
@@ -37,14 +46,13 @@ export default function Setting() {
           title="Cache"
           description="View and manage cached data"
           left={renderCacheIcon}
-          right={renderRightIcon}
+          right={!devModeEnabled ? renderRightIcon : renderExploreIconButton}
           onPress={() => {
             router.push('/subtitles');
-          }}
-          onLongPress={() => {
-            if (devModeEnabled) {
-              router.push('/dev/cache');
-            }
+            ToastAndroid.show(
+              'Remove history subtitles to clean cached files',
+              ToastAndroid.LONG
+            )
           }}
         />
 
