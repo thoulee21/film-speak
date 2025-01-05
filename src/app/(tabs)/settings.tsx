@@ -52,10 +52,16 @@ export default function Setting() {
       >
         <ShowSubtitleSwitchItem />
         <VolumeSlider />
+
         <Divider />
       </List.Section>
 
-      <List.Section>
+      <List.Section
+        title="Advanced"
+        titleStyle={{
+          color: appTheme.colors.primary
+        }}
+      >
         <Link href="/videoEnhance" asChild>
           <List.Item
             title="Video Enhancement"

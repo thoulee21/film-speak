@@ -29,7 +29,7 @@ export default function VolumeSlider() {
   ), []);
 
   return (
-    <View>
+    <View style={styles.item}>
       <List.Item
         title={({
           color, ellipsizeMode, fontSize, selectable
@@ -54,7 +54,6 @@ export default function VolumeSlider() {
         right={({ style }) => (
           <IconButton
             icon="refresh"
-            mode="contained"
             style={style}
             onPress={() => dispatch(resetVolume())}
           />
@@ -95,6 +94,9 @@ export default function VolumeSlider() {
 }
 
 const styles = StyleSheet.create({
+  item: {
+    marginBottom: 15,
+  },
   title: {
     flexDirection: 'row',
     justifyContent: 'space-between',
