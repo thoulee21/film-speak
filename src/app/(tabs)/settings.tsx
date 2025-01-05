@@ -1,4 +1,4 @@
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, List, useTheme } from 'react-native-paper';
@@ -24,10 +24,30 @@ export default function Setting() {
     <List.Icon {...props} icon="information-outline" />
   ), []);
 
+  const renderCacheIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="folder-outline" />
+  ), []);
+
   return (
     <ScrollView style={styles.container}>
       <List.Section>
         <ShowSubtitleSwitchItem />
+
+        <List.Item
+          title="Cache"
+          description="View and manage cached data"
+          left={renderCacheIcon}
+          right={renderRightIcon}
+          onPress={() => {
+            router.push('/subtitles');
+          }}
+          onLongPress={() => {
+            if (devModeEnabled) {
+              router.push('/dev/cache');
+            }
+          }}
+        />
+
         <Divider />
       </List.Section>
 
