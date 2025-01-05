@@ -7,14 +7,15 @@ import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedbac
 import { Avatar, Button, Caption, Card, Text, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
+import { selectDevMode } from "@/src/redux/slices/devMode";
 import { removeSubtitle, type Subtitle } from "@/src/redux/slices/subtitles";
 import { selectVideoSource, setVideoSource } from "@/src/redux/slices/videoSource";
-
 
 export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
 
+  const devMode = useAppSelector(selectDevMode);
   const videoSource = useAppSelector(selectVideoSource);
   const selected = videoSource === item.fileUri;
 
@@ -96,7 +97,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
         )}
       />
       <Card.Content>
-        <Text>{item.fileUri}</Text>
+        {devMode && <Text>{item.fileUri}</Text>}
       </Card.Content>
 
       <Card.Actions>
