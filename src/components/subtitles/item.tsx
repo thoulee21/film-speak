@@ -51,15 +51,18 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       Paths.cache,
       `${fileHash.slice(0, 6)}.wav`
     );
+    const coverFile = new File(item.coverUri);
 
     wavFile.exists && wavFile.delete();
+    coverFile.exists && coverFile.delete();
+
     dispatch(removeSubtitle(item.fileUri));
 
     ToastAndroid.show(
       "Subtitle removed",
       ToastAndroid.SHORT
     );
-  }, [dispatch, item.fileUri]);
+  }, [dispatch, item.coverUri, item.fileUri]);
 
   return (
     <Card
