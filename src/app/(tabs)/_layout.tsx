@@ -1,77 +1,32 @@
-import { TransitionPresets } from '@react-navigation/bottom-tabs';
-import { CommonActions } from '@react-navigation/native';
-import { router, Tabs } from 'expo-router';
-import React from 'react';
 import {
-  Easing,
-  Pressable,
-  StyleSheet,
-  type ColorValue,
-  type StyleProp,
-  type ViewStyle
-} from 'react-native';
+  TransitionPresets,
+  type BottomTabBarProps,
+} from '@react-navigation/bottom-tabs';
+import { router, Tabs } from 'expo-router';
+import React, { useCallback } from 'react';
+import { StyleSheet } from 'react-native';
 import HapticFeedback, {
   HapticFeedbackTypes,
 } from 'react-native-haptic-feedback';
-import {
-  BottomNavigation,
-  FAB,
-  Portal,
-  TouchableRipple,
-  type TouchableRippleProps
-} from "react-native-paper";
-import type {
-  BaseRoute,
-} from "react-native-paper/lib/typescript/components/BottomNavigation/BottomNavigation";
+import { FAB, Portal } from "react-native-paper";
 
+import packageData from '@/package.json';
+import MaterialBottomBar from '@/src/components/tabbar/MaterialBottomBar';
 import TabBarIcon from '@/src/components/TabBarIcon';
-import { useAppSelector } from '@/src/hooks/redux';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
-import { selectDevMode } from '@/src/redux/slices/devMode';
 
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary
 } from 'expo-router';
 
-type TouchableProps<Route extends BaseRoute> = TouchableRippleProps & {
-  key: string;
-  route: Route;
-  children: React.ReactNode;
-  borderless?: boolean;
-  centered?: boolean;
-  rippleColor?: ColorValue;
-};
-
-const Touchable = <Route extends BaseRoute>({
-  route: _0,
-  style,
-  children,
-  borderless,
-  centered,
-  rippleColor,
-  ...rest
-}: TouchableProps<Route>) => (
-  TouchableRipple.supported ? (
-    <TouchableRipple
-      {...rest}
-      disabled={rest.disabled || undefined}
-      borderless={borderless}
-      centered={centered}
-      rippleColor={rippleColor}
-      style={style}
-    >
-      {children}
-    </TouchableRipple>
-  ) : (
-    <Pressable style={style as StyleProp<ViewStyle>} {...rest}>
-      {children}
-    </Pressable>
-  )
-);
-
 export default function TabLayout() {
-  const devModeEnabled = useAppSelector(selectDevMode);
+  const renderTabBar = useCallback((
+    props: BottomTabBarProps
+  ) => (
+    <MaterialBottomBar {...props} />
+  ), []);
+
   return (
     <Portal.Host>
       <Tabs
@@ -84,57 +39,12 @@ export default function TabLayout() {
           headerShown: useClientOnlyValue(false, true),
         }}
         backBehavior='none'
-        tabBar={({ navigation, state, descriptors, insets }) => (
-          <BottomNavigation.Bar
-            compact
-            shifting={!devModeEnabled}
-            animationEasing={Easing.ease}
-            navigationState={state}
-            safeAreaInsets={insets}
-            onTabPress={({ route, preventDefault }) => {
-              const event = navigation.emit({
-                type: 'tabPress',
-                target: route.key,
-                canPreventDefault: true,
-              });
-
-              if (event.defaultPrevented) {
-                preventDefault();
-              } else {
-                navigation.dispatch({
-                  ...CommonActions.navigate(route.name, route.params),
-                  target: state.key,
-                });
-              }
-            }}
-            renderIcon={({ route, focused, color }) => {
-              const { options } = descriptors[route.key];
-              if (options.tabBarIcon) {
-                return options.tabBarIcon({ focused, color, size: 24 });
-              }
-
-              return null;
-            }}
-            getLabelText={({ route }) => {
-              const { options } = descriptors[route.key];
-              const label =
-                typeof options.tabBarLabel === 'string'
-                  ? options.tabBarLabel
-                  : typeof options.title === 'string'
-                    ? options.title
-                    : route.name;
-              return label;
-            }}
-            renderTouchable={(props) => (
-              <Touchable {...props} key={props.key} />
-            )}
-          />
-        )}
+        tabBar={renderTabBar}
       >
         <Tabs.Screen
           name="index"
           options={{
-            title: 'Video',
+            title: packageData.displayName,
             headerShown: false,
             tabBarIcon: ({ color, focused, size }) => (
               <TabBarIcon
