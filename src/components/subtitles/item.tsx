@@ -62,15 +62,14 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       cachedVideo.exists && cachedVideo.delete();
     }
 
-    dispatch(removeSubtitle(item.fileUri));
-
     if (selected) {
-      if (subtitles.length > 0) {
+      if (subtitles.length - 1 > 0) {
         dispatch(setVideoSource(subtitles[0].fileUri));
       } else {
         dispatch(setVideoSource(undefined))
       }
     }
+    dispatch(removeSubtitle(item.fileUri));
 
     ToastAndroid.show(
       "Subtitle removed",
