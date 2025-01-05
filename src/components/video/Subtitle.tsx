@@ -1,42 +1,18 @@
 import * as Crypto from "expo-crypto";
 import { cacheDirectory } from "expo-file-system";
 import { File, Paths } from "expo-file-system/next";
-import {
-  FFmpegKit,
-  type FFmpegSession,
-} from "ffmpeg-kit-react-native";
-import React, {
-  useCallback,
-  useMemo,
-  useState,
-} from "react";
-import {
-  FlatList,
-  StyleSheet,
-  View,
-  type ListRenderItemInfo,
-} from "react-native";
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from "react-native-haptic-feedback";
-import {
-  ActivityIndicator,
-  Avatar,
-  Caption,
-  Divider,
-  List,
-  Text,
-  useTheme
-} from "react-native-paper";
+import { FFmpegKit, type FFmpegSession, } from "ffmpeg-kit-react-native";
+import React, { useCallback, useMemo, useState, } from "react";
+import { FlatList, StyleSheet, View } from "react-native";
+import { Divider, List, useTheme } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
 import LottieAnimation from "@/src/components/LottieAnimation";
+import SubtitleItem from "@/src/components/video/SubtitleItem";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { selectShowSubtitle } from "@/src/redux/slices/showSubtitle";
 import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
 import { selectVideoSource } from "@/src/redux/slices/videoSource";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
-import formateTime from "@/src/utils/formatTime";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
@@ -51,7 +27,7 @@ export default function Subtitle({
 
   const videoFileUri = useAppSelector(selectVideoSource);
   const subtitles = useAppSelector(selectSubtitles);
-  const showSubtitle = useAppSelector(selectShowSubtitle);
+
   const [selectedID, setSelectedID] = useState("0");
 
   const subtitle = useMemo(() => {
@@ -108,69 +84,14 @@ export default function Subtitle({
 
   const renderItem = useCallback(({
     item
-  }: ListRenderItemInfo<Line>) => (
-    <List.Item
-      title={({
-        color, ellipsizeMode, fontSize, selectable
-      }) => (
-        <View style={styles.row}>
-          <Text
-            style={{ color, fontSize }}
-            ellipsizeMode={ellipsizeMode}
-            selectable={selectable}
-          >
-            {`${formateTime(item.startTime)} - ${formateTime(item.endTime)}`}
-          </Text>
-
-          <Caption>
-            {(item.endSeconds - item.startSeconds)
-              .toFixed(1)}s
-          </Caption>
-        </View>)
-      }
-      description={showSubtitle && item.text.trim()}
-      descriptionNumberOfLines={3}
-      onPress={() => {
-        HapticFeedback.trigger(
-          HapticFeedbackTypes.effectDoubleClick
-        );
-
-        if (selectedID === item.id) {
-          setSelectedID("0");
-          onItemPress(undefined);
-        } else {
-          setSelectedID(item.id);
-          onItemPress(item);
-        }
-      }}
-      style={{
-        backgroundColor: selectedID === item.id
-          ? appTheme.colors.secondaryContainer
-          : undefined,
-      }}
-      left={({
-        style, color
-      }) => (
-        selectedID !== item.id ? (
-          <Avatar.Text
-            size={40}
-            label={item.id}
-            color={color}
-            style={[style, {
-              backgroundColor: appTheme.colors.secondaryContainer,
-            }]}
-          />
-        ) : (
-          <ActivityIndicator size={40} style={style} />
-        )
-      )}
+  }: { item: Line }) => (
+    <SubtitleItem
+      item={item}
+      onItemPress={onItemPress}
+      selectedID={selectedID}
+      setSelectedID={setSelectedID}
     />
-  ), [
-    showSubtitle,
-    selectedID,
-    appTheme.colors.secondaryContainer,
-    onItemPress
-  ]);
+  ), [onItemPress, selectedID]);
 
   return (
     <FlatList
