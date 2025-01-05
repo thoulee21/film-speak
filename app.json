@@ -36,6 +36,8 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
+      "./plugin/gradle-properties",
+      "./plugin/android-manifest",
       "expo-router",
       [
         "react-native-video",
@@ -55,8 +57,14 @@
         }
       ],
       "expo-asset",
-      "./plugin/gradle-properties",
-      "./plugin/android-manifest"
+      [
+        "@sentry/react-native/expo",
+        {
+          "url": "https://sentry.io/",
+          "project": "film-speak",
+          "organization": "thouworks"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

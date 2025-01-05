@@ -18,7 +18,7 @@
     "postversion": "react-native-version --generate-build",
     "build:android": "expo prebuild && cd android && .\\gradlew clean && .\\gradlew assembleRelease",
     "deploy:android": "adb install ./android/app/build/outputs/apk/release/app-release.apk",
-    "create:update": "eas update --channel production --platform android --auto"
+    "create:update": "eas update --channel production --platform android --auto && sentry-expo-upload-sourcemaps dist"
   },
   "jest": {
     "preset": "jest-expo"
@@ -68,7 +68,8 @@
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
-    "srt-parser-2": "^1.2.3"
+    "srt-parser-2": "^1.2.3",
+    "@sentry/react-native": "~6.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

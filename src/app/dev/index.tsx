@@ -1,7 +1,8 @@
+import * as Sentry from "@sentry/react-native";
 import { Link } from "expo-router";
 import { useCallback } from "react";
 import { ScrollView } from "react-native";
-import { Divider, List, useTheme } from "react-native-paper";
+import { Button, Divider, List, useTheme } from "react-native-paper";
 
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
@@ -79,6 +80,14 @@ export default function DevScreen() {
       >
         <RouteItem />
         <TestSourceItem />
+
+        <Button
+          onPress={() => {
+            Sentry.captureException(new Error('First error'))
+          }}
+        >
+          Capture Exception
+        </Button>
       </List.Section>
     </ScrollView>
   );
