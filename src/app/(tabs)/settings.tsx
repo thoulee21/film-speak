@@ -37,10 +37,23 @@ export default function Setting() {
     />
   ), []);
 
+  const renderVideoEnhanceIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="video-plus-outline" />
+  ), []);
+
   return (
     <ScrollView style={styles.container}>
       <List.Section>
         <ShowSubtitleSwitchItem />
+
+        <Link href="/videoEnhance" asChild>
+          <List.Item
+            title="Video Enhancement"
+            description="Adjust video enhancement factors"
+            left={renderVideoEnhanceIcon}
+            right={renderRightIcon}
+          />
+        </Link>
 
         <List.Item
           title="Cache"

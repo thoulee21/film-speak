@@ -75,6 +75,10 @@ function RootLayoutNav() {
         <Stack.Screen name="dev/cache" options={{
           headerTitle: 'Cache',
         }} />
+        <Stack.Screen name='videoEnhance' options={{
+          headerTitle: 'Video Enhancement',
+          gestureEnabled: false,
+        }} />
       </Stack>
     </View>
   );
