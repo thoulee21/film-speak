@@ -1,11 +1,5 @@
-import * as Crypto from 'expo-crypto';
-import * as FileSystem from 'expo-file-system';
 import { router } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import {
-  FFmpegKit,
-  FFmpegKitConfig,
-} from 'ffmpeg-kit-react-native';
 import {
   useCallback,
   useEffect,
@@ -45,6 +39,7 @@ import { selectVolume, setVolume } from '@/src/redux/slices/volume';
 import {
   selectVolumeFactor,
 } from '@/src/redux/slices/volumeFactor';
+import handleInputVideo from '@/src/utils/handleInputVideo';
 
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
@@ -64,20 +59,10 @@ export default function VideoScreen() {
     if (!item) { return; }
 
     const shareSource = Array.isArray(item.data) ? item.data[0] : item.data;
-    const fileUri = await FFmpegKitConfig.getSafParameterForRead(shareSource);
-
-    const hash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256, shareSource
-    );
-    const destination = `${FileSystem.cacheDirectory}${hash.slice(0, 6)}.mp4`;
+    const onComplete = (dest: string) => dispatch(setVideoSource(dest))
 
     ToastAndroid.show(`Processing video in background ...`, ToastAndroid.LONG);
-    await FFmpegKit.executeAsync(
-      `-y -i ${fileUri} -af "volume=${volumeFactor}" -c:v copy -c:a aac ${destination}`,
-      () => {
-        dispatch(setVideoSource(destination));
-      },
-    );
+    await handleInputVideo(shareSource, volumeFactor, onComplete);
   }, [dispatch, volumeFactor]);
 
   useEffect(() => {

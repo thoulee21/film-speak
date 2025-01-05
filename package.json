@@ -68,7 +68,8 @@
     "redux-persist": "^6.0.0",
     "srt-parser-2": "^1.2.3",
     "lottie-react-native": "7.1.0",
-    "@react-native-community/slider": "4.5.5"
+    "@react-native-community/slider": "4.5.5",
+    "expo-document-picker": "~13.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
