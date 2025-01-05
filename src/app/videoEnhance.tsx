@@ -70,7 +70,6 @@ export default function VideoEnhanceScreen() {
             right={({ style }) => (
               <IconButton
                 icon="refresh"
-                mode="contained"
                 style={style}
                 onPress={() => dispatch(resetVolumeFactor())}
               />
