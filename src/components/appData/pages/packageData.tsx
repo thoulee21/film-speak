@@ -1,6 +1,6 @@
-import packageJson from '@/package.json';
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 
+import packageJson from '@/package.json';
 import { DataList } from "@/src/components/appData/DataList";
 
 const PackageData = () => {
@@ -16,4 +16,4 @@ const PackageData = () => {
   return <DataList dataItems={packageData} />;
 };
 
-export default memo(PackageData);
+export default PackageData;

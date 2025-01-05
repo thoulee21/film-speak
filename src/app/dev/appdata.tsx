@@ -1,13 +1,13 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { useNavigation } from '@react-navigation/native';
-import React, { useCallback } from 'react';
+import { useNavigation } from 'expo-router';
+import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button } from 'react-native-paper';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import LocalStorage from '@/src/app/appdata/localStorage';
-import PackageData from '@/src/app/appdata/packageData';
-import ReduxState from '@/src/app/appdata/reduxState';
+import LocalStorage from '@/src/components/appData/pages/localStorage';
+import PackageData from '@/src/components/appData/pages/packageData';
+import ReduxState from '@/src/components/appData/pages/reduxState';
 import { formatDataSize } from '@/src/utils/formatDataSize';
 import { reduxStorage } from '@/src/utils/mmkvStorage';
 
@@ -28,30 +28,30 @@ const Actions = ({ routeIndex }: { routeIndex: number }) => {
   );
 };
 
-export default function AppDataLayout() {
+export default function AppDataScreen() {
   const navigation = useNavigation();
-
-  const screenListeners = useCallback(() => ({
-    state: ({ data }: { data: any }) => {
-      navigation.setOptions({
-        headerRight: () => (
-          <Actions routeIndex={data.state.index} />
-        ),
-      });
-    }
-  }), [navigation]);
-
   return (
     <TopTab.Navigator
       backBehavior="none"
-      screenListeners={screenListeners}
+      screenListeners={() => ({
+        state: ({ data }: { data: any }) => {
+          navigation.setOptions({
+            headerRight: () => (
+              <Actions routeIndex={data.state.index} />
+            ),
+          });
+        }
+      })}
       screenOptions={{
         lazy: true,
         lazyPlaceholder: () => (
           <View style={styles.placeholder}>
             <ActivityIndicator size='large' />
           </View>
-        )
+        ),
+        tabBarAndroidRipple: {
+          color: 'transparent',
+        }
       }}
     >
       <TopTab.Screen

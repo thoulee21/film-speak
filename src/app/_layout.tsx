@@ -68,7 +68,7 @@ function RootLayoutNav() {
         <Stack.Screen name="about" options={{
           headerTitle: 'About',
         }} />
-        <Stack.Screen name="appdata" options={{
+        <Stack.Screen name="dev/appdata" options={{
           headerTitle: 'App Data',
           gestureEnabled: false,
         }} />

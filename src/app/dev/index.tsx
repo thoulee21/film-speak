@@ -43,10 +43,7 @@ export default function DevScreen() {
         title="Developer's view"
         titleStyle={{ color: appTheme.colors.primary }}
       >
-        <Link
-          //@ts-expect-error
-          href="/appdata" asChild
-        >
+        <Link href="/dev/appdata" asChild>
           <List.Item
             title="View App Data"
             description="View the data that related to the app"

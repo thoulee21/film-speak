@@ -1,4 +1,4 @@
-import { memo, useMemo } from "react";
+import { useMemo } from "react";
 
 import { DataList } from "@/src/components/appData/DataList";
 import { reduxStorage as storage } from "@/src/utils/mmkvStorage";
@@ -18,4 +18,4 @@ const LocalStorage = () => {
   return <DataList dataItems={dataItems} />;
 };
 
-export default memo(LocalStorage);
+export default LocalStorage;
