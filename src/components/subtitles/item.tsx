@@ -40,9 +40,8 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   }, [item.fileUri]);
 
   const performRemove = useCallback(async () => {
-    HapticFeedback.trigger(
-      HapticFeedbackTypes.effectClick
-    );
+    HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+
     const fileHash = await Crypto.digestStringAsync(
       Crypto.CryptoDigestAlgorithm.SHA256,
       item.fileUri
@@ -55,6 +54,11 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
 
     wavFile.exists && wavFile.delete();
     coverFile.exists && coverFile.delete();
+
+    if (!item.fileUri.startsWith("http")) {
+      const cachedVideo = new File(item.fileUri);
+      cachedVideo.exists && cachedVideo.delete();
+    }
 
     dispatch(removeSubtitle(item.fileUri));
 
