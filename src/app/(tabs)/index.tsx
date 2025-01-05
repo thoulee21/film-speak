@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useNavigation } from 'expo-router';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { OrientationLock } from 'expo-screen-orientation';
 import * as SplashScreen from 'expo-splash-screen';
@@ -55,6 +55,7 @@ import handleInputVideo from '@/src/utils/handleInputVideo';
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
   const playerRef = useRef<VideoRef>(null);
+  const navigation = useNavigation();
   const insets = useSafeAreaInsets();
 
   const volume = useAppSelector(selectVolume);
@@ -63,6 +64,12 @@ export default function VideoScreen() {
 
   const [clip, setClip] = useState<Line>();
   const [isVideoProcessing, setIsVideoProcessing] = useState(false);
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerShown: typeof source === 'undefined'
+    })
+  }, [navigation, source]);
 
   const handleShare: ShareCallback = useCallback(async (
     item
@@ -119,76 +126,78 @@ export default function VideoScreen() {
       styles.root,
       { paddingTop: insets.top }
     ]}>
-      <VideoPlayer
-        ref={playerRef}
-        source={{ uri: source }}
-        style={{
-          height: '35%',
-          width: '100%',
-          backgroundColor: 'black'
-        }}
-        showNotificationControls
-        onLayout={async () => {
-          playerRef.current?.pause();
-          await SplashScreen.hideAsync();
-        }}
-        onProgress={({
-          currentTime
-        }) => {
-          if (!clip) { return; }
+      {source && (
+        <VideoPlayer
+          ref={playerRef}
+          source={{ uri: source }}
+          style={{
+            height: '35%',
+            width: '100%',
+            backgroundColor: 'black'
+          }}
+          showNotificationControls
+          onLayout={async () => {
+            playerRef.current?.pause();
+            await SplashScreen.hideAsync();
+          }}
+          onProgress={({
+            currentTime
+          }) => {
+            if (!clip) { return; }
 
-          //在片段的开始和结束之间循环播放
-          if (
-            currentTime >= clip.startSeconds &&
-            currentTime <= clip.endSeconds
-          ) { return; }
+            //在片段的开始和结束之间循环播放
+            if (
+              currentTime >= clip.startSeconds &&
+              currentTime <= clip.endSeconds
+            ) { return; }
 
-          playerRef.current?.seek(clip.startSeconds);
-        }}
-        debug={{ enable: __DEV__, thread: __DEV__ }}
-        enterPictureInPictureOnLeave
-        fullscreenOrientation='landscape'
-        fullscreenAutorotate
-        onFullscreenPlayerWillPresent={() => {
-          ScreenOrientation.lockAsync(
-            OrientationLock.LANDSCAPE_RIGHT
-          );
-        }}
-        onFullscreenPlayerWillDismiss={() => {
-          ScreenOrientation.lockAsync(
-            OrientationLock.PORTRAIT_UP
-          );
-        }}
-        shutterColor="transparent"
-        onError={({
-          error
-        }) => {
-          ToastAndroid.showWithGravity(
-            'Video error: ' + error.errorException,
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM
-          );
-          console.error(
-            'Video error:',
+            playerRef.current?.seek(clip.startSeconds);
+          }}
+          debug={{ enable: __DEV__, thread: __DEV__ }}
+          enterPictureInPictureOnLeave
+          fullscreenOrientation='landscape'
+          fullscreenAutorotate
+          onFullscreenPlayerWillPresent={() => {
+            ScreenOrientation.lockAsync(
+              OrientationLock.LANDSCAPE_RIGHT
+            );
+          }}
+          onFullscreenPlayerWillDismiss={() => {
+            ScreenOrientation.lockAsync(
+              OrientationLock.PORTRAIT_UP
+            );
+          }}
+          shutterColor="transparent"
+          onError={({
             error
-          );
+          }) => {
+            ToastAndroid.showWithGravity(
+              'Video error: ' + error.errorException,
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
+            console.error(
+              'Video error:',
+              error
+            );
 
-          ToastAndroid.showWithGravity(
-            'Resetting video source ...',
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM
-          );
-          dispatch(resetVideoSource());
-        }}
-        // if volume is unset(-1), play at original volume
-        volume={volume === -1 ? (1 / volumeFactor) : volume}
-        controls={!clip}
-        controlsStyles={{
-          hidePrevious: true,
-          hideNext: true,
-          hideSettingButton: false
-        }}
-      />
+            ToastAndroid.showWithGravity(
+              'Resetting video source ...',
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
+            dispatch(resetVideoSource());
+          }}
+          // if volume is unset(-1), play at original volume
+          volume={volume === -1 ? (1 / volumeFactor) : volume}
+          controls={!clip}
+          controlsStyles={{
+            hidePrevious: true,
+            hideNext: true,
+            hideSettingButton: false
+          }}
+        />
+      )}
 
       <Subtitle
         onItemPress={(item) => {
@@ -198,32 +207,34 @@ export default function VideoScreen() {
       />
 
       <Portal>
-        {!isVideoProcessing ? (
-          <FAB
-            icon="subtitles-outline"
-            style={styles.fab}
-            onPress={() => {
-              HapticFeedback.trigger(
-                HapticFeedbackTypes.effectDoubleClick,
-              );
-              router.push('/subtitles');
-            }}
-          />
-        ) : (
-          <Dialog visible dismissable={false}>
-            <Dialog.Title>Processing</Dialog.Title>
-            <Dialog.Content style={styles.flexing}>
-              <ActivityIndicator
-                color={MD3Colors.tertiary30}
-                size={Platform.OS === 'ios' ? 'large' : 48}
-                style={styles.marginRight}
-              />
-              <Text>
-                Enhancing & caching video ...
-              </Text>
-            </Dialog.Content>
-          </Dialog>
-        )}
+        <FAB
+          icon="subtitles-outline"
+          style={styles.fab}
+          visible={typeof source !== 'undefined' && !isVideoProcessing}
+          onPress={() => {
+            HapticFeedback.trigger(
+              HapticFeedbackTypes.effectDoubleClick,
+            );
+            router.push('/subtitles');
+          }}
+        />
+
+        <Dialog
+          visible={isVideoProcessing}
+          dismissable={false}
+        >
+          <Dialog.Title>Processing</Dialog.Title>
+          <Dialog.Content style={styles.flexing}>
+            <ActivityIndicator
+              color={MD3Colors.tertiary30}
+              size={Platform.OS === 'ios' ? 'large' : 48}
+              style={styles.marginRight}
+            />
+            <Text>
+              Enhancing & caching video ...
+            </Text>
+          </Dialog.Content>
+        </Dialog>
       </Portal>
     </View>
   );

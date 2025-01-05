@@ -1,33 +1,21 @@
-import * as DocumentPicker from 'expo-document-picker';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
-import {
-  DeviceEventEmitter,
-  Platform,
-  StyleSheet,
-  View,
-  type ListRenderItemInfo,
-} from "react-native";
-import { Appbar, Banner, Button, Icon, useTheme } from "react-native-paper";
+import { Platform, StyleSheet, View, type ListRenderItemInfo } from "react-native";
+import { Appbar, Banner, Icon, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
+import SelectVideoButton from '@/src/components/SelectVideoButton';
 import SubtitleItem from "@/src/components/subtitles/item";
-import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
+import { useAppSelector } from "@/src/hooks/redux";
 import { selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
-import { setVideoSource } from '@/src/redux/slices/videoSource';
-import { selectVolumeFactor } from '@/src/redux/slices/volumeFactor';
-import handleInputVideo from '@/src/utils/handleInputVideo';
 
 export default function Subtitles() {
-  const dispatch = useAppDispatch();
   const appTheme = useTheme();
-
-  const volumeFactor = useAppSelector(selectVolumeFactor);
   const subtitles = useAppSelector(selectSubtitles);
-
   const { inform } = useLocalSearchParams();
+
   const [bannerVisible, setBannerVisible] = useState(
     (subtitles.length > 1) && inform === '1'
   );
@@ -37,27 +25,6 @@ export default function Subtitles() {
   }: ListRenderItemInfo<Subtitle>) => (
     <SubtitleItem item={item} />
   ), []);
-
-  const selectFile = useCallback(async () => {
-    const pickRes = await DocumentPicker.getDocumentAsync({
-      type: 'video/*',
-      copyToCacheDirectory: false,
-    });
-
-    if (!pickRes.canceled) {
-      DeviceEventEmitter.emit('onVideoProcessing');
-      router.back();
-
-      await handleInputVideo(
-        pickRes.assets[0].uri,
-        volumeFactor,
-        (dest) => {
-          dispatch(setVideoSource(dest));
-          DeviceEventEmitter.emit('onVideoProcessed');
-        }
-      );
-    }
-  }, [dispatch, volumeFactor]);
 
   return (
     <View style={styles.root}>
@@ -101,14 +68,7 @@ export default function Subtitles() {
         }
         itemLayoutAnimation={LinearTransition}
         ListFooterComponent={
-          <Button
-            icon="file-video"
-            mode="contained"
-            style={styles.selectBtn}
-            onPress={selectFile}
-          >
-            Select Video File
-          </Button>
+          <SelectVideoButton style={styles.selectBtn} />
         }
       />
     </View>

@@ -1,11 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import StateKeys from '@/src/constants/stateKeys';
-import VIDEO_SOURCE from '@/src/constants/video-source';
 import { RootState } from '@/src/redux/store';
 
 const initialState = {
-  value: VIDEO_SOURCE,
+  value: undefined as string | undefined,
 };
 
 export const videoSourceSlice = createSlice({
@@ -16,7 +15,7 @@ export const videoSourceSlice = createSlice({
       state.value = action.payload;
     },
     resetVideoSource: (state) => {
-      state.value = VIDEO_SOURCE;
+      state.value = undefined;
     },
   },
 });

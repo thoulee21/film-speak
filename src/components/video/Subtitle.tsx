@@ -7,14 +7,15 @@ import { FlatList, StyleSheet, View } from "react-native";
 import { Divider } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
+import packageData from '@/package.json';
 import LottieAnimation from "@/src/components/LottieAnimation";
+import SelectVideoButton from "@/src/components/SelectVideoButton";
 import SubtitleItem from "@/src/components/video/SubtitleItem";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
 import { selectVideoSource } from "@/src/redux/slices/videoSource";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
-
 interface SubtitleProps {
   onItemPress: (arg0?: Line) => void;
 }
@@ -26,6 +27,8 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
   const [selectedID, setSelectedID] = useState("0");
 
   const subtitle = useMemo(() => {
+    if (!videoFileUri) { return []; }
+
     let subtitleValue = subtitles.find((subtitle) =>
       subtitle.fileUri === videoFileUri
     )?.value;
@@ -98,14 +101,25 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
       contentContainerStyle={styles.container}
       keyExtractor={(item) => item.id}
       ListEmptyComponent={
-        <LottieAnimation
-          animation="stackLoading"
-          caption="Generating subtitle..."
-        />
+        videoFileUri ? (
+          <LottieAnimation
+            animation="stackLoading"
+            caption="Generating subtitle..."
+          />
+        ) : (
+          <LottieAnimation
+            animation="welcome"
+            style={styles.welcome}
+            // caption={`Welcome to ${packageData.displayName}!\nPlease select a video file or share a video to get started.`}
+          />
+        )
       }
       // 避免字幕项被 FAB 遮挡
       ListFooterComponent={
-        <View style={{ height: 70 }} />
+        <View style={styles.footer}>
+          {!videoFileUri && <SelectVideoButton />}
+          <View style={{ height: 100 }} />
+        </View>
       }
     />
   );
@@ -115,4 +129,11 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
+  footer: {
+    justifyContent: "center",
+    marginHorizontal: 16,
+  },
+  welcome: {
+    marginHorizontal: 16,
+  }
 })
