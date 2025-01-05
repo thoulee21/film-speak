@@ -22,6 +22,10 @@ export default function DevScreen() {
     <List.Icon {...props} icon="open-in-new" />
   ), []);
 
+  const renderCacheIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="folder-outline" />
+  ), []);
+
   const renderDocumentIcon = useCallback((props: ListLRProps) => (
     <List.Icon {...props} icon="file-document-outline" />
   ), []);
@@ -44,6 +48,15 @@ export default function DevScreen() {
             title="View App Data"
             description="View the data that related to the app"
             left={renderDataBaseIcon}
+            right={renderRightIcon}
+          />
+        </Link>
+
+        <Link href="/dev/cache" asChild>
+          <List.Item
+            title="Cache"
+            description="View files and directories that are under the cache directory"
+            left={renderCacheIcon}
             right={renderRightIcon}
           />
         </Link>
