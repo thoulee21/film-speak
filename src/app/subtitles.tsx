@@ -68,7 +68,10 @@ export default function Subtitles() {
         }
         itemLayoutAnimation={LinearTransition}
         ListFooterComponent={
-          <SelectVideoButton style={styles.selectBtn} />
+          <SelectVideoButton
+            style={styles.selectBtn}
+            mode={subtitles.length === 0 ? 'contained' : 'text'}
+          />
         }
       />
     </View>

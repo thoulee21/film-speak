@@ -9,8 +9,11 @@ import { setVideoSource } from "@/src/redux/slices/videoSource";
 import { selectVolumeFactor } from "@/src/redux/slices/volumeFactor";
 import handleInputVideo from "@/src/utils/handleInputVideo";
 
-export default function SelectVideoButton({ style }: {
+export default function SelectVideoButton({
+  style, mode
+}: {
   style?: StyleProp<ViewStyle>
+  mode?: 'text' | 'outlined' | 'contained' | 'elevated' | 'contained-tonal';
 }) {
   const dispatch = useAppDispatch();
   const volumeFactor = useAppSelector(selectVolumeFactor);
@@ -39,7 +42,7 @@ export default function SelectVideoButton({ style }: {
   return (
     <Button
       icon="file-video"
-      mode="contained"
+      mode={mode || 'contained'}
       style={style}
       onPress={selectFile}
     >
