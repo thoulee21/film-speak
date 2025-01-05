@@ -91,6 +91,7 @@ export default function VideoScreen() {
     const listener = ShareMenu.addNewShareListener(handleShare);
     ShareMenu.getInitialShare(handleShare);
 
+    SplashScreen.hideAsync();
     return () => {
       listener.remove();
     };
@@ -138,7 +139,6 @@ export default function VideoScreen() {
           showNotificationControls
           onLayout={async () => {
             playerRef.current?.pause();
-            await SplashScreen.hideAsync();
           }}
           onProgress={({
             currentTime
