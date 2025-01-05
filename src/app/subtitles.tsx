@@ -1,11 +1,11 @@
 import * as DocumentPicker from 'expo-document-picker';
-import { useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
 import {
+  DeviceEventEmitter,
   Platform,
   StyleSheet,
-  ToastAndroid,
   View,
   type ListRenderItemInfo,
 } from "react-native";
@@ -45,18 +45,15 @@ export default function Subtitles() {
     });
 
     if (!pickRes.canceled) {
-      console.debug(pickRes.assets[0]);
-      ToastAndroid.showWithGravity(
-        'Processing video file...',
-        ToastAndroid.LONG,
-        ToastAndroid.CENTER,
-      );
+      DeviceEventEmitter.emit('onVideoProcessing');
+      router.back();
 
       await handleInputVideo(
         pickRes.assets[0].uri,
         volumeFactor,
         (dest) => {
           dispatch(setVideoSource(dest));
+          DeviceEventEmitter.emit('onVideoProcessed');
         }
       );
     }
