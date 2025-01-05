@@ -16,6 +16,7 @@ import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
 import { selectVideoSource } from "@/src/redux/slices/videoSource";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
+
 interface SubtitleProps {
   onItemPress: (arg0?: Line) => void;
 }
@@ -110,7 +111,7 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
           <LottieAnimation
             animation="welcome"
             style={styles.welcome}
-            // caption={`Welcome to ${packageData.displayName}!\nPlease select a video file or share a video to get started.`}
+            caption={`Welcome to ${packageData.displayName}!\nPlease select a video file or share a video to get started.`}
           />
         )
       }
