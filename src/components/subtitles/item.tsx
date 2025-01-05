@@ -2,13 +2,13 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import * as Crypto from "expo-crypto";
 import { File, Paths } from "expo-file-system/next";
 import { useCallback } from "react";
-import { StyleSheet, ToastAndroid } from "react-native";
+import { Alert, StyleSheet, ToastAndroid } from "react-native";
 import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
 import { Avatar, Button, Caption, Card, Text, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { selectDevMode } from "@/src/redux/slices/devMode";
-import { removeSubtitle, type Subtitle } from "@/src/redux/slices/subtitles";
+import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
 import { selectVideoSource, setVideoSource } from "@/src/redux/slices/videoSource";
 
 export default function SubtitleItem({ item }: { item: Subtitle }) {
@@ -16,6 +16,8 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   const appTheme = useTheme();
 
   const devMode = useAppSelector(selectDevMode);
+  const subtitles = useAppSelector(selectSubtitles);
+
   const videoSource = useAppSelector(selectVideoSource);
   const selected = videoSource === item.fileUri;
 
@@ -62,11 +64,19 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
 
     dispatch(removeSubtitle(item.fileUri));
 
+    if (selected) {
+      if (subtitles.length > 0) {
+        dispatch(setVideoSource(subtitles[0].fileUri));
+      } else {
+        dispatch(setVideoSource(undefined))
+      }
+    }
+
     ToastAndroid.show(
       "Subtitle removed",
       ToastAndroid.SHORT
     );
-  }, [dispatch, item.coverUri, item.fileUri]);
+  }, [dispatch, item.coverUri, item.fileUri, selected, subtitles]);
 
   return (
     <Card
@@ -110,8 +120,20 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       <Card.Actions>
         <Button
           icon="delete-outline"
-          onPress={performRemove}
-          disabled={selected}
+          onPress={() => {
+            Alert.alert(
+              "Remove subtitle",
+              "Are you sure you want to remove this subtitle?",
+              [
+                { text: "Cancel", style: "cancel", },
+                {
+                  text: "Remove",
+                  style: "destructive",
+                  onPress: performRemove,
+                },
+              ]
+            );
+          }}
         >
           Delete
         </Button>

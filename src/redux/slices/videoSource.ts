@@ -11,7 +11,7 @@ export const videoSourceSlice = createSlice({
   name: StateKeys.VideoSource,
   initialState,
   reducers: {
-    setVideoSource: (state, action: { payload: string }) => {
+    setVideoSource: (state, action: { payload: string | undefined }) => {
       state.value = action.payload;
     },
     resetVideoSource: (state) => {
