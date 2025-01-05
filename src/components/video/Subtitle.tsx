@@ -1,10 +1,10 @@
 import * as Crypto from "expo-crypto";
 import { cacheDirectory } from "expo-file-system";
 import { File, Paths } from "expo-file-system/next";
-import { FFmpegKit, type FFmpegSession, } from "ffmpeg-kit-react-native";
+import { FFmpegKit, type FFmpegSession } from "ffmpeg-kit-react-native";
 import React, { useCallback, useMemo, useState, } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Divider, List, useTheme } from "react-native-paper";
+import { Divider } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
 import LottieAnimation from "@/src/components/LottieAnimation";
@@ -19,15 +19,10 @@ interface SubtitleProps {
   onItemPress: (arg0?: Line) => void;
 }
 
-export default function Subtitle({
-  onItemPress
-}: SubtitleProps) {
+export default function Subtitle({ onItemPress }: SubtitleProps) {
   const dispatch = useAppDispatch();
-  const appTheme = useTheme();
-
   const videoFileUri = useAppSelector(selectVideoSource);
   const subtitles = useAppSelector(selectSubtitles);
-
   const [selectedID, setSelectedID] = useState("0");
 
   const subtitle = useMemo(() => {
@@ -99,19 +94,6 @@ export default function Subtitle({
       renderItem={renderItem}
       overScrollMode="never"
       ItemSeparatorComponent={Divider}
-      ListHeaderComponent={
-        <View style={[
-          styles.row,
-          { backgroundColor: appTheme.colors.background }
-        ]}>
-          <List.Subheader
-            style={{ color: appTheme.colors.primary }}
-          >
-            Subtitle
-          </List.Subheader>
-        </View>
-      }
-      stickyHeaderIndices={[0]}
       extraData={selectedID}
       contentContainerStyle={styles.container}
       keyExtractor={(item) => item.id}
@@ -123,7 +105,7 @@ export default function Subtitle({
       }
       // 避免字幕项被 FAB 遮挡
       ListFooterComponent={
-        <View style={{ height: 100 }} />
+        <View style={{ height: 70 }} />
       }
     />
   );
@@ -133,9 +115,4 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
-  row: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  }
 })

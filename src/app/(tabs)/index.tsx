@@ -1,4 +1,6 @@
 import { router } from 'expo-router';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { OrientationLock } from 'expo-screen-orientation';
 import * as SplashScreen from 'expo-splash-screen';
 import {
   useCallback,
@@ -14,15 +16,15 @@ import {
 import HapticFeedback, {
   HapticFeedbackTypes,
 } from 'react-native-haptic-feedback';
-import Video from 'react-native-media-console';
-import { FAB, Portal, useTheme } from 'react-native-paper';
+import { FAB, Portal } from 'react-native-paper';
 import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import ShareMenu, {
   type ShareCallback
 } from 'react-native-share-menu';
-import { type VideoRef } from 'react-native-video';
+import type { VideoRef } from 'react-native-video';
+import VideoPlayer from 'react-native-video';
 import type { Line } from 'srt-parser-2';
 
 import Subtitle from '@/src/components/video/Subtitle';
@@ -35,7 +37,7 @@ import {
   selectVideoSource,
   setVideoSource,
 } from '@/src/redux/slices/videoSource';
-import { selectVolume, setVolume } from '@/src/redux/slices/volume';
+import { selectVolume } from '@/src/redux/slices/volume';
 import {
   selectVolumeFactor,
 } from '@/src/redux/slices/volumeFactor';
@@ -43,9 +45,8 @@ import handleInputVideo from '@/src/utils/handleInputVideo';
 
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
-  const player = useRef<VideoRef>(null);
+  const playerRef = useRef<VideoRef>(null);
   const insets = useSafeAreaInsets();
-  const appTheme = useTheme();
 
   const volume = useAppSelector(selectVolume);
   const volumeFactor = useAppSelector(selectVolumeFactor);
@@ -80,81 +81,81 @@ export default function VideoScreen() {
         styles.root,
         { paddingTop: insets.top }
       ]}>
-        <View style={styles.videoContainer}>
-          <Video
-            videoRef={player}
-            source={{ uri: source }}
-            seekColor={appTheme.colors.secondary}
-            shutterColor={appTheme.colors.secondaryContainer}
-            showNotificationControls
-            automaticallyWaitsToMinimizeStalling
-            onLoad={() => { player.current?.pause(); }}
-            onProgress={({
-              currentTime
-            }) => {
-              if (!clip) { return; }
+        <VideoPlayer
+          ref={playerRef}
+          source={{ uri: source }}
+          style={{
+            height: '35%',
+            width: '100%',
+            backgroundColor: 'black'
+          }}
+          showNotificationControls
+          onLayout={async () => {
+            playerRef.current?.pause();
+            await SplashScreen.hideAsync();
+          }}
+          onProgress={({
+            currentTime
+          }) => {
+            if (!clip) { return; }
 
-              //在片段的开始和结束之间循环播放
-              if (
-                currentTime >= clip.startSeconds &&
-                currentTime <= clip.endSeconds
-              ) { return; }
+            //在片段的开始和结束之间循环播放
+            if (
+              currentTime >= clip.startSeconds &&
+              currentTime <= clip.endSeconds
+            ) { return; }
 
-              player.current?.seek(clip.startSeconds);
-            }}
-            showDuration
-            showTimeRemaining
-            disableBack
-            disableFullscreen
-            // fullscreenOrientation='landscape'
-            // fullscreenAutorotate
-            // isFullscreen={fullscreen}
-            // onEnterFullscreen={async () => {
-            //   setFullscreen(true);
-            //   navigation.setOptions({ headerShown: false })
+            playerRef.current?.seek(clip.startSeconds);
+          }}
+          debug={{ enable: __DEV__, thread: __DEV__ }}
+          enterPictureInPictureOnLeave
+          fullscreenOrientation='landscape'
+          fullscreenAutorotate
+          onFullscreenPlayerWillPresent={() => {
+            ScreenOrientation.lockAsync(
+              OrientationLock.LANDSCAPE_RIGHT
+            );
+          }}
+          onFullscreenPlayerWillDismiss={() => {
+            ScreenOrientation.lockAsync(
+              OrientationLock.PORTRAIT_UP
+            );
+          }}
+          shutterColor="transparent"
+          onError={({
+            error
+          }) => {
+            ToastAndroid.showWithGravity(
+              'Video error: ' + error.errorException,
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
+            console.error(
+              'Video error:',
+              error
+            );
 
-            //   await ScreenOrientation.lockAsync(
-            //     OrientationLock.LANDSCAPE_RIGHT
-            //   );
-            // }}
-            // onExitFullscreen={async () => {
-            //   await ScreenOrientation.lockAsync(
-            //     OrientationLock.PORTRAIT_UP
-            //   );
-
-            //   setFullscreen(false);
-            //   navigation.setOptions({ headerShown: true });
-            // }}
-            onError={({ error }) => {
-              ToastAndroid.showWithGravity(
-                'Video error: ' + error.errorException,
-                ToastAndroid.LONG,
-                ToastAndroid.BOTTOM
-              );
-              console.error('Video error:', error);
-
-              ToastAndroid.showWithGravity(
-                'Resetting video source ...',
-                ToastAndroid.LONG,
-                ToastAndroid.BOTTOM
-              );
-              dispatch(resetVideoSource());
-            }}
-            onLayout={SplashScreen.hideAsync}
-            disableOverlay
-            paused
-            // if volume is unset(-1), play at original volume
-            volume={volume === -1 ? (1 / volumeFactor) : volume}
-            onVolumeChange={({ volume }) => {
-              dispatch(setVolume(volume));
-            }}
-          />
-        </View>
+            ToastAndroid.showWithGravity(
+              'Resetting video source ...',
+              ToastAndroid.LONG,
+              ToastAndroid.BOTTOM
+            );
+            dispatch(resetVideoSource());
+          }}
+          // if volume is unset(-1), play at original volume
+          volume={volume === -1 ? (1 / volumeFactor) : volume}
+          controls={!clip}
+          controlsStyles={{
+            hidePrevious: true,
+            hideNext: true,
+            hideSettingButton: false
+          }}
+        />
 
         <Subtitle
           onItemPress={(item) => {
             setClip(item);
-            player.current?.resume();
+            playerRef.current?.resume();
           }}
         />
 
@@ -179,14 +180,10 @@ const styles = StyleSheet.create({
   root: {
     flex: 1,
   },
-  videoContainer: {
-    width: "100%",
-    height: "35%",
-  },
   fab: {
     position: 'absolute',
     margin: 16,
     right: 0,
     bottom: 0
-  }
+  },
 });

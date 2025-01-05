@@ -4,6 +4,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List, useTheme } from 'react-native-paper';
 
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
+import VolumeSlider from '@/src/components/settings/VolumeSlider';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
@@ -43,9 +44,18 @@ export default function Setting() {
 
   return (
     <ScrollView style={styles.container}>
-      <List.Section>
+      <List.Section
+        title="General"
+        titleStyle={{
+          color: appTheme.colors.primary
+        }}
+      >
         <ShowSubtitleSwitchItem />
+        <VolumeSlider />
+        <Divider />
+      </List.Section>
 
+      <List.Section>
         <Link href="/videoEnhance" asChild>
           <List.Item
             title="Video Enhancement"
@@ -68,10 +78,7 @@ export default function Setting() {
         <Divider />
       </List.Section>
 
-      <List.Section
-        title="General"
-        titleStyle={{ color: appTheme.colors.primary }}
-      >
+      <List.Section>
         {devModeEnabled && (
           <Link href="/dev" asChild>
             <List.Item

@@ -44,6 +44,7 @@
           "enableBackgroundAudio": false,
           "enableADSExtension": true,
           "enableCacheExtension": false,
+          "enableAndroidPictureInPicture": true,
           "androidExtensions": {
             "useExoplayerRtsp": true,
             "useExoplayerSmoothStreaming": true,
