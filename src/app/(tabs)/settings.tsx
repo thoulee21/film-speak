@@ -1,6 +1,6 @@
 import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
-import { ScrollView, StyleSheet, ToastAndroid } from 'react-native';
+import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List, useTheme } from 'react-native-paper';
 
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
@@ -61,11 +61,7 @@ export default function Setting() {
           left={renderCacheIcon}
           right={!devModeEnabled ? renderRightIcon : renderExploreIconButton}
           onPress={() => {
-            router.push('/subtitles');
-            ToastAndroid.show(
-              'Remove history subtitles to clean cached files',
-              ToastAndroid.LONG
-            )
+            router.push('/subtitles?inform=1');
           }}
         />
 

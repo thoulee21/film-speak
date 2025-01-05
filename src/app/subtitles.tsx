@@ -1,6 +1,7 @@
 import * as DocumentPicker from 'expo-document-picker';
+import { useLocalSearchParams } from 'expo-router';
 import { StatusBar } from "expo-status-bar";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import {
   Platform,
   StyleSheet,
@@ -8,7 +9,7 @@ import {
   View,
   type ListRenderItemInfo,
 } from "react-native";
-import { Appbar, Button } from "react-native-paper";
+import { Appbar, Banner, Button, Icon, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
@@ -21,9 +22,15 @@ import handleInputVideo from '@/src/utils/handleInputVideo';
 
 export default function Subtitles() {
   const dispatch = useAppDispatch();
+  const appTheme = useTheme();
 
   const volumeFactor = useAppSelector(selectVolumeFactor);
   const subtitles = useAppSelector(selectSubtitles);
+
+  const { inform } = useLocalSearchParams();
+  const [bannerVisible, setBannerVisible] = useState(
+    (subtitles.length > 1) && inform === '1'
+  );
 
   const renderItem = useCallback(({
     item
@@ -67,11 +74,28 @@ export default function Subtitles() {
         <Appbar.Content title="Subtitles" />
         <Appbar.Action icon="drag" />
       </Appbar.Header>
+      <Banner
+        visible={bannerVisible}
+        icon={(props) => (
+          <Icon
+            {...props}
+            source="information-outline"
+            color={appTheme.colors.secondary}
+          />
+        )}
+        actions={[{
+          label: 'OK',
+          onPress: () => setBannerVisible(false),
+        }]}
+      >
+        Remove history subtitles can delete cached files related to them
+      </Banner>
 
       <Reanimated.FlatList
         data={subtitles}
         renderItem={renderItem}
         contentContainerStyle={styles.items}
+        overScrollMode="never"
         ListEmptyComponent={
           <LottieAnimation
             animation="teapot"
@@ -101,8 +125,10 @@ const styles = StyleSheet.create({
   items: {
     flexGrow: 1,
     marginHorizontal: 10,
+    marginTop: 5,
   },
   selectBtn: {
-    marginVertical: 10,
+    marginTop: 10,
+    marginBottom: 25,
   }
 })
