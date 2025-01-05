@@ -9,6 +9,8 @@ import {
 } from '@react-navigation/stack';
 import * as Sentry from '@sentry/react-native';
 import { isRunningInExpoGo } from 'expo';
+import * as FileSystem from 'expo-file-system';
+import { File } from 'expo-file-system/next';
 import { useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
@@ -29,6 +31,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
 import { persister, store } from '@/src/redux/store';
+import { logFilePath } from '@/src/utils/logger';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -48,7 +51,6 @@ const navigationIntegration = Sentry.reactNavigationIntegration({
 
 Sentry.init({
   dsn: 'https://3d6106f276a8cdfb240e2a6282ce777c@o4507198225383424.ingest.de.sentry.io/4508592129441872',
-  debug: __DEV__,
   tracesSampleRate: 1.0, // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing. Adjusting this value in production.
   integrations: [
     // Pass integration
@@ -98,6 +100,9 @@ function RootLayoutNav() {
           headerTitle: 'Video Enhancement',
           gestureEnabled: false,
         }} />
+        <Stack.Screen name="dev/logcat" options={{
+          headerTitle: 'Logcat',
+        }} />
       </Stack>
     </View>
   );
@@ -114,6 +119,18 @@ function RootLayout() {
       navigationIntegration.registerNavigationContainer(ref);
     }
   }, [ref]);
+
+  useEffect(() => {
+    const createLogFile = async () => {
+      const fileExists = new File(logFilePath).exists;
+
+      if (!fileExists) {
+        await FileSystem.writeAsStringAsync(logFilePath, '');
+      }
+    };
+
+    createLogFile();
+  }, []);
 
   const {
     DarkTheme: PaperedDarkTheme,

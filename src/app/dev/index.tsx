@@ -1,8 +1,7 @@
-import * as Sentry from "@sentry/react-native";
 import { Link } from "expo-router";
 import { useCallback } from "react";
 import { ScrollView } from "react-native";
-import { Button, Divider, List, useTheme } from "react-native-paper";
+import { Divider, List, useTheme } from "react-native-paper";
 
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
@@ -35,6 +34,10 @@ export default function DevScreen() {
     <List.Icon {...props} icon="database-cog-outline" />
   ), []);
 
+  const renderLogcatIcon = useCallback((props: ListLRProps) => (
+    <List.Icon icon="folder-eye-outline" {...props} />
+  ), []);
+
   return (
     <ScrollView>
       <DevSwitchItem />
@@ -62,6 +65,15 @@ export default function DevScreen() {
           />
         </Link>
 
+        <Link href="/dev/logcat" asChild>
+          <List.Item
+            title="Logcat"
+            description="View the log file"
+            left={renderLogcatIcon}
+            right={renderRightIcon}
+          />
+        </Link>
+
         <ExternalLink href={EXPO_DOCS_URL}>
           <List.Item
             title="Read the Expo documentation"
@@ -80,14 +92,6 @@ export default function DevScreen() {
       >
         <RouteItem />
         <TestSourceItem />
-
-        <Button
-          onPress={() => {
-            Sentry.captureException(new Error('First error'))
-          }}
-        >
-          Capture Exception
-        </Button>
       </List.Section>
     </ScrollView>
   );

@@ -51,6 +51,7 @@ import {
   selectVolumeFactor,
 } from '@/src/redux/slices/volumeFactor';
 import handleInputVideo from '@/src/utils/handleInputVideo';
+import { playerLog } from '@/src/utils/logger';
 
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
@@ -74,7 +75,7 @@ export default function VideoScreen() {
   const handleShare: ShareCallback = useCallback(async (
     item
   ) => {
-    console.debug('Shared item:', item);
+    playerLog.debug('Shared item:', item);
     if (!item) { return; }
 
     const shareSource = Array.isArray(item.data) ? item.data[0] : item.data;
