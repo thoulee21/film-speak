@@ -41,6 +41,8 @@ jobs:
           cache: gradle
 
       - name: Build Android Release
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           cd android
           chmod +x ./gradlew
@@ -49,8 +51,6 @@ jobs:
       - name: Automatic Releases
         if: github.event_name == 'push'
         uses: marvinpinto/action-automatic-releases@v1.2.1
-        env:
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: 'Release ${{ github.ref_name }}'
