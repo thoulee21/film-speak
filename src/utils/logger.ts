@@ -3,15 +3,15 @@ import * as FileSystem from 'expo-file-system';
 import { InteractionManager } from 'react-native';
 import {
   consoleTransport,
-  // fileAsyncTransport,
+  fileAsyncTransport,
   logger,
   sentryTransport,
 } from 'react-native-logs';
 
-export const logFilePath = `${FileSystem.documentDirectory}/log.txt`;
+export const logFilePath = `${FileSystem.documentDirectory}log`;
 
 const transports = [
-  // fileAsyncTransport,
+  fileAsyncTransport,
   sentryTransport,
   consoleTransport,
 ];
@@ -26,15 +26,14 @@ export const log = logger.createLogger({
       }
     }),
   transportOptions: {
-    // FS: {
-    //   ...FileSystem,
-    //   DocumentDirectoryPath: FileSystem.documentDirectory as never,
-    //   appendFile: FileSystem.writeAsStringAsync as never,
-    //   writeAsStringAsync: (
-    //     fileUri, contents, options
-    //   ) =>
-    //     FileSystem.writeAsStringAsync(fileUri, contents, options) as never,
-    // },
+    FS: {
+      documentDirectory: FileSystem.documentDirectory,
+      DocumentDirectoryPath: FileSystem.documentDirectory as never,
+      writeAsStringAsync: FileSystem.writeAsStringAsync,
+      readAsStringAsync: FileSystem.readAsStringAsync,
+      getInfoAsync: FileSystem.getInfoAsync,
+      appendFile: undefined,
+    },
     SENTRY: {
       ...Sentry,
       addBreadcrumb: Sentry.addBreadcrumb as never,

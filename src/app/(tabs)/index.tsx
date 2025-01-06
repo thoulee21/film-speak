@@ -75,7 +75,10 @@ export default function VideoScreen() {
   const handleShare: ShareCallback = useCallback(async (
     item
   ) => {
-    playerLog.debug('Shared item:', item);
+    playerLog.debug(
+      'Shared item:',
+      item === null ? 'No shared item' : item?.data[0]
+    );
     if (!item) { return; }
 
     const shareSource = Array.isArray(item.data) ? item.data[0] : item.data;
