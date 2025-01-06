@@ -84,7 +84,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       mode={selected ? "elevated" : "contained"}
       style={[styles.card, {
         backgroundColor: selected
-          ? appTheme.colors.primaryContainer
+          ? appTheme.colors.secondaryContainer
           : appTheme.colors.surfaceVariant,
       }]}
     >
