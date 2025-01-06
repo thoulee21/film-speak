@@ -155,7 +155,6 @@ export default function VideoScreen() {
             playerRef.current?.seek(clip.startSeconds);
           }}
           debug={{ enable: __DEV__, thread: __DEV__ }}
-          enterPictureInPictureOnLeave
           fullscreenOrientation='landscape'
           fullscreenAutorotate
           onFullscreenPlayerWillPresent={() => {
