@@ -43,6 +43,8 @@ jobs:
       - name: Build Android Release
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: 'thouworks'
+          SENTRY_PROJECT: 'film-speak'
         run: |
           cd android
           chmod +x ./gradlew
