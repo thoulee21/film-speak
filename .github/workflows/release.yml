@@ -61,3 +61,22 @@ jobs:
         with:
           name: android-release
           path: android/app/build/outputs/**/*.apk
+
+  sentry-release:
+    name: Sentry Release
+    if: github.event_name == 'push'
+    needs: build-release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v4
+      
+      - name: Sentry Release
+        uses: getsentry/action-release@v1.7.0
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: 'thouworks'
+          SENTRY_PROJECT: 'film-speak'
+        with:
+          environment: production
+          version: ${{ github.ref_name }}
