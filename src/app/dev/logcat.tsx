@@ -25,6 +25,7 @@ import {
   Button,
   Caption,
   Dialog,
+  FAB,
   IconButton,
   Portal,
   Text,
@@ -119,7 +120,6 @@ const Logcat = () => {
       if (!isLoaded) {
         readLog().then(() => {
           setIsLoaded(true);
-          logsRef.current?.scrollToEnd();
         });
       }
     } catch (e) { rootLog.error(e); }
@@ -155,7 +155,7 @@ const Logcat = () => {
   ), []);
 
   return (
-    <>
+    <Portal.Host>
       <Animated.FlatList
         ref={logsRef}
         data={logLines}
@@ -178,6 +178,19 @@ const Logcat = () => {
       />
 
       <Portal>
+        <FAB
+          icon="arrow-down"
+          variant="surface"
+          style={styles.fab}
+          onPress={() => {
+            if (logsRef.current) {
+              logsRef.current.scrollToEnd();
+            }
+          }}
+        />
+      </Portal>
+
+      <Portal>
         <Dialog
           visible={dialogVisible}
           onDismiss={() => setDialogVisible(false)}
@@ -198,18 +211,22 @@ const Logcat = () => {
             <Button
               textColor={appTheme.colors.outline}
               onPress={() => setDialogVisible(false)}
-            >Cancel</Button>
+            >
+              Cancel
+            </Button>
             <Button
               textColor={appTheme.colors.error}
               onPress={() => {
                 clearLogs();
                 setDialogVisible(false);
               }}
-            >OK</Button>
+            >
+              OK
+            </Button>
           </Dialog.Actions>
         </Dialog>
       </Portal>
-    </>
+    </Portal.Host>
   );
 };
 
@@ -227,5 +244,11 @@ const styles = StyleSheet.create({
   },
   row: {
     flexDirection: 'row',
-  }
+  },
+  fab: {
+    position: 'absolute',
+    margin: 16,
+    right: 0,
+    bottom: 0
+  },
 });
