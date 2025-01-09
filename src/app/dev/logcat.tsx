@@ -21,7 +21,6 @@ import HapticFeedback, {
   HapticFeedbackTypes
 } from 'react-native-haptic-feedback';
 import {
-  ActivityIndicator,
   Button,
   Caption,
   Dialog,
@@ -126,14 +125,7 @@ const Logcat = () => {
   }, [isLoaded]);
 
   const renderEmpty = useCallback(() => (
-    isLoaded ? (
-      <Caption>No logs found</Caption>
-    ) : (
-      <ActivityIndicator
-        style={styles.loading}
-        size="large"
-      />
-    )
+    isLoaded && <Caption>No logs found</Caption>
   ), [isLoaded]);
 
   const logLines = useMemo(() => (
