@@ -18,8 +18,6 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import {
-  MD3DarkTheme,
-  MD3LightTheme,
   PaperProvider,
   adaptNavigationTheme,
   useTheme,
@@ -28,6 +26,7 @@ import 'react-native-reanimated';
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+import BlurColorTheme from '@/src/constants/colorTheme';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
 import { persister, store } from '@/src/redux/store';
@@ -157,15 +156,16 @@ function RootLayout() {
   } = adaptNavigationTheme({
     reactNavigationDark: DarkTheme,
     reactNavigationLight: DefaultTheme,
-    materialDark: MD3DarkTheme,
-    materialLight: MD3LightTheme,
+    materialDark: BlurColorTheme.dark,
+    materialLight: BlurColorTheme.light,
   });
 
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persister}>
         <PaperProvider
-          theme={colorScheme === 'dark' ? MD3DarkTheme : MD3LightTheme}
+          theme={colorScheme === 'dark'
+            ? BlurColorTheme.dark : BlurColorTheme.light}
         >
           <ThemeProvider value={{
             ...(colorScheme === 'dark'
