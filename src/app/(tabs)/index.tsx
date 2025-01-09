@@ -33,7 +33,7 @@ import ShareMenu, {
   type ShareCallback
 } from 'react-native-share-menu';
 import type { VideoRef } from 'react-native-video';
-import VideoPlayer from 'react-native-video';
+import VideoPlayer, { ViewType } from 'react-native-video';
 import type { Line } from 'srt-parser-2';
 
 import Subtitle from '@/src/components/video/Subtitle';
@@ -140,6 +140,7 @@ export default function VideoScreen() {
             width: '100%',
             backgroundColor: 'black'
           }}
+          viewType={ViewType.SURFACE}
           showNotificationControls
           onLayout={async () => {
             playerRef.current?.pause();
