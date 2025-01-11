@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import StateKeys from '@/src/constants/stateKeys';
 import { RootState } from '@/src/redux/store';
 
-const initialState = {
+export const initialState = {
   value: 10.0,
 };
 

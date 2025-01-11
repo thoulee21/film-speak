@@ -22,15 +22,16 @@ import {
   useAppSelector,
 } from "@/src/hooks/redux";
 import {
+  initialState as initialVolumeFactorState,
   resetVolumeFactor,
   selectVolumeFactor,
   setVolumeFactor,
 } from "@/src/redux/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
 
-const MIN = 1;
-const MAX = 20;
-const STEP = 1;
+const MIN = 1.0;
+const MAX = 20.0;
+const STEP = 1.0;
 
 export default function VideoEnhanceScreen() {
   const dispatch = useAppDispatch();
@@ -65,16 +66,17 @@ export default function VideoEnhanceScreen() {
                 </Text>
 
                 <Text style={{ fontSize }}>
-                  {volumeFactor}
+                  {volumeFactor.toFixed(1)}x
                 </Text>
               </View>
             )}
-            description="Increase or decrease the video factor, default is 20"
+            description={`Increase or decrease the video factor, default is ${initialVolumeFactorState.value.toFixed(1)}`}
             left={renderVolumeFactorIcon}
-            right={({ style }) => (
+            right={({ style, color }) => (
               <IconButton
                 icon="refresh"
                 style={style}
+                iconColor={color}
                 onPress={() => dispatch(resetVolumeFactor())}
               />
             )}
@@ -106,8 +108,8 @@ export default function VideoEnhanceScreen() {
           />
 
           <View style={styles.sliderCaption}>
-            <Caption>{MIN}</Caption>
-            <Caption>{MAX}</Caption>
+            <Caption>{MIN.toFixed(1)}</Caption>
+            <Caption>{MAX.toFixed(1)}</Caption>
           </View>
         </View>
       </ScrollView>
