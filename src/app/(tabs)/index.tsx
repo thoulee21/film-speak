@@ -42,7 +42,6 @@ import {
   useAppSelector,
 } from '@/src/hooks/redux';
 import {
-  resetVideoSource,
   selectVideoSource,
   setVideoSource,
 } from '@/src/redux/slices/videoSource';
@@ -180,17 +179,7 @@ export default function VideoScreen() {
               ToastAndroid.LONG,
               ToastAndroid.BOTTOM
             );
-            console.error(
-              'Video error:',
-              error
-            );
-
-            ToastAndroid.showWithGravity(
-              'Resetting video source ...',
-              ToastAndroid.LONG,
-              ToastAndroid.BOTTOM
-            );
-            dispatch(resetVideoSource());
+            playerLog.error('Video error: ', error);
           }}
           // if volume is unset(-1), play at original volume
           volume={volume === -1 ? (1 / volumeFactor) : volume}
