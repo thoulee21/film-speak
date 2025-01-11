@@ -120,6 +120,8 @@ function RootLayoutNav() {
         }} />
         <Stack.Screen name="dev/logcat" options={{
           headerTitle: 'Logcat',
+          headerBackButtonDisplayMode: 'minimal',
+          headerTitleAlign: 'left',
         }} />
       </Stack>
     </View>
