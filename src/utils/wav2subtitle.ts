@@ -105,7 +105,11 @@ class Wav2SubtitleConverter {
    * @param fileUri 本地 .wav 文件路径
    * 如：file:///data/user/0/host.exp.exponent/cache/recording.wav
    */
-  public async start(fileUri: string, onRecognized: (lines: Line[]) => void) {
+  public async start(
+    fileUri: string,
+    onCompleted: (lines: Line[]) => void,
+    onRecognizing: (resTxt: string) => void
+  ) {
     // 先检查是否有麦克风等权限
     await Wav2SubtitleConverter.checkPermission();
 
@@ -132,7 +136,7 @@ class Wav2SubtitleConverter {
 
         const parser = new SrtParser2();
         this.lines = parser.fromSrt(this.subtitle);
-        onRecognized(this.lines);
+        onCompleted(this.lines);
       }
 
       if (CancellationReason.Error === e.reason) {
@@ -146,8 +150,12 @@ class Wav2SubtitleConverter {
       }
     }
 
+    this.recognizer!.recognizing = (s, e) => {
+      onRecognizing(e.result.text)
+    }
+
     // 识别到一整句话说完之后执行
-    this.recognizer!.recognized = (s, e) => {
+    this.recognizer!.recognized = (_, e) => {
       sequenceNumber = sequenceNumber + 1;
 
       const caption = getCaption(

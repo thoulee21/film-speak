@@ -4,7 +4,7 @@ import { File, Paths } from "expo-file-system/next";
 import { FFmpegKit, type FFmpegSession } from "ffmpeg-kit-react-native";
 import React, { useCallback, useMemo, useState, } from "react";
 import { FlatList, StyleSheet, View } from "react-native";
-import { Divider } from "react-native-paper";
+import { Caption, Divider } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
 import packageData from '@/package.json';
@@ -23,9 +23,12 @@ interface SubtitleProps {
 
 export default function Subtitle({ onItemPress }: SubtitleProps) {
   const dispatch = useAppDispatch();
+
   const videoFileUri = useAppSelector(selectVideoSource);
   const subtitles = useAppSelector(selectSubtitles);
+
   const [selectedID, setSelectedID] = useState("0");
+  const [generatingLog, setGeneratingLog] = useState('');
 
   const subtitle = useMemo(() => {
     if (!videoFileUri) { return []; }
@@ -68,7 +71,11 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
       _: FFmpegSession, audioUri: string
     ) => {
       const wav2Subtitle = new Wav2SubtitleConverter();
-      wav2Subtitle.start(audioUri, save);
+      wav2Subtitle.start(
+        audioUri,
+        save,
+        setGeneratingLog
+      );
     }
 
     if (!subtitleValue) {
@@ -106,18 +113,29 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
           <LottieAnimation
             animation="stackLoading"
             caption="Generating subtitle..."
-          />
+          >
+            <Caption
+              style={[
+                styles.log,
+                styles.paddingHor
+              ]}
+              numberOfLines={1}
+              ellipsizeMode="head"
+            >
+              {generatingLog}
+            </Caption>
+          </LottieAnimation>
         ) : (
           <LottieAnimation
             animation="welcome"
-            style={styles.welcome}
+            style={styles.paddingHor}
             caption={`Welcome to ${packageData.displayName}!\nPlease select a video file or share a video to get started.`}
           />
         )
       }
       // 避免字幕项被 FAB 遮挡
       ListFooterComponent={
-        <View style={styles.footer}>
+        <View style={styles.paddingHor}>
           {!videoFileUri && <SelectVideoButton />}
           <View style={{ height: 100 }} />
         </View>
@@ -130,11 +148,11 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
   },
-  footer: {
-    justifyContent: "center",
-    marginHorizontal: 16,
+  log: {
+    textAlign: 'center',
+    marginBottom: 16,
   },
-  welcome: {
+  paddingHor: {
     marginHorizontal: 16,
   }
 })
