@@ -4,7 +4,7 @@ import StateKeys from '@/src/constants/stateKeys';
 import { RootState } from '@/src/redux/store';
 
 const initialState = {
-  value: 20.0,
+  value: 10.0,
 };
 
 export const volumeFactorSlice = createSlice({

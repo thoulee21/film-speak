@@ -28,6 +28,10 @@ import {
 } from "@/src/redux/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
 
+const MIN = 1;
+const MAX = 20;
+const STEP = 1;
+
 export default function VideoEnhanceScreen() {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
@@ -77,15 +81,15 @@ export default function VideoEnhanceScreen() {
           />
 
           <Slider
-            minimumValue={1}
-            maximumValue={40}
+            minimumValue={MIN}
+            maximumValue={MAX}
             StepMarker={() => (
               <View style={[
                 styles.stepMaker,
                 { backgroundColor: appTheme.colors.primary }
               ]} />
             )}
-            step={1}
+            step={STEP}
             value={volumeFactor}
             onSlidingComplete={(value) => {
               dispatch(setVolumeFactor(value));
@@ -102,8 +106,8 @@ export default function VideoEnhanceScreen() {
           />
 
           <View style={styles.sliderCaption}>
-            <Caption>1</Caption>
-            <Caption>40</Caption>
+            <Caption>{MIN}</Caption>
+            <Caption>{MAX}</Caption>
           </View>
         </View>
       </ScrollView>
