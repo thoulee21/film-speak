@@ -22,7 +22,6 @@ import {
   ActivityIndicator,
   Dialog,
   FAB,
-  MD3Colors,
   Portal,
   Text,
 } from 'react-native-paper';
@@ -219,8 +218,7 @@ export default function VideoScreen() {
           <Dialog.Title>Processing</Dialog.Title>
           <Dialog.Content style={styles.flexing}>
             <ActivityIndicator
-              color={MD3Colors.tertiary30}
-              size={Platform.OS === 'ios' ? 'large' : 48}
+              size={Platform.OS === 'ios' ? 'large' : 40}
               style={styles.marginRight}
             />
             <Text>
