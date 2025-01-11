@@ -9,6 +9,7 @@ export interface Subtitle {
   value: Line[];
   createAt: number;
   coverUri: string;
+  audioUri: string;
 }
 
 const initialState = {

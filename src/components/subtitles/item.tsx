@@ -1,6 +1,6 @@
 import Clipboard from "@react-native-clipboard/clipboard";
-import * as Crypto from "expo-crypto";
-import { File, Paths } from "expo-file-system/next";
+import { File } from "expo-file-system/next";
+import * as Sharing from 'expo-sharing';
 import { useCallback } from "react";
 import { Alert, StyleSheet, ToastAndroid } from "react-native";
 import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
@@ -10,6 +10,7 @@ import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { selectDevMode } from "@/src/redux/slices/devMode";
 import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
 import { selectVideoSource, setVideoSource } from "@/src/redux/slices/videoSource";
+import { formatDataSize } from "@/src/utils/formatDataSize";
 
 export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
@@ -44,14 +45,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   const performRemove = useCallback(async () => {
     HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
 
-    const fileHash = await Crypto.digestStringAsync(
-      Crypto.CryptoDigestAlgorithm.SHA256,
-      item.fileUri
-    );
-    const wavFile = new File(
-      Paths.cache,
-      `${fileHash.slice(0, 6)}.wav`
-    );
+    const wavFile = new File(item.audioUri);
     const coverFile = new File(item.coverUri);
 
     wavFile.exists && wavFile.delete();
@@ -75,7 +69,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       "Subtitle removed",
       ToastAndroid.SHORT
     );
-  }, [dispatch, item.coverUri, item.fileUri, selected, subtitles]);
+  }, [dispatch, item.audioUri, item.coverUri, item.fileUri, selected, subtitles]);
 
   return (
     <Card
@@ -103,20 +97,54 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
             }}
           />
         )}
-        right={({ size }) => (
-          <Caption style={{
-            marginRight: 16,
-            fontSize: size - 6,
-          }}>
-            {item.fileUri.split(".").pop()?.toLocaleUpperCase()}
-          </Caption>
-        )}
+        right={() => {
+          const videoFileSize = new File(item.fileUri).size || 0;
+          const coverFileSize = new File(item.coverUri).size || 0;
+          const wavFileSize = new File(item.audioUri).size || 0;
+          const cacheSizeSum = videoFileSize + coverFileSize + wavFileSize;
+
+          return (
+            <Caption style={styles.cacheSize}>
+              {formatDataSize(cacheSizeSum)}
+            </Caption>
+          )
+        }}
       />
-      <Card.Content>
-        {devMode && <Text>{item.fileUri}</Text>}
-      </Card.Content>
+
+      {devMode && (
+        <Card.Content>
+          <Text>
+            {JSON.stringify(
+              item.fileUri, null, 2
+            )}
+          </Text>
+        </Card.Content>
+      )}
 
       <Card.Actions>
+        <Button
+          icon="share-outline"
+          onPress={async () => {
+            const isAvailable = await Sharing.isAvailableAsync();
+            if (isAvailable) {
+              await Sharing.shareAsync(
+                item.audioUri,
+                {
+                  dialogTitle: "Share extracted wave file",
+                  mimeType: "audio/wav",
+                },
+              );
+            } else {
+              ToastAndroid.show(
+                "Sharing is not available",
+                ToastAndroid.SHORT,
+              );
+            }
+          }}
+        >
+          Share .wav
+        </Button>
+
         <Button
           icon="delete-outline"
           onPress={() => {
@@ -144,5 +172,9 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
 const styles = StyleSheet.create({
   card: {
     marginVertical: 5,
+  },
+  cacheSize: {
+    fontSize: 15,
+    marginRight: 16,
   }
 })

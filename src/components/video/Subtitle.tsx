@@ -37,7 +37,7 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
       subtitle.fileUri === videoFileUri
     )?.value;
 
-    const save = async (lines: Line[]) => {
+    const save = async (lines: Line[], audioUri: string) => {
       subtitleValue = lines;
 
       const uriHash = await Crypto.digestStringAsync(
@@ -54,7 +54,8 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
           fileUri: videoFileUri,
           value: lines,
           createAt: Date.now(),
-          coverUri: coverFile.uri
+          coverUri: coverFile.uri,
+          audioUri
         };
 
         dispatch(addSubtitle(subtitleMatedata));
@@ -73,7 +74,7 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
       const wav2Subtitle = new Wav2SubtitleConverter();
       wav2Subtitle.start(
         audioUri,
-        save,
+        (lines) => save(lines, audioUri),
         setGeneratingLog
       );
     }
