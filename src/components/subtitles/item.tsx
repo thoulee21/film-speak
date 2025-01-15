@@ -4,10 +4,9 @@ import * as Sharing from 'expo-sharing';
 import { useCallback } from "react";
 import { Alert, StyleSheet, ToastAndroid } from "react-native";
 import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
-import { Avatar, Button, Caption, Card, Text, useTheme } from "react-native-paper";
+import { Avatar, Button, Caption, Card, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { selectDevMode } from "@/src/redux/slices/devMode";
 import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
 import { selectVideoSource, setVideoSource } from "@/src/redux/slices/videoSource";
 import { formatDataSize } from "@/src/utils/formatDataSize";
@@ -16,7 +15,6 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
 
-  const devMode = useAppSelector(selectDevMode);
   const subtitles = useAppSelector(selectSubtitles);
 
   const videoSource = useAppSelector(selectVideoSource);
@@ -110,16 +108,6 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
           )
         }}
       />
-
-      {devMode && (
-        <Card.Content>
-          <Text>
-            {JSON.stringify(
-              item.fileUri, null, 2
-            )}
-          </Text>
-        </Card.Content>
-      )}
 
       <Card.Actions>
         <Button
