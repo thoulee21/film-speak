@@ -1,10 +1,10 @@
 import Clipboard from "@react-native-clipboard/clipboard";
 import { File } from "expo-file-system/next";
 import * as Sharing from 'expo-sharing';
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Alert, StyleSheet, ToastAndroid } from "react-native";
 import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
-import { Avatar, Button, Caption, Card, useTheme } from "react-native-paper";
+import { Avatar, Button, Caption, Card, Menu, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
@@ -16,9 +16,18 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   const appTheme = useTheme();
 
   const subtitles = useAppSelector(selectSubtitles);
-
   const videoSource = useAppSelector(selectVideoSource);
+
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [isShareAvailable, setIsShareAvailable] = useState(false);
+
   const selected = videoSource === item.fileUri;
+
+  useEffect(() => {
+    (async () => {
+      setIsShareAvailable(await Sharing.isAvailableAsync());
+    })();
+  }, []);
 
   const selectSubtitle = useCallback(() => {
     HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
@@ -110,28 +119,61 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       />
 
       <Card.Actions>
-        <Button
-          icon="share-outline"
-          onPress={async () => {
-            const isAvailable = await Sharing.isAvailableAsync();
-            if (isAvailable) {
-              await Sharing.shareAsync(
-                item.audioUri,
-                {
-                  dialogTitle: "Share extracted wave file",
-                  mimeType: "audio/wav",
-                },
-              );
-            } else {
-              ToastAndroid.show(
-                "Sharing is not available",
-                ToastAndroid.SHORT,
-              );
-            }
-          }}
+        <Menu
+          visible={menuVisible}
+          onDismiss={() => setMenuVisible(false)}
+          mode="elevated"
+          anchorPosition="bottom"
+          anchor={
+            <Button
+              icon="share-outline"
+              mode="outlined"
+              disabled={!isShareAvailable}
+              onPress={() => {
+                HapticFeedback.trigger(
+                  HapticFeedbackTypes.effectClick
+                );
+                setMenuVisible(true);
+              }}
+            >
+              Share...
+            </Button>
+          }
         >
-          Share .wav
-        </Button>
+          <Menu.Item
+            title="Audio file"
+            leadingIcon="music-note-outline"
+            onPress={async () => {
+              await Sharing.shareAsync(item.audioUri, {
+                dialogTitle: "Share extracted wave file",
+                mimeType: "audio/wav",
+              });
+              setMenuVisible(false);
+            }}
+          />
+          <Menu.Item
+            title="Cover image"
+            leadingIcon="image-outline"
+            onPress={async () => {
+              await Sharing.shareAsync(item.coverUri, {
+                dialogTitle: "Share cover image",
+                mimeType: "image/png",
+              });
+              setMenuVisible(false);
+            }}
+          />
+          <Menu.Item
+            title="Video file"
+            leadingIcon="video-outline"
+            onPress={async () => {
+              await Sharing.shareAsync(item.fileUri, {
+                dialogTitle: "Share video file",
+                mimeType: "video/mp4",
+              });
+              setMenuVisible(false);
+            }}
+          />
+        </Menu>
 
         <Button
           icon="delete-outline"
