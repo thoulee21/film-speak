@@ -22,7 +22,7 @@
 			"label": "clean: build:android",
 			"detail": "rm -rf .\\android\\app\\.cxx",
 			"windows": {
-				"command": "rm -Recurse -Force .\\android\\app\\.cxx",
+				"command": "rm -Recurse -Force .\\android\\app\\.cxx\\**",
 			}
 		},
 		{
