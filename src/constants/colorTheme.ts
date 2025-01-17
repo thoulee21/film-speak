@@ -90,7 +90,7 @@ const darkBlueColors = {
   },
 };
 
-const BlurColorTheme = {
+const ColorTheme = {
   light: {
     ...MD3LightTheme,
     ...lightBlueColors,
@@ -101,4 +101,4 @@ const BlurColorTheme = {
   }
 }
 
-export default BlurColorTheme;
+export default ColorTheme;

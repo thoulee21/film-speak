@@ -26,7 +26,7 @@ import 'react-native-reanimated';
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
-import BlurColorTheme from '@/src/constants/colorTheme';
+import ColorTheme from '@/src/constants/colorTheme';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
 import { persister, store } from '@/src/redux/store';
@@ -158,16 +158,15 @@ function RootLayout() {
   } = adaptNavigationTheme({
     reactNavigationDark: DarkTheme,
     reactNavigationLight: DefaultTheme,
-    materialDark: BlurColorTheme.dark,
-    materialLight: BlurColorTheme.light,
+    materialDark: ColorTheme.dark,
+    materialLight: ColorTheme.light,
   });
 
   return (
     <ReduxProvider store={store}>
       <PersistGate loading={null} persistor={persister}>
         <PaperProvider
-          theme={colorScheme === 'dark'
-            ? BlurColorTheme.dark : BlurColorTheme.light}
+          theme={colorScheme === 'dark' ? ColorTheme.dark : ColorTheme.light}
         >
           <ThemeProvider value={{
             ...(colorScheme === 'dark'
