@@ -33,7 +33,7 @@
     "@react-navigation/stack": "^7.1.1",
     "@reduxjs/toolkit": "^2.5.0",
     "@sentry/react-native": "~6.3.0",
-    "expo": "~52.0.23",
+    "expo": "~52.0.26",
     "expo-asset": "~11.0.1",
     "expo-crypto": "~14.0.1",
     "expo-dev-client": "~5.0.7",
