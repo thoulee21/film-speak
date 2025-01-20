@@ -46,7 +46,7 @@
     "expo-status-bar": "~2.0.0",
     "expo-system-ui": "~4.0.6",
     "expo-updates": "~0.26.10",
-    "expo-web-browser": "~14.0.1",
+    "expo-web-browser": "~14.0.2",
     "ffmpeg-kit-react-native": "^6.0.2",
     "lottie-react-native": "7.1.0",
     "microsoft-cognitiveservices-speech-sdk": "^1.42.0",
