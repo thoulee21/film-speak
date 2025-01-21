@@ -123,6 +123,9 @@ function RootLayoutNav() {
           headerBackButtonDisplayMode: 'minimal',
           headerTitleAlign: 'left',
         }} />
+        <Stack.Screen name="dev/aniGallery" options={{
+          headerTitle: 'AniGallery',
+        }} />
       </Stack>
     </View>
   );

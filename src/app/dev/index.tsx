@@ -38,6 +38,10 @@ export default function DevScreen() {
     <List.Icon icon="folder-eye-outline" {...props} />
   ), []);
 
+  const renderAniIcon = useCallback((props: ListLRProps) => (
+    <List.Icon {...props} icon="animation-outline" />
+  ), []);
+
   return (
     <ScrollView>
       <DevSwitchItem />
@@ -70,6 +74,15 @@ export default function DevScreen() {
             title="Logcat"
             description="View the log file"
             left={renderLogcatIcon}
+            right={renderRightIcon}
+          />
+        </Link>
+
+        <Link href="/dev/aniGallery" asChild>
+          <List.Item
+            title="Animation Gallery"
+            description="View the animations that are used in the app"
+            left={renderAniIcon}
             right={renderRightIcon}
           />
         </Link>

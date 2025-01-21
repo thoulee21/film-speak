@@ -20,6 +20,8 @@ export const ANIMATIONS = {
   teapot: require('@/assets/animations/teapot.json'),
   stackLoading: require('@/assets/animations/stack-loading.json'),
   robotOnError: require('@/assets/animations/robot-on-error.json'),
+  loadingAtom: require('@/assets/animations/loading-atom.json'),
+  loadingAtomColored: require('@/assets/animations/loading-atom-colored.json'),
 };
 
 export type AniKeys = keyof typeof ANIMATIONS

@@ -112,7 +112,7 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
       ListEmptyComponent={
         videoFileUri ? (
           <LottieAnimation
-            animation="stackLoading"
+            animation="loadingAtomColored"
             caption="Generating subtitle..."
           >
             <Caption
