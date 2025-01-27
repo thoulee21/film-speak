@@ -20,6 +20,10 @@ jobs:
   build-release:
     name: Release Android
     runs-on: ubuntu-latest
+    env:
+      SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+      SENTRY_ORG: 'thouworks'
+      SENTRY_PROJECT: 'film-speak'
 
     steps:
       - name: Code Checkout
@@ -41,10 +45,6 @@ jobs:
           cache: gradle
 
       - name: Build Android Release
-        # env:
-        #   SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-        #   SENTRY_ORG: 'thouworks'
-        #   SENTRY_PROJECT: 'film-speak'
         run: |
           cd android
           chmod +x ./gradlew
