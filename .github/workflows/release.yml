@@ -25,6 +25,9 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v4
 
+      - name: Generate android/
+        run: npx expo prebuild
+
       - name: Setup Java JDK 17 
       # 需要 Java 17 才能编译 apk, 
       # 且默认情况下该环境（ubuntu-latest）只有 Java 11
@@ -36,9 +39,6 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-
-      - name: Generate android/
-        run: npx expo prebuild
 
       - name: Build Android Release
         # env:
