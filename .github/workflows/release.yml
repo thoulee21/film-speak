@@ -25,6 +25,9 @@ jobs:
       - name: Code Checkout
         uses: actions/checkout@v4
 
+      - name: Install Dependencies
+        run: npm install
+
       - name: Generate android/
         run: npx expo prebuild
 
@@ -36,9 +39,6 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
           cache: gradle
-
-      - name: Install Dependencies
-        run: npm install
 
       - name: Build Android Release
         # env:
@@ -71,6 +71,7 @@ jobs:
     if: github.event_name == 'push'
     needs: build-release
     runs-on: ubuntu-latest
+
     steps:
       - name: Code Checkout
         uses: actions/checkout@v4
