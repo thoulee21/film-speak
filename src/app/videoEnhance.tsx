@@ -5,9 +5,6 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from "react-native-haptic-feedback";
 import {
   Banner,
   Caption,
@@ -28,6 +25,7 @@ import {
   setVolumeFactor,
 } from "@/src/redux/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
+import haptics from "@/src/utils/haptics";
 
 const MIN = 1.0;
 const MAX = 20.0;
@@ -96,11 +94,7 @@ export default function VideoEnhanceScreen() {
             onSlidingComplete={(value) => {
               dispatch(setVolumeFactor(value));
             }}
-            onValueChange={() => {
-              HapticFeedback.trigger(
-                HapticFeedbackTypes.effectHeavyClick
-              );
-            }}
+            onValueChange={haptics.heavy}
             style={styles.slider}
             thumbTintColor={appTheme.colors.primary}
             minimumTrackTintColor={appTheme.colors.onPrimaryContainer}

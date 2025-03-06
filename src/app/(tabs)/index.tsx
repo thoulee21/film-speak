@@ -15,9 +15,6 @@ import {
   ToastAndroid,
   View,
 } from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from 'react-native-haptic-feedback';
 import {
   ActivityIndicator,
   Dialog,
@@ -49,6 +46,7 @@ import {
   selectVolumeFactor,
 } from '@/src/redux/slices/volumeFactor';
 import handleInputVideo from '@/src/utils/handleInputVideo';
+import haptics from '@/src/utils/haptics';
 import { playerLog } from '@/src/utils/logger';
 
 export default function VideoScreen() {
@@ -204,9 +202,7 @@ export default function VideoScreen() {
           style={styles.fab}
           visible={typeof source !== 'undefined' && !isVideoProcessing}
           onPress={() => {
-            HapticFeedback.trigger(
-              HapticFeedbackTypes.effectDoubleClick,
-            );
+            haptics.medium();
             router.push('/subtitles');
           }}
         />

@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from 'react-native-haptic-feedback';
 import { List, Switch } from 'react-native-paper';
 
 import {
@@ -14,6 +11,7 @@ import {
   toggleShowSubtitle,
 } from '@/src/redux/slices/showSubtitle';
 import ListLRProps from '@/src/types/paperListItem';
+import haptics from '@/src/utils/haptics';
 
 const ShowSubtitleSwitchItem = () => {
   const dispatch = useAppDispatch();
@@ -32,7 +30,7 @@ const ShowSubtitleSwitchItem = () => {
   ), [showSubtitle]);
 
   const onPressSwitch = useCallback(() => {
-    HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+    haptics.medium();
     dispatch(toggleShowSubtitle());
   }, [dispatch]);
 

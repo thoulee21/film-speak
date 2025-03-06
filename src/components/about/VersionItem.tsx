@@ -1,18 +1,15 @@
-import { version } from '@/package.json';
-
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
 import { Platform } from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from 'react-native-haptic-feedback';
 import { List, Portal, Snackbar } from 'react-native-paper';
 
+import { version } from '@/package.json';
 import PlatformIcon from '@/src/components/about/PlatformIcon';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode, setDevMode } from '@/src/redux/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
 import upperFirst from '@/src/utils/upperFirst';
+import haptics from '@/src/utils/haptics';
 
 const VersionItem = () => {
   const dispatch = useAppDispatch();
@@ -39,7 +36,7 @@ const VersionItem = () => {
       setHitCount(hitCount + 1);
       if (hitCount >= 5) {
         dispatch(setDevMode(true));
-        HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+        haptics.heavy();
         showSnackbar();
       }
     }

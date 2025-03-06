@@ -3,13 +3,13 @@ import { File } from "expo-file-system/next";
 import * as Sharing from 'expo-sharing';
 import { useCallback, useEffect, useState } from "react";
 import { Alert, StyleSheet, ToastAndroid } from "react-native";
-import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
 import { Avatar, Button, Caption, Card, Menu, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
 import { selectVideoSource, setVideoSource } from "@/src/redux/slices/videoSource";
 import { formatDataSize } from "@/src/utils/formatDataSize";
+import haptics from "@/src/utils/haptics";
 
 export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
@@ -30,7 +30,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   }, []);
 
   const selectSubtitle = useCallback(() => {
-    HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+    haptics.light();
 
     if (videoSource !== item.fileUri) {
       dispatch(setVideoSource(item.fileUri));
@@ -38,9 +38,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   }, [dispatch, item.fileUri, videoSource]);
 
   const copyToClipboard = useCallback(() => {
-    HapticFeedback.trigger(
-      HapticFeedbackTypes.effectHeavyClick
-    );
+    haptics.heavy();
     Clipboard.setString(item.fileUri);
 
     ToastAndroid.show(
@@ -50,7 +48,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
   }, [item.fileUri]);
 
   const performRemove = useCallback(async () => {
-    HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+    haptics.medium();
 
     const wavFile = new File(item.audioUri);
     const coverFile = new File(item.coverUri);
@@ -130,9 +128,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
               mode="outlined"
               disabled={!isShareAvailable}
               onPress={() => {
-                HapticFeedback.trigger(
-                  HapticFeedbackTypes.effectClick
-                );
+                haptics.light();
                 setMenuVisible(true);
               }}
             >

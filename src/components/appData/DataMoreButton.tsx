@@ -1,8 +1,9 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useState } from 'react';
 import { Share, StatusBar, ToastAndroid } from 'react-native';
-import HapticFeedback from 'react-native-haptic-feedback';
 import { IconButton, Menu } from 'react-native-paper';
+
+import haptics from '@/src/utils/haptics';
 
 export const DataMoreBtn = ({ data, props }: {
   data: any, props: { size: number }
@@ -19,7 +20,7 @@ export const DataMoreBtn = ({ data, props }: {
           {...props}
           icon="dots-vertical"
           onPress={() => {
-            HapticFeedback.trigger('effectHeavyClick');
+            haptics.heavy();
             setMenuVisible(true);
           }}
         />}
@@ -33,7 +34,7 @@ export const DataMoreBtn = ({ data, props }: {
         onPress={() => {
           Clipboard.setString(JSON.stringify(data));
 
-          HapticFeedback.trigger('effectTick');
+          haptics.medium();
           ToastAndroid.show(
             'Copied to clipboard',
             ToastAndroid.SHORT
@@ -50,7 +51,7 @@ export const DataMoreBtn = ({ data, props }: {
             message: JSON.stringify(data)
           });
 
-          HapticFeedback.trigger('effectTick');
+          haptics.medium();
           setMenuVisible(false);
         }}
       />

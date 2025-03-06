@@ -9,9 +9,6 @@ import {
   ToastAndroid,
   View
 } from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from 'react-native-haptic-feedback';
 import {
   ActivityIndicator,
   Button,
@@ -26,6 +23,7 @@ import RNRestart from 'react-native-restart';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
+import haptics from '@/src/utils/haptics';
 
 const UpdateChecker = () => {
   const appTheme = useTheme();
@@ -55,9 +53,7 @@ const UpdateChecker = () => {
 
   const showCurrent = useCallback(() => {
     if (isDev) {
-      HapticFeedback.trigger(
-        HapticFeedbackTypes.effectClick
-      );
+      haptics.heavy();
 
       if (availableUpdate) {
         Alert.alert(

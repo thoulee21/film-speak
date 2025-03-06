@@ -1,13 +1,11 @@
 import { useCallback, useState } from "react"
 import { ToastAndroid } from "react-native"
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from "react-native-haptic-feedback"
 import { List, TextInput, useTheme } from "react-native-paper"
 
 import { useAppDispatch } from "@/src/hooks/redux"
 import { setVideoSource } from "@/src/redux/slices/videoSource"
 import type ListLRProps from "@/src/types/paperListItem"
+import haptics from "@/src/utils/haptics"
 
 export default function TestSourceItem() {
   const dispatch = useAppDispatch()
@@ -51,9 +49,7 @@ export default function TestSourceItem() {
           icon="check"
           color={appTheme.colors.primary}
           onPress={() => {
-            HapticFeedback.trigger(
-              HapticFeedbackTypes.effectHeavyClick
-            )
+            haptics.heavy()
             commitSource()
           }}
         />

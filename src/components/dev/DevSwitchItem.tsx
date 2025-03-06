@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 import { View } from 'react-native';
-import HapticFeedback, { HapticFeedbackTypes } from 'react-native-haptic-feedback';
 import { List, Switch } from 'react-native-paper';
 
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode, toggleDevMode } from '@/src/redux/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
+import haptics from '@/src/utils/haptics';
 
 const DevSwitchItem = () => {
   const dispatch = useAppDispatch();
@@ -22,7 +22,7 @@ const DevSwitchItem = () => {
   ), [isDev]);
 
   const onPressSwitch = useCallback(() => {
-    HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+    haptics.light();
     dispatch(toggleDevMode());
   }, [dispatch]);
 

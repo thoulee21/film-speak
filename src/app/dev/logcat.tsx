@@ -17,9 +17,6 @@ import {
   type NativeSyntheticEvent,
   type TextInputChangeEventData
 } from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes
-} from 'react-native-haptic-feedback';
 import {
   Button,
   Caption,
@@ -34,6 +31,7 @@ import { v7 as uuid } from 'uuid';
 
 import packageData from '@/package.json';
 import { logFilePath, rootLog } from '@/src/utils/logger';
+import haptics from '@/src/utils/haptics';
 
 const Logcat = () => {
   const navigation = useNavigation();
@@ -79,9 +77,7 @@ const Logcat = () => {
         iconColor={appTheme.colors.error}
         disabled={!logContent}
         onPress={() => {
-          HapticFeedback.trigger(
-            HapticFeedbackTypes.notificationWarning
-          );
+          haptics.warning();
           setDialogVisible(true);
         }}
       />

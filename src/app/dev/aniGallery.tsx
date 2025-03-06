@@ -4,15 +4,13 @@ import {
 import type LottieView from 'lottie-react-native';
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from 'react-native-haptic-feedback';
 
 import LottieAnimation, {
   ANIMATIONS,
   type AniKeys,
 } from '@/src/components/LottieAnimation';
 import upperFirst from '@/src/utils/upperFirst';
+import haptics from '@/src/utils/haptics';
 
 const BottomTab = createMaterialTopTabNavigator();
 
@@ -21,7 +19,7 @@ const AniPage = ({ name }: { name: AniKeys }) => {
   const [isPlaying, setIsPlaying] = useState(true);
 
   const togglePlay = useCallback(() => {
-    HapticFeedback.trigger(HapticFeedbackTypes.effectClick);
+    haptics.light();
 
     if (isPlaying) { aniRef.current?.pause(); }
     else { aniRef.current?.resume(); }

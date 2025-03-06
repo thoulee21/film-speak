@@ -1,8 +1,5 @@
 import { useCallback } from "react";
 import { Alert, StyleSheet, View } from "react-native";
-import HapticFeedback, {
-  HapticFeedbackTypes,
-} from "react-native-haptic-feedback";
 import {
   ActivityIndicator,
   Avatar,
@@ -17,6 +14,7 @@ import { useAppSelector } from "@/src/hooks/redux";
 import { selectShowSubtitle } from "@/src/redux/slices/showSubtitle";
 import type ListLRProps from "@/src/types/paperListItem";
 import formateTime from "@/src/utils/formatTime";
+import haptics from "@/src/utils/haptics";
 
 interface SubtitleItemProps {
   item: Line;
@@ -96,15 +94,11 @@ const SubtitleItem = ({
       }}
       left={renderIndicator}
       onPress={() => {
-        HapticFeedback.trigger(
-          HapticFeedbackTypes.effectDoubleClick
-        );
+        haptics.light();
         toggleSelected();
       }}
       onLongPress={() => {
-        HapticFeedback.trigger(
-          HapticFeedbackTypes.effectClick
-        );
+        haptics.medium();
         Alert.alert("Subtitle", item.text)
       }}
     />

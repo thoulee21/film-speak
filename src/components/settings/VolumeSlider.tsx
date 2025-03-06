@@ -1,13 +1,13 @@
 import Slider from "@react-native-community/slider";
 import { useCallback } from "react";
 import { StyleSheet, View } from "react-native";
-import HapticFeedback, { HapticFeedbackTypes } from "react-native-haptic-feedback";
 import { Caption, IconButton, List, Text, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { resetVolume, selectVolume, setVolume } from "@/src/redux/slices/volume";
 import { selectVolumeFactor } from "@/src/redux/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
+import haptics from "@/src/utils/haptics";
 
 const MIN = 0;
 const MAX = 1;
@@ -74,11 +74,7 @@ export default function VolumeSlider() {
         onSlidingComplete={(value) => {
           dispatch(setVolume(value));
         }}
-        onValueChange={() => {
-          HapticFeedback.trigger(
-            HapticFeedbackTypes.effectHeavyClick
-          );
-        }}
+        onValueChange={haptics.heavy}
         style={styles.slider}
         thumbTintColor={appTheme.colors.primary}
         minimumTrackTintColor={appTheme.colors.onPrimaryContainer}
