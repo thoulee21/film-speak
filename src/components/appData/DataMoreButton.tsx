@@ -1,5 +1,6 @@
 import Clipboard from '@react-native-clipboard/clipboard';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Share, StatusBar, ToastAndroid } from 'react-native';
 import { IconButton, Menu } from 'react-native-paper';
 
@@ -8,6 +9,7 @@ import haptics from '@/src/utils/haptics';
 export const DataMoreBtn = ({ data, props }: {
   data: any, props: { size: number }
 }) => {
+  const { t } = useTranslation();
   const [
     menuVisible,
     setMenuVisible,
@@ -36,7 +38,7 @@ export const DataMoreBtn = ({ data, props }: {
 
           haptics.medium();
           ToastAndroid.show(
-            'Copied to clipboard',
+            t('action.copied'),
             ToastAndroid.SHORT
           );
           setMenuVisible(false);
@@ -44,7 +46,7 @@ export const DataMoreBtn = ({ data, props }: {
       />
       <Menu.Item
         leadingIcon="share-outline"
-        title="Share"
+        title={t('common.share')}
         disabled={typeof data === 'undefined' || data === ''}
         onPress={() => {
           Share.share({
