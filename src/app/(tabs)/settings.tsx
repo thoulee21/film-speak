@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List } from 'react-native-paper';
 
-import TestSourceItem from '@/src/components/dev/TestSourceItem';
+import TestSourceItem from '@/src/components/settings/TestSourceItem';
 import CacheItem from '@/src/components/settings/CacheItem';
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
