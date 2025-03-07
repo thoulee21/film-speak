@@ -37,6 +37,15 @@ const LanguageSelector = () => {
     <FlatList
       data={[
         {
+          title: '跟随系统',
+          description: 'Follow system',
+          onPress: () => handleLanguageChange(LanguageCode.SYSTEM),
+          right: (props: ListLRProps) => renderRadio({
+            ...props,
+            lang: LanguageCode.SYSTEM
+          })
+        },
+        {
           title: 'English',
           description: 'English',
           onPress: () => handleLanguageChange(LanguageCode.EN_US),

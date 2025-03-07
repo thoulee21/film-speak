@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+import i18next, { type ModuleType } from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
 import { MMKV } from 'react-native-mmkv';
@@ -9,7 +9,6 @@ import zhCN from '@/src/i18n/resources/zh-CN.json';
 import zhTW from '@/src/i18n/resources/zh-TW.json';
 import { LanguageCode } from '@/src/i18n/types';
 
-// 使用已有的 MMKV 实例存储语言设置
 export const storage = new MMKV();
 
 const LANGUAGE_STORAGE_KEY = `@${pkgData.name}/language`;
@@ -29,18 +28,26 @@ export const saveLanguage = (language: LanguageCode) => {
 export const getLanguage = (): LanguageCode => {
   const language = storage.getString(LANGUAGE_STORAGE_KEY);
 
-  if (language && Object.values(LanguageCode).includes(language as LanguageCode)) {
+  if (
+    language && Object.values(LanguageCode)
+      .includes(language as LanguageCode)
+  ) {
+    if (language === LanguageCode.SYSTEM) {
+      return getSystemLanguage();
+    }
     return language as LanguageCode;
   }
 
-  // 如果没有存储的语言设置，则使用设备语言
+  return LanguageCode.EN_US;
+};
+
+const getSystemLanguage = (): LanguageCode => {
   const deviceLanguages = RNLocalize.getLocales();
 
   if (deviceLanguages.length > 0) {
     const deviceLanguage = deviceLanguages[0].languageCode;
 
     if (deviceLanguage === 'zh') {
-      // 针对中文，检查是简体(CN)还是繁体(TW, HK)
       const countryCode = deviceLanguages[0].countryCode;
       if (countryCode === 'TW' || countryCode === 'HK') {
         return LanguageCode.ZH_TW;
@@ -51,13 +58,32 @@ export const getLanguage = (): LanguageCode => {
     }
   }
 
-  // 默认返回英语
   return LanguageCode.EN_US;
+};
+
+const languageDetector = {
+  type: 'languageDetector' as ModuleType,
+  async: true,
+  detect: function (callback: (arg0: string) => void) {
+    // 获取上次选择的语言
+    const lng = storage.getString(LANGUAGE_STORAGE_KEY);
+
+    // 如果是跟随本地，则获取系统语言
+    if (lng === LanguageCode.SYSTEM) {
+      callback(getSystemLanguage());
+    } else {
+      callback(lng || LanguageCode.EN_US);
+    }
+  },
+  cacheUserLanguage: function (language: string) {
+    storage.set(LANGUAGE_STORAGE_KEY, language);
+  },
 };
 
 // 初始化 i18next
 i18next
   .use(initReactI18next)
+  .use(languageDetector)
   .init({
     compatibilityJSON: 'v3',
     resources,
