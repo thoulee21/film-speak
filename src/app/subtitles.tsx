@@ -1,6 +1,7 @@
 import { useLocalSearchParams } from 'expo-router';
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
+import { useTranslation } from 'react-i18next';
 import { Platform, StyleSheet, View, type ListRenderItemInfo } from "react-native";
 import { Appbar, Banner, Icon, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
@@ -15,6 +16,7 @@ export default function Subtitles() {
   const appTheme = useTheme();
   const subtitles = useAppSelector(selectSubtitles);
   const { inform } = useLocalSearchParams();
+  const { t } = useTranslation();
 
   const [bannerVisible, setBannerVisible] = useState(
     (subtitles.length > 1) && inform === '1'
@@ -35,7 +37,7 @@ export default function Subtitles() {
         statusBarHeight={0}
         elevated
       >
-        <Appbar.Content title="Subtitles" />
+        <Appbar.Content title={t('navigation.subtitles')} />
         <Appbar.Action icon="drag" />
       </Appbar.Header>
       <Banner
@@ -48,11 +50,11 @@ export default function Subtitles() {
           />
         )}
         actions={[{
-          label: 'OK',
+          label: t('common.ok'),
           onPress: () => setBannerVisible(false),
         }]}
       >
-        Remove history subtitles can delete cached files related to them
+        {t('subtitle.removeHistory')}
       </Banner>
 
       <Reanimated.FlatList
@@ -63,7 +65,7 @@ export default function Subtitles() {
         ListEmptyComponent={
           <LottieAnimation
             animation="teapot"
-            caption="No subtitles found"
+            caption={t('subtitle.noSubtitles')}
           />
         }
         itemLayoutAnimation={LinearTransition}

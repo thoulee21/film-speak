@@ -1,5 +1,6 @@
 import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List, useTheme } from 'react-native-paper';
 
@@ -10,32 +11,24 @@ import { selectDevMode } from '@/src/redux/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
 
 export default function Setting() {
+  const { t } = useTranslation();
   const appTheme = useTheme();
   const devModeEnabled = useAppSelector(selectDevMode);
 
-  const renderDevIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="code-tags" />
-  ), []);
-
-  const renderRightIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="chevron-right" />
-  ), []);
-
-  const renderAppIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="information-outline" />
-  ), []);
-
-  const renderCacheIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="folder-outline" />
-  ), []);
-
-  const renderExploreIconButton = useCallback((props: ListLRProps) => (
+  const renderRightIcon = useCallback(({ color, style }: ListLRProps) => (
     <IconButton
-      {...props}
-      icon="file-eye-outline"
-      mode='contained'
-      onPress={() => router.push('/dev/cache')}
+      icon="chevron-right"
+      iconColor={color}
+      style={style}
     />
+  ), []);
+
+  const renderDevIcon = useCallback(({ color, style }: ListLRProps) => (
+    <List.Icon color={color} style={style} icon="developer-board" />
+  ), []);
+
+  const renderAppIcon = useCallback(({ color, style }: ListLRProps) => (
+    <List.Icon color={color} style={style} icon="information-outline" />
   ), []);
 
   const renderVideoEnhanceIcon = useCallback((props: ListLRProps) => (
@@ -44,24 +37,26 @@ export default function Setting() {
 
   return (
     <ScrollView style={styles.container}>
-      <List.Section
-        title="General"
-        titleStyle={{
-          color: appTheme.colors.primary
-        }}
-      >
+      <List.Section>
+        <List.Subheader
+          style={{ color: appTheme.colors.primary }}
+        >
+          {t('navigation.settings')}
+        </List.Subheader>
+
         <ShowSubtitleSwitchItem />
         <VolumeSlider />
-
         <Divider />
-      </List.Section>
 
-      <List.Section
-        title="Advanced"
-        titleStyle={{
-          color: appTheme.colors.primary
-        }}
-      >
+        <Link href="/lang" asChild>
+          <List.Item
+            title={t('settings.languageSelect')}
+            left={({ color, style }) => (
+              <List.Icon color={color} style={style} icon="translate" />
+            )}
+            right={renderRightIcon}
+          />
+        </Link>
         <Link href="/videoEnhance" asChild>
           <List.Item
             title="Video Enhancement"
@@ -70,12 +65,12 @@ export default function Setting() {
             right={renderRightIcon}
           />
         </Link>
-
         <List.Item
-          title="Cache"
-          description="View and manage cached data"
-          left={renderCacheIcon}
-          right={!devModeEnabled ? renderRightIcon : renderExploreIconButton}
+          title={t('navigation.subtitles')}
+          left={({ color, style }) => (
+            <List.Icon color={color} style={style} icon="subtitles-outline" />
+          )}
+          right={renderRightIcon}
           onPress={() => {
             router.push('/subtitles?inform=1');
           }}
@@ -88,8 +83,8 @@ export default function Setting() {
         {devModeEnabled && (
           <Link href="/dev" asChild>
             <List.Item
-              title="Developer Options"
-              description="Enable to access additional features"
+              title={t('navigation.devOptions')}
+              description={t('settings.enableDev')}
               left={renderDevIcon}
               right={renderRightIcon}
             />
@@ -98,8 +93,8 @@ export default function Setting() {
 
         <Link href="/about" asChild>
           <List.Item
-            title="About"
-            description="Learn more about the app"
+            title={t('navigation.about')}
+            description={t('settings.learnMore')}
             left={renderAppIcon}
             right={renderRightIcon}
           />

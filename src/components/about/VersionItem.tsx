@@ -1,5 +1,6 @@
 import { router } from 'expo-router';
 import React, { useCallback, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Platform } from 'react-native';
 import { List, Portal, Snackbar } from 'react-native-paper';
 
@@ -8,14 +9,15 @@ import PlatformIcon from '@/src/components/about/PlatformIcon';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode, setDevMode } from '@/src/redux/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
-import upperFirst from '@/src/utils/upperFirst';
 import haptics from '@/src/utils/haptics';
+import upperFirst from '@/src/utils/upperFirst';
 
 const VersionItem = () => {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const devModeEnabled = useAppSelector(selectDevMode);
-  const [hitCount, setHitCount] = useState(0);
+  const setHitCount = useState(0)[1];
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const versionText = useMemo(() => (
@@ -26,45 +28,49 @@ const VersionItem = () => {
     setSnackbarVisible(false);
   }, []);
 
-  const showSnackbar = useCallback(() => {
-    setSnackbarVisible(true);
-  }, []);
-
-  // 点击5次后开启开发者模式
-  const handleDevMode = useCallback(() => {
-    if (!devModeEnabled) {
-      setHitCount(hitCount + 1);
-      if (hitCount >= 5) {
-        dispatch(setDevMode(true));
-        haptics.heavy();
-        showSnackbar();
-      }
-    }
-  }, [devModeEnabled, dispatch, hitCount, showSnackbar]);
-
-  const renderPlatformIcon = useCallback((props: ListLRProps) => (
-    <PlatformIcon {...props} />
+  const renderVersionIcon = useCallback(({ color, style }: ListLRProps) => (
+    <PlatformIcon color={color} style={style} />
   ), []);
+
+  const onVersionPress = useCallback(() => {
+    setHitCount((prev) => {
+      const newCount = prev + 1;
+
+      if (newCount === 7) {
+        haptics.success();
+        dispatch(setDevMode(true));
+        setSnackbarVisible(true);
+        return 0;
+      }
+
+      if (newCount >= 3) {
+        haptics.light();
+      }
+
+      return newCount;
+    });
+  }, [dispatch, setHitCount]);
 
   return (
     <>
       <List.Item
-        title="Version"
+        title={t('about.version')}
         description={versionText}
-        left={renderPlatformIcon}
-        onPress={handleDevMode}
+        descriptionNumberOfLines={1}
+        left={renderVersionIcon}
+        onPress={onVersionPress}
       />
 
       <Portal>
         <Snackbar
-          visible={snackbarVisible}
+          visible={snackbarVisible && devModeEnabled}
           onDismiss={hideSnackbar}
           action={{
-            label: 'Dev',
+            label: t('common.ok'),
             onPress: () => router.push('/dev')
           }}
         >
-          Developer mode enabled
+          {t('settings.developMode')}
         </Snackbar>
       </Portal>
     </>

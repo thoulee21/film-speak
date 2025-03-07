@@ -2,6 +2,7 @@ import Clipboard from "@react-native-clipboard/clipboard";
 import { File } from "expo-file-system/next";
 import * as Sharing from 'expo-sharing';
 import { useCallback, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Alert, StyleSheet, ToastAndroid } from "react-native";
 import { Avatar, Button, Caption, Card, Menu, useTheme } from "react-native-paper";
 
@@ -14,6 +15,7 @@ import haptics from "@/src/utils/haptics";
 export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
+  const { t } = useTranslation();
 
   const subtitles = useAppSelector(selectSubtitles);
   const videoSource = useAppSelector(selectVideoSource);
@@ -42,10 +44,10 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
     Clipboard.setString(item.fileUri);
 
     ToastAndroid.show(
-      "File URI copied",
+      t('action.fileUri'),
       ToastAndroid.SHORT
-    )
-  }, [item.fileUri]);
+    );
+  }, [item.fileUri, t]);
 
   const performRemove = useCallback(async () => {
     haptics.medium();
@@ -71,10 +73,10 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
     dispatch(removeSubtitle(item.fileUri));
 
     ToastAndroid.show(
-      "Subtitle removed",
+      t('common.remove'),
       ToastAndroid.SHORT
     );
-  }, [dispatch, item.audioUri, item.coverUri, item.fileUri, selected, subtitles]);
+  }, [dispatch, item.audioUri, item.coverUri, item.fileUri, selected, subtitles, t]);
 
   return (
     <Card
@@ -132,38 +134,38 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
                 setMenuVisible(true);
               }}
             >
-              Share...
+              {t('common.share')}
             </Button>
           }
         >
           <Menu.Item
-            title="Audio file"
+            title={t('action.audioShare')}
             leadingIcon="music-note-outline"
             onPress={async () => {
               await Sharing.shareAsync(item.audioUri, {
-                dialogTitle: "Share extracted wave file",
+                dialogTitle: t('action.audioShare'),
                 mimeType: "audio/wav",
               });
               setMenuVisible(false);
             }}
           />
           <Menu.Item
-            title="Cover image"
+            title={t('action.coverShare')}
             leadingIcon="image-outline"
             onPress={async () => {
               await Sharing.shareAsync(item.coverUri, {
-                dialogTitle: "Share cover image",
+                dialogTitle: t('action.coverShare'),
                 mimeType: "image/png",
               });
               setMenuVisible(false);
             }}
           />
           <Menu.Item
-            title="Video file"
+            title={t('action.videoShare')}
             leadingIcon="video-outline"
             onPress={async () => {
               await Sharing.shareAsync(item.fileUri, {
-                dialogTitle: "Share video file",
+                dialogTitle: t('action.videoShare'),
                 mimeType: "video/mp4",
               });
               setMenuVisible(false);
@@ -175,12 +177,12 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
           icon="delete-outline"
           onPress={() => {
             Alert.alert(
-              "Remove subtitle",
-              "Are you sure you want to remove this subtitle?",
+              t('common.remove'),
+              t('error.removeSubtitleConfirm'),
               [
-                { text: "Cancel", style: "cancel", },
+                { text: t('common.cancel'), style: "cancel", },
                 {
-                  text: "Remove",
+                  text: t('common.remove'),
                   style: "destructive",
                   onPress: performRemove,
                 },
@@ -188,7 +190,7 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
             );
           }}
         >
-          Delete
+          {t('common.delete')}
         </Button>
       </Card.Actions>
     </Card>

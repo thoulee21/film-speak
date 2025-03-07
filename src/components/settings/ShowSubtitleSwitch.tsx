@@ -1,46 +1,32 @@
-import React, { useCallback } from 'react';
-import { View } from 'react-native';
+import React from 'react';
 import { List, Switch } from 'react-native-paper';
+import { useTranslation } from 'react-i18next';
 
-import {
-  useAppDispatch,
-  useAppSelector,
-} from '@/src/hooks/redux';
-import {
-  selectShowSubtitle,
-  toggleShowSubtitle,
-} from '@/src/redux/slices/showSubtitle';
-import ListLRProps from '@/src/types/paperListItem';
+import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
+import { selectShowSubtitle, setShowSubtitle } from '@/src/redux/slices/showSubtitle';
 import haptics from '@/src/utils/haptics';
 
 const ShowSubtitleSwitchItem = () => {
-  const dispatch = useAppDispatch();
+  const { t } = useTranslation();
   const showSubtitle = useAppSelector(selectShowSubtitle);
+  const dispatch = useAppDispatch();
 
-  const renderSubtitleIcon = useCallback((
-    props: ListLRProps
-  ) => (
-    <List.Icon {...props} icon="subtitles-outline" />
-  ), []);
-
-  const renderSwitch = useCallback((props: ListLRProps) => (
-    <View pointerEvents="none" {...props}>
-      <Switch value={showSubtitle} />
-    </View>
-  ), [showSubtitle]);
-
-  const onPressSwitch = useCallback(() => {
-    haptics.medium();
-    dispatch(toggleShowSubtitle());
-  }, [dispatch]);
+  const toggleSwitch = () => {
+    haptics.selection();
+    dispatch(setShowSubtitle(!showSubtitle));
+  };
 
   return (
     <List.Item
-      title="Show Subtitle"
-      description="Display subtitle when available"
-      left={renderSubtitleIcon}
-      right={renderSwitch}
-      onPress={onPressSwitch}
+      title={t('settings.showSubtitle')}
+      left={props => <List.Icon {...props} icon="subtitles-outline" />}
+      right={() => (
+        <Switch
+          value={showSubtitle}
+          onValueChange={toggleSwitch}
+        />
+      )}
+      onPress={toggleSwitch}
     />
   );
 };

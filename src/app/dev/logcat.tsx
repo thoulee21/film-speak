@@ -8,6 +8,7 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Animated,
   RefreshControl,
@@ -30,48 +31,42 @@ import {
 import { v7 as uuid } from 'uuid';
 
 import packageData from '@/package.json';
-import { logFilePath, rootLog } from '@/src/utils/logger';
 import haptics from '@/src/utils/haptics';
+import { logFilePath, rootLog } from '@/src/utils/logger';
 
 const Logcat = () => {
   const navigation = useNavigation();
   const logsRef = useRef<Animated.FlatList>(null);
   const appTheme = useTheme();
+  const { t } = useTranslation();
 
   const [isLoaded, setIsLoaded] = useState(false);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [logContent, setLogContent] = useState('');
   const [keyword, setKeyword] = useState('');
 
-  const clearLogs = useCallback(async () => {
-    try {
-      // Clear log file, but not delete it
-      await FileSystem.writeAsStringAsync(logFilePath, '');
-      setLogContent('');
-    } catch (e) {
-      rootLog.error(e);
-    }
-  }, []);
+  const saveLogs = useCallback(async () => {
+    const savePath = `${FileSystem.documentDirectory
+      }/${packageData.name}_${uuid().slice(0, 8)}.log`;
+
+    await FileSystem.writeAsStringAsync(
+      savePath, logContent
+    );
+    ToastAndroid.showWithGravity(
+      `Logs saved successfully to ${savePath}`,
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
+  }, [logContent]);
 
   const renderHeaderRight = useCallback(() => (
-    <View style={styles.row}>
+    <View style={{ flexDirection: 'row' }}>
       <IconButton
         icon="content-save-outline"
         disabled={!logContent}
-        onPress={async () => {
-          const savePath = `${FileSystem.documentDirectory
-            }/${packageData.name}_${uuid().slice(0, 8)}.log`;
-
-          await FileSystem.writeAsStringAsync(
-            savePath, logContent
-          );
-          ToastAndroid.showWithGravity(
-            `Logs saved successfully to ${FileSystem.documentDirectory}`,
-            ToastAndroid.SHORT,
-            ToastAndroid.CENTER
-          );
-        }}
+        onPress={saveLogs}
       />
+
       <IconButton
         icon="delete-forever-outline"
         iconColor={appTheme.colors.error}
@@ -82,7 +77,7 @@ const Logcat = () => {
         }}
       />
     </View>
-  ), [appTheme.colors.error, logContent]);
+  ), [appTheme.colors.error, logContent, saveLogs]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -117,40 +112,64 @@ const Logcat = () => {
           setIsLoaded(true);
         });
       }
-    } catch (e) { rootLog.error(e); }
+    } catch (e) {
+      rootLog.error({ id: uuid(), message: e, });
+      setIsLoaded(true);
+    }
   }, [isLoaded]);
 
-  const renderEmpty = useCallback(() => (
-    isLoaded && <Caption>No logs found</Caption>
-  ), [isLoaded]);
+  const clearLogs = async () => {
+    await FileSystem.writeAsStringAsync(logFilePath, '');
 
-  const logLines = useMemo(() => (
-    logContent
-      .split('\n')
-      .filter((line) => {
-        if (!keyword) {
-          return Boolean(line);
-        } else {
-          return line.includes(keyword);
-        }
-      })
-  ), [keyword, logContent]);
+    rootLog.info({
+      id: uuid(),
+      message: "Start a new logging session",
+    });
 
-  const renderLogLine = useCallback((
-    { item }: { item: string }
-  ) => (
-    <Caption>{item}</Caption>
-  ), []);
+    setIsLoaded(false);
+  }
+
+  const renderItem = useCallback(({
+    item
+  }: {
+    item: string;
+  }) => {
+    const key = uuid();
+    return (
+      <Caption
+        key={key}
+        style={styles.row}
+        selectable
+      >
+        {item}
+      </Caption>
+    );
+  }, []);
+
+  const renderEmpty = () => (
+    <Text style={styles.loading}>
+      {t('common.loading')}
+    </Text>
+  );
+
+  const filteredLogLines = useMemo(() => {
+    if (!keyword) { return logContent.split('\n'); }
+
+    return logContent.split('\n').filter(
+      (line) => line.toLowerCase().includes(keyword.toLowerCase())
+    );
+  }, [keyword, logContent]);
 
   return (
     <Portal.Host>
       <Animated.FlatList
         ref={logsRef}
-        data={logLines}
+        data={filteredLogLines}
         style={styles.root}
         contentContainerStyle={styles.content}
-        renderItem={renderLogLine}
+        renderItem={renderItem}
         onRefresh={() => { setIsLoaded(false); }}
+        keyExtractor={() => uuid()}
         refreshing={!isLoaded}
         initialNumToRender={33}
         refreshControl={
@@ -188,10 +207,10 @@ const Logcat = () => {
             color={appTheme.colors.error}
             size={40}
           />
-          <Dialog.Title>Clear logs</Dialog.Title>
+          <Dialog.Title>{t('dev.clearLogs')}</Dialog.Title>
           <Dialog.Content>
             <Text>
-              Are you sure you want to clear logs?
+              {t('error.clearLogsConfirm')}
             </Text>
           </Dialog.Content>
 
@@ -200,7 +219,7 @@ const Logcat = () => {
               textColor={appTheme.colors.outline}
               onPress={() => setDialogVisible(false)}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               textColor={appTheme.colors.error}
@@ -209,7 +228,7 @@ const Logcat = () => {
                 setDialogVisible(false);
               }}
             >
-              OK
+              {t('common.ok')}
             </Button>
           </Dialog.Actions>
         </Dialog>

@@ -1,5 +1,6 @@
 import Slider from "@react-native-community/slider";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
 import { Caption, IconButton, List, Text, useTheme } from "react-native-paper";
 
@@ -14,13 +15,14 @@ const MAX = 1;
 const STEP = 0.1;
 
 export default function VolumeSlider() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
 
   const volumeFactor = useAppSelector(selectVolumeFactor);
   const volume = useAppSelector(selectVolume);
 
-  const showVolumeValue = volume === -1 ? (1 / volumeFactor) : volume
+  const showVolumeValue = volume === -1 ? (1 / volumeFactor) : volume;
 
   const renderVolumeIcon = useCallback((
     props: ListLRProps
@@ -40,7 +42,7 @@ export default function VolumeSlider() {
               ellipsizeMode={ellipsizeMode}
               selectable={selectable}
             >
-              Extra Volume Adjustment
+              {t('settings.volume')}
             </Text>
 
             <Text style={{ fontSize }}>

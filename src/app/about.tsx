@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ScrollView } from "react-native";
 import { Divider } from "react-native-paper";
 
@@ -8,6 +9,8 @@ import UpdateChecker from "@/src/components/about/UpdateChecker";
 import VersionItem from "@/src/components/about/VersionItem";
 
 export default function AboutScreen() {
+  const { t } = useTranslation();
+  
   return (
     <ScrollView>
       <VersionItem />
@@ -16,7 +19,7 @@ export default function AboutScreen() {
 
       <ContactMe />
       <CopyrightItem />
-      <PoweredBy caption="Powered by Microsoft Cognitive Services" />
+      <PoweredBy caption={t('about.poweredBy')} />
     </ScrollView>
   );
 }
