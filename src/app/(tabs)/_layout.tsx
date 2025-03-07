@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Portal } from 'react-native-paper';
 
 import packageData from '@/package.json';
@@ -17,6 +18,8 @@ export {
 } from 'expo-router';
 
 export default function TabLayout() {
+  const { t } = useTranslation();
+
   const renderTabBar = useCallback((
     props: BottomTabBarProps
   ) => (
@@ -56,7 +59,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="settings"
           options={{
-            title: 'Settings',
+            title: t('navigation.settings'),
             tabBarIcon: ({
               color, size, focused
             }) => (
