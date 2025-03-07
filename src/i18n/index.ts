@@ -4,9 +4,9 @@ import * as RNLocalize from 'react-native-localize';
 import { MMKV } from 'react-native-mmkv';
 
 import pkgData from '@/package.json';
-import enUS from '@/src/i18n/resources/en-US';
-import zhCN from '@/src/i18n/resources/zh-CN';
-import zhTW from '@/src/i18n/resources/zh-TW';
+import enUS from '@/src/i18n/resources/en-US.json';
+import zhCN from '@/src/i18n/resources/zh-CN.json';
+import zhTW from '@/src/i18n/resources/zh-TW.json';
 import { LanguageCode } from '@/src/i18n/types';
 
 // 使用已有的 MMKV 实例存储语言设置
