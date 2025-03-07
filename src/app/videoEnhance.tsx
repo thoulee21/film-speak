@@ -1,5 +1,6 @@
 import Slider from "@react-native-community/slider";
 import { useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import {
   ScrollView,
   StyleSheet,
@@ -33,6 +34,8 @@ const STEP = 1.0;
 
 export default function VideoEnhanceScreen() {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
+
   const appTheme = useTheme();
   const volumeFactor = useAppSelector(selectVolumeFactor);
 
@@ -60,7 +63,7 @@ export default function VideoEnhanceScreen() {
                   ellipsizeMode={ellipsizeMode}
                   selectable={selectable}
                 >
-                  Volume Factor
+                  {t('videoEnhance.factors')}
                 </Text>
 
                 <Text style={{ fontSize }}>
