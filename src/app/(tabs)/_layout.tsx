@@ -9,7 +9,7 @@ import { Portal } from 'react-native-paper';
 
 import packageData from '@/package.json';
 import MaterialBottomBar from '@/src/components/tabbar/MaterialBottomBar';
-import TabBarIcon from '@/src/components/TabBarIcon';
+import TabBarIcon from '@/src/components/tabbar/TabBarIcon';
 import { useClientOnlyValue } from '@/src/hooks/useClientOnlyValue';
 
 export {
