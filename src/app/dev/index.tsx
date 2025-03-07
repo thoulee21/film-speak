@@ -6,10 +6,7 @@ import { Divider, List, useTheme } from "react-native-paper";
 import DevSwitchItem from "@/src/components/dev/DevSwitchItem";
 import RouteItem from "@/src/components/dev/RouteItem";
 import TestSourceItem from "@/src/components/dev/TestSourceItem";
-import ExternalLink from "@/src/components/ExternalLink";
 import type ListLRProps from "@/src/types/paperListItem";
-
-const EXPO_DOCS_URL = "https://docs.expo.dev";
 
 export default function DevScreen() {
   const appTheme = useTheme();
@@ -18,16 +15,8 @@ export default function DevScreen() {
     <List.Icon {...props} icon="chevron-right" />
   ), []);
 
-  const renderOpenInBrowserIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="open-in-new" />
-  ), []);
-
   const renderCacheIcon = useCallback((props: ListLRProps) => (
     <List.Icon {...props} icon="folder-outline" />
-  ), []);
-
-  const renderDocumentIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="file-document-outline" />
   ), []);
 
   const renderDataBaseIcon = useCallback((props: ListLRProps) => (
@@ -35,7 +24,7 @@ export default function DevScreen() {
   ), []);
 
   const renderLogcatIcon = useCallback((props: ListLRProps) => (
-    <List.Icon icon="folder-eye-outline" {...props} />
+    <List.Icon {...props} icon="folder-eye-outline" />
   ), []);
 
   const renderAniIcon = useCallback((props: ListLRProps) => (
@@ -86,16 +75,6 @@ export default function DevScreen() {
             right={renderRightIcon}
           />
         </Link>
-
-        <ExternalLink href={EXPO_DOCS_URL}>
-          <List.Item
-            title="Read the Expo documentation"
-            description={EXPO_DOCS_URL}
-            left={renderDocumentIcon}
-            right={renderOpenInBrowserIcon}
-          />
-        </ExternalLink>
-
         <Divider />
       </List.Section>
 
