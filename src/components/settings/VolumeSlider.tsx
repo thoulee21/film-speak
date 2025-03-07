@@ -27,7 +27,7 @@ export default function VolumeSlider() {
   const renderVolumeIcon = useCallback((
     props: ListLRProps
   ) => (
-    <List.Icon {...props} icon="volume-high" />
+    <List.Icon {...props} icon="volume-low" />
   ), []);
 
   return (

@@ -1,11 +1,10 @@
-import { Link, router } from 'expo-router';
+import { Link } from 'expo-router';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List } from 'react-native-paper';
 
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
-import VolumeSlider from '@/src/components/settings/VolumeSlider';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
@@ -38,9 +37,10 @@ export default function Setting() {
     <ScrollView style={styles.container}>
       <List.Section>
         <ShowSubtitleSwitchItem />
-        <VolumeSlider />
-        <Divider />
+      </List.Section>
+      <Divider />
 
+      <List.Section>
         <Link href="/lang" asChild>
           <List.Item
             title={t('settings.languageSelect')}
@@ -50,6 +50,7 @@ export default function Setting() {
             right={renderRightIcon}
           />
         </Link>
+
         <Link href="/videoEnhance" asChild>
           <List.Item
             title={t('videoEnhance.title')}
@@ -58,19 +59,8 @@ export default function Setting() {
             right={renderRightIcon}
           />
         </Link>
-        <List.Item
-          title={t('navigation.subtitles')}
-          left={({ color, style }) => (
-            <List.Icon color={color} style={style} icon="subtitles-outline" />
-          )}
-          right={renderRightIcon}
-          onPress={() => {
-            router.push('/subtitles?inform=1');
-          }}
-        />
-
-        <Divider />
       </List.Section>
+      <Divider />
 
       <List.Section>
         {devModeEnabled && (

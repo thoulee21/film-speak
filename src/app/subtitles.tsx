@@ -1,4 +1,3 @@
-import { useLocalSearchParams } from 'expo-router';
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
 import { useTranslation } from 'react-i18next';
@@ -14,13 +13,14 @@ import { selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
 
 export default function Subtitles() {
   const appTheme = useTheme();
-  const subtitles = useAppSelector(selectSubtitles);
-  const { inform } = useLocalSearchParams();
   const { t } = useTranslation();
 
-  const [bannerVisible, setBannerVisible] = useState(
-    (subtitles.length > 1) && inform === '1'
-  );
+  const subtitles = useAppSelector(selectSubtitles);
+
+  const [
+    bannerVisible,
+    setBannerVisible,
+  ] = useState(subtitles.length > 1);
 
   const renderItem = useCallback(({
     item
@@ -29,54 +29,58 @@ export default function Subtitles() {
   ), []);
 
   return (
-    <View style={styles.root}>
+    <>
       <StatusBar
         style={Platform.OS === 'ios' ? 'light' : 'auto'}
       />
-      <Appbar.Header
-        statusBarHeight={0}
-        elevated
-      >
-        <Appbar.Content title={t('navigation.subtitles')} />
-        <Appbar.Action icon="drag" />
-      </Appbar.Header>
-      <Banner
-        visible={bannerVisible}
-        icon={(props) => (
-          <Icon
-            {...props}
-            source="information-outline"
-            color={appTheme.colors.secondary}
-          />
-        )}
-        actions={[{
-          label: t('common.ok'),
-          onPress: () => setBannerVisible(false),
-        }]}
-      >
-        {t('subtitle.removeHistory')}
-      </Banner>
 
-      <Reanimated.FlatList
-        data={subtitles}
-        renderItem={renderItem}
-        contentContainerStyle={styles.items}
-        overScrollMode="never"
-        ListEmptyComponent={
-          <LottieAnimation
-            animation="teapot"
-            caption={t('subtitle.noSubtitles')}
-          />
-        }
-        itemLayoutAnimation={LinearTransition}
-        ListFooterComponent={
-          <SelectVideoButton
-            style={styles.selectBtn}
-            mode={subtitles.length === 0 ? 'contained' : 'text'}
-          />
-        }
-      />
-    </View>
+      <View style={styles.root}>
+        <Appbar.Header
+          statusBarHeight={0}
+          elevated
+        >
+          <Appbar.Content title={t('navigation.subtitles')} />
+          <Appbar.Action icon="drag" />
+        </Appbar.Header>
+
+        <Banner
+          visible={bannerVisible}
+          icon={(props) => (
+            <Icon
+              {...props}
+              source="information-outline"
+              color={appTheme.colors.secondary}
+            />
+          )}
+          actions={[{
+            label: t('common.ok'),
+            onPress: () => setBannerVisible(false),
+          }]}
+        >
+          {t('subtitle.removeHistory')}
+        </Banner>
+
+        <Reanimated.FlatList
+          data={subtitles}
+          renderItem={renderItem}
+          contentContainerStyle={styles.items}
+          overScrollMode="never"
+          ListEmptyComponent={
+            <LottieAnimation
+              animation="teapot"
+              caption={t('subtitle.noSubtitles')}
+            />
+          }
+          itemLayoutAnimation={LinearTransition}
+          ListFooterComponent={
+            <SelectVideoButton
+              style={styles.selectBtn}
+              mode={subtitles.length === 0 ? 'contained' : 'text'}
+            />
+          }
+        />
+      </View>
+    </>
   );
 }
 

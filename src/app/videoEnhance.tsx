@@ -9,12 +9,14 @@ import {
 import {
   Banner,
   Caption,
+  Divider,
   IconButton,
   List,
   Text,
   useTheme,
 } from "react-native-paper";
 
+import VolumeSlider from "@/src/components/settings/VolumeSlider";
 import {
   useAppDispatch,
   useAppSelector,
@@ -52,7 +54,7 @@ export default function VideoEnhanceScreen() {
       </Banner>
 
       <ScrollView>
-        <View>
+        <List.Section>
           <List.Item
             title={({
               color, ellipsizeMode, fontSize, selectable
@@ -108,7 +110,10 @@ export default function VideoEnhanceScreen() {
             <Caption>{MIN.toFixed(1)}</Caption>
             <Caption>{MAX.toFixed(1)}</Caption>
           </View>
-        </View>
+        </List.Section>
+        <Divider />
+
+        <VolumeSlider />
       </ScrollView>
     </View>
   );
