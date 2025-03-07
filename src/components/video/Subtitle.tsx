@@ -3,11 +3,11 @@ import { cacheDirectory } from "expo-file-system";
 import { File, Paths } from "expo-file-system/next";
 import { FFmpegKit, type FFmpegSession } from "ffmpeg-kit-react-native";
 import React, { useCallback, useMemo, useState, } from "react";
+import { useTranslation } from "react-i18next";
 import { FlatList, StyleSheet, View } from "react-native";
 import { Caption, Divider } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
-import packageData from '@/package.json';
 import LottieAnimation from "@/src/components/LottieAnimation";
 import SelectVideoButton from "@/src/components/SelectVideoButton";
 import SubtitleItem from "@/src/components/video/SubtitleItem";
@@ -23,6 +23,7 @@ interface SubtitleProps {
 
 export default function Subtitle({ onItemPress }: SubtitleProps) {
   const dispatch = useAppDispatch();
+  const { t } = useTranslation();
 
   const videoFileUri = useAppSelector(selectVideoSource);
   const subtitles = useAppSelector(selectSubtitles);
@@ -113,7 +114,7 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
         videoFileUri ? (
           <LottieAnimation
             animation="loadingAtomColored"
-            caption="Generating subtitle..."
+            caption={t('subtitle.generate')}
           >
             <Caption
               style={[
@@ -130,7 +131,7 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
           <LottieAnimation
             animation="welcome"
             style={styles.paddingHor}
-            caption={`Welcome to ${packageData.displayName}!\nPlease select a video file or share a video to get started.`}
+            caption={t('subtitle.welcome')}
           />
         )
       }

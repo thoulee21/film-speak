@@ -40,8 +40,7 @@
   },
   "subtitle": {
     "generate": "正在生成字幕...",
-    "welcome": "欢迎使用 FilmSpeak！",
-    "selectVideo": "请选择视频文件或分享视频以开始使用",
+    "welcome": "欢迎使用 FilmSpeak！\n请选择视频文件或分享视频以开始使用",
     "removeHistory": "移除历史字幕将会删除相关的缓存文件",
     "noSubtitles": "未找到字幕",
     "seconds": "秒"
