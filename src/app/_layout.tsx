@@ -26,6 +26,9 @@ import 'react-native-reanimated';
 import { Provider as ReduxProvider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
+// 导入 i18n 初始化配置
+import '@/src/i18n';
+
 import ColorTheme from '@/src/constants/colorTheme';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
