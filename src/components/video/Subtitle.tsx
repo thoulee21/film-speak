@@ -9,7 +9,7 @@ import { Caption, Divider } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
 import LottieAnimation from "@/src/components/LottieAnimation";
-import SelectVideoButton from "@/src/components/SelectVideoButton";
+import SelectVideoButton from "@/src/components/video/SelectVideoButton";
 import SubtitleItem from "@/src/components/video/SubtitleItem";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { addSubtitle, selectSubtitles } from "@/src/store/slices/subtitles";

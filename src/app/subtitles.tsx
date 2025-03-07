@@ -6,7 +6,7 @@ import { Appbar, Banner, Icon, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
-import SelectVideoButton from '@/src/components/SelectVideoButton';
+import SelectVideoButton from '@/src/components/video/SelectVideoButton';
 import SubtitleItem from "@/src/components/subtitles/item";
 import { useAppSelector } from "@/src/hooks/redux";
 import { selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
