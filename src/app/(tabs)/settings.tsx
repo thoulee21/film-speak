@@ -59,8 +59,8 @@ export default function Setting() {
         </Link>
         <Link href="/videoEnhance" asChild>
           <List.Item
-            title="Video Enhancement"
-            description="Adjust video enhancement factors"
+            title={t('videoEnhance.title')}
+            description={t('videoEnhance.description')}
             left={renderVideoEnhanceIcon}
             right={renderRightIcon}
           />

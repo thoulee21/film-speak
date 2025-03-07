@@ -85,5 +85,12 @@ export default {
       coverShare: 'Share cover image',
       videoShare: 'Share video file',
     },
+    
+    // 视频增强
+    videoEnhance: {
+      title: 'Video Enhancement',
+      description: 'Adjust video enhancement factors',
+      factors: 'Enhancement Factors',
+    },
   },
 };

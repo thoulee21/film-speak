@@ -76,6 +76,13 @@ export default {
       videoEnhance: '视频增强',
     },
     
+    // 视频增强
+    videoEnhance: {
+      title: '视频增强',
+      description: '调整视频增强因子',
+      factors: '增强因子',
+    },
+    
     // 动作
     action: {
       copy: '复制到剪贴板',

@@ -57,6 +57,13 @@ export default {
       seconds: '秒',
     },
     
+    // 视频增强
+    videoEnhance: {
+      title: '視頻增強',
+      description: '調整視頻增強因子',
+      factors: '增強因子',
+    },
+    
     // 关于
     about: {
       version: '版本',
