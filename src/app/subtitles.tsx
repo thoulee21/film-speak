@@ -1,3 +1,4 @@
+import { useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useState } from "react";
 import { useTranslation } from 'react-i18next';
@@ -6,21 +7,21 @@ import { Appbar, Banner, Icon, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
-import SelectVideoButton from '@/src/components/video/SelectVideoButton';
 import SubtitleItem from "@/src/components/subtitles/item";
+import SelectVideoButton from '@/src/components/video/SelectVideoButton';
 import { useAppSelector } from "@/src/hooks/redux";
 import { selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
 
 export default function Subtitles() {
   const appTheme = useTheme();
   const { t } = useTranslation();
+  const { inform } = useLocalSearchParams();
 
   const subtitles = useAppSelector(selectSubtitles);
 
-  const [
-    bannerVisible,
-    setBannerVisible,
-  ] = useState(subtitles.length > 1);
+  const [cacheBannerVisible, setCacheBannerVisible] = useState(
+    (subtitles.length > 1) && inform === 'true'
+  );
 
   const renderItem = useCallback(({
     item
@@ -44,7 +45,7 @@ export default function Subtitles() {
         </Appbar.Header>
 
         <Banner
-          visible={bannerVisible}
+          visible={cacheBannerVisible}
           icon={(props) => (
             <Icon
               {...props}
@@ -54,7 +55,7 @@ export default function Subtitles() {
           )}
           actions={[{
             label: t('common.ok'),
-            onPress: () => setBannerVisible(false),
+            onPress: () => setCacheBannerVisible(false),
           }]}
         >
           {t('subtitle.removeHistory')}

@@ -57,7 +57,14 @@ export default function CacheItem() {
       mode='contained'
       onPress={() => {
         haptics.light();
-        router.push(!isDev ? '/subtitles' : '/dev/cache');
+        router.push(
+          !isDev
+            ? {
+              pathname: '/subtitles',
+              params: { inform: 'true' }
+            }
+            : '/dev/cache'
+        );
       }}
     />
   ), [isDev]);
