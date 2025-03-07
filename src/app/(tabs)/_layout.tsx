@@ -4,6 +4,7 @@ import {
 } from '@react-navigation/bottom-tabs';
 import { Tabs } from 'expo-router';
 import React, { useCallback } from 'react';
+import { Portal } from 'react-native-paper';
 
 import packageData from '@/package.json';
 import MaterialBottomBar from '@/src/components/tabbar/MaterialBottomBar';
@@ -23,49 +24,51 @@ export default function TabLayout() {
   ), []);
 
   return (
-    <Tabs
-      screenOptions={{
-        ...TransitionPresets.ShiftTransition,
-        animation: 'shift',
-        tabBarHideOnKeyboard: true,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}
-      backBehavior='none'
-      tabBar={renderTabBar}
-    >
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: packageData.displayName,
-          headerShown: false,
-          tabBarIcon: ({
-            color, focused, size
-          }) => (
-            <TabBarIcon
-              name={focused ? 'video' : 'video-outline'}
-              color={color}
-              size={size}
-            />
-          ),
+    <Portal.Host>
+      <Tabs
+        screenOptions={{
+          ...TransitionPresets.ShiftTransition,
+          animation: 'shift',
+          tabBarHideOnKeyboard: true,
+          // Disable the static render of the header on web
+          // to prevent a hydration error in React Navigation v6.
+          headerShown: useClientOnlyValue(false, true),
         }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: 'Settings',
-          tabBarIcon: ({
-            color, size, focused
-          }) => (
-            <TabBarIcon
-              name={focused ? 'cog' : 'cog-outline'}
-              color={color}
-              size={size}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+        backBehavior='none'
+        tabBar={renderTabBar}
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: packageData.displayName,
+            headerShown: false,
+            tabBarIcon: ({
+              color, focused, size
+            }) => (
+              <TabBarIcon
+                name={focused ? 'video' : 'video-outline'}
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="settings"
+          options={{
+            title: 'Settings',
+            tabBarIcon: ({
+              color, size, focused
+            }) => (
+              <TabBarIcon
+                name={focused ? 'cog' : 'cog-outline'}
+                color={color}
+                size={size}
+              />
+            ),
+          }}
+        />
+      </Tabs>
+    </Portal.Host>
   );
 }
