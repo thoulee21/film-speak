@@ -16,7 +16,7 @@
   },
   "navigation": {
     "home": "首頁",
-    "settings": "設置",
+    "settings": "設定",
     "about": "關於",
     "subtitles": "字幕",
     "devOptions": "開發者選項",
@@ -38,8 +38,8 @@
     "learnMore": "了解更多關於本應用的信息",
     "enableDev": "啟用後可訪問更多功能",
     "videoSource": {
-      "set": "视频源集",
-      "title": "测试视频源"
+      "set": "視頻源已設置",
+      "title": "測試視頻源"
     }
   },
   "subtitle": {
@@ -64,9 +64,9 @@
     "title": "視頻增強",
     "description": "調整視頻增強因子",
     "factors": "增強因子",
-    "banner": "您在此处所做的更改不会影响之前处理的视频。要应用更改，您需要重新处理视频。",
+    "banner": "您在此處所做的更改不會影響之前處理的視頻。要應用更改，您需要重新處理視頻。",
     "volFactor": {
-      "description": "增加或减少视频系数，默认值为5.0"
+      "description": "增加或減少視頻系數，默認值為5.0"
     }
   },
   "action": {
