@@ -13,11 +13,11 @@ import haptics from '@/src/utils/haptics';
 import upperFirst from '@/src/utils/upperFirst';
 
 const VersionItem = () => {
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const devModeEnabled = useAppSelector(selectDevMode);
-  const setHitCount = useState(0)[1];
+  const [hitCount, setHitCount] = useState(0);
   const [snackbarVisible, setSnackbarVisible] = useState(false);
 
   const versionText = useMemo(() => (
@@ -28,45 +28,41 @@ const VersionItem = () => {
     setSnackbarVisible(false);
   }, []);
 
-  const renderVersionIcon = useCallback(({ color, style }: ListLRProps) => (
-    <PlatformIcon color={color} style={style} />
-  ), []);
+  const showSnackbar = useCallback(() => {
+    setSnackbarVisible(true);
+  }, []);
 
-  const onVersionPress = useCallback(() => {
-    setHitCount((prev) => {
-      const newCount = prev + 1;
-
-      if (newCount === 7) {
-        haptics.success();
+  // 点击5次后开启开发者模式
+  const handleDevMode = useCallback(() => {
+    if (!devModeEnabled) {
+      setHitCount(hitCount + 1);
+      if (hitCount >= 5) {
         dispatch(setDevMode(true));
-        setSnackbarVisible(true);
-        return 0;
+        haptics.heavy();
+        showSnackbar();
       }
+    }
+  }, [devModeEnabled, dispatch, hitCount, showSnackbar]);
 
-      if (newCount >= 3) {
-        haptics.light();
-      }
-
-      return newCount;
-    });
-  }, [dispatch, setHitCount]);
+  const renderPlatformIcon = useCallback((props: ListLRProps) => (
+    <PlatformIcon {...props} />
+  ), []);
 
   return (
     <>
       <List.Item
         title={t('about.version')}
         description={versionText}
-        descriptionNumberOfLines={1}
-        left={renderVersionIcon}
-        onPress={onVersionPress}
+        left={renderPlatformIcon}
+        onPress={handleDevMode}
       />
 
       <Portal>
         <Snackbar
-          visible={snackbarVisible && devModeEnabled}
+          visible={snackbarVisible}
           onDismiss={hideSnackbar}
           action={{
-            label: t('common.ok'),
+            label: 'Dev',
             onPress: () => router.push('/dev')
           }}
         >
