@@ -15,9 +15,9 @@ export const storage = new MMKV();
 const LANGUAGE_STORAGE_KEY = `@${pkgData.name}/language`;
 
 export const resources = {
-  [LanguageCode.EN_US]: enUS,
-  [LanguageCode.ZH_CN]: zhCN,
-  [LanguageCode.ZH_TW]: zhTW,
+  [LanguageCode.EN_US]: { translation: enUS },
+  [LanguageCode.ZH_CN]: { translation: zhCN },
+  [LanguageCode.ZH_TW]: { translation: zhTW },
 };
 
 // 保存语言设置到本地存储

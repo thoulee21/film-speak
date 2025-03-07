@@ -1,79 +1,77 @@
 {
-  "translation": {
-    "common": {
-      "ok": "确定",
-      "cancel": "取消",
-      "confirm": "确认",
-      "delete": "删除",
-      "remove": "移除",
-      "save": "保存",
-      "share": "分享",
-      "loading": "加载中...",
-      "submit": "提交",
-      "edit": "编辑",
-      "back": "返回",
-      "next": "下一步",
-      "previous": "上一步"
-    },
-    "navigation": {
-      "home": "首页",
-      "settings": "设置",
-      "about": "关于",
-      "subtitles": "字幕",
-      "devOptions": "开发者选项",
-      "logcat": "日志查看",
-      "aniGallery": "动画库"
-    },
-    "error": {
-      "somethingWrong": "出现了问题",
-      "tryAgain": "请重试",
-      "clearLogsConfirm": "确定要清除日志吗？",
-      "removeSubtitleConfirm": "确定要移除这个字幕吗？"
-    },
-    "settings": {
-      "language": "语言",
-      "languageSelect": "选择语言",
-      "showSubtitle": "显示字幕",
-      "volume": "音量",
-      "developMode": "已启用开发者模式",
-      "learnMore": "了解更多关于本应用的信息",
-      "enableDev": "启用后可访问更多功能"
-    },
-    "subtitle": {
-      "generate": "正在生成字幕...",
-      "welcome": "欢迎使用 FilmSpeak！",
-      "selectVideo": "请选择视频文件或分享视频以开始使用",
-      "removeHistory": "移除历史字幕将会删除相关的缓存文件",
-      "noSubtitles": "未找到字幕",
-      "seconds": "秒"
-    },
-    "about": {
-      "version": "版本",
-      "copyright": "版权所有",
-      "poweredBy": "由 Microsoft Cognitive Services 提供支持",
-      "contactMe": "联系我",
-      "checkUpdate": "检查更新",
-      "upToDate": "已是最新版本"
-    },
-    "dev": {
-      "clearLogs": "清除日志",
-      "testSource": "测试源",
-      "appData": "应用数据",
-      "cache": "缓存",
-      "videoEnhance": "视频增强"
-    },
-    "videoEnhance": {
-      "title": "视频增强",
-      "description": "调整视频增强因子",
-      "factors": "增强因子"
-    },
-    "action": {
-      "copy": "复制到剪贴板",
-      "copied": "已复制到剪贴板",
-      "fileUri": "文件路径已复制",
-      "audioShare": "分享音频文件",
-      "coverShare": "分享封面图片",
-      "videoShare": "分享视频文件"
-    }
+  "common": {
+    "ok": "确定",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "remove": "移除",
+    "save": "保存",
+    "share": "分享",
+    "loading": "加载中...",
+    "submit": "提交",
+    "edit": "编辑",
+    "back": "返回",
+    "next": "下一步",
+    "previous": "上一步"
+  },
+  "navigation": {
+    "home": "首页",
+    "settings": "设置",
+    "about": "关于",
+    "subtitles": "字幕",
+    "devOptions": "开发者选项",
+    "logcat": "日志查看",
+    "aniGallery": "动画库"
+  },
+  "error": {
+    "somethingWrong": "出现了问题",
+    "tryAgain": "请重试",
+    "clearLogsConfirm": "确定要清除日志吗？",
+    "removeSubtitleConfirm": "确定要移除这个字幕吗？"
+  },
+  "settings": {
+    "language": "语言",
+    "languageSelect": "选择语言",
+    "showSubtitle": "显示字幕",
+    "volume": "音量",
+    "developMode": "已启用开发者模式",
+    "learnMore": "了解更多关于本应用的信息",
+    "enableDev": "启用后可访问更多功能"
+  },
+  "subtitle": {
+    "generate": "正在生成字幕...",
+    "welcome": "欢迎使用 FilmSpeak！",
+    "selectVideo": "请选择视频文件或分享视频以开始使用",
+    "removeHistory": "移除历史字幕将会删除相关的缓存文件",
+    "noSubtitles": "未找到字幕",
+    "seconds": "秒"
+  },
+  "about": {
+    "version": "版本",
+    "copyright": "版权所有",
+    "poweredBy": "由 Microsoft Cognitive Services 提供支持",
+    "contactMe": "联系我",
+    "checkUpdate": "检查更新",
+    "upToDate": "已是最新版本"
+  },
+  "dev": {
+    "clearLogs": "清除日志",
+    "testSource": "测试源",
+    "appData": "应用数据",
+    "cache": "缓存",
+    "videoEnhance": "视频增强"
+  },
+  "videoEnhance": {
+    "title": "视频增强",
+    "description": "调整视频增强因子",
+    "factors": "增强因子"
+  },
+  "action": {
+    "copy": "复制到剪贴板",
+    "copied": "已复制到剪贴板",
+    "fileUri": "文件路径已复制",
+    "audioShare": "分享音频文件",
+    "coverShare": "分享封面图片",
+    "videoShare": "分享视频文件"
   }
 }
