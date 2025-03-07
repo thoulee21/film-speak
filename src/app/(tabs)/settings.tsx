@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List } from 'react-native-paper';
 
+import TestSourceItem from '@/src/components/dev/TestSourceItem';
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/redux/slices/devMode';
@@ -37,10 +38,6 @@ export default function Setting() {
     <ScrollView style={styles.container}>
       <List.Section>
         <ShowSubtitleSwitchItem />
-      </List.Section>
-      <Divider />
-
-      <List.Section>
         <Link href="/lang" asChild>
           <List.Item
             title={t('settings.languageSelect')}
@@ -50,7 +47,10 @@ export default function Setting() {
             right={renderRightIcon}
           />
         </Link>
+      </List.Section>
+      <Divider />
 
+      <List.Section>
         <Link href="/videoEnhance" asChild>
           <List.Item
             title={t('videoEnhance.title')}
@@ -59,6 +59,8 @@ export default function Setting() {
             right={renderRightIcon}
           />
         </Link>
+
+        <TestSourceItem />
       </List.Section>
       <Divider />
 
