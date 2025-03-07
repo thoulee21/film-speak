@@ -36,7 +36,11 @@
     "volume": "Volume",
     "developMode": "Developer mode enabled",
     "learnMore": "Learn more about the app",
-    "enableDev": "Enable to access additional features"
+    "enableDev": "Enable to access additional features",
+    "videoSource": {
+      "title": "Test Video Source",
+      "set": "Video source set"
+    }
   },
   "subtitle": {
     "generate": "Generating subtitle...",

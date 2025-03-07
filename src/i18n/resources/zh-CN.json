@@ -36,7 +36,11 @@
     "volume": "音量",
     "developMode": "已启用开发者模式",
     "learnMore": "了解更多关于本应用的信息",
-    "enableDev": "启用后可访问更多功能"
+    "enableDev": "启用后可访问更多功能",
+    "videoSource": {
+      "set": "视频源已设置",
+      "title": "测试视频源"
+    }
   },
   "subtitle": {
     "generate": "正在生成字幕...",

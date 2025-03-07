@@ -1,4 +1,5 @@
 import { useCallback, useState } from "react"
+import { useTranslation } from "react-i18next"
 import { ToastAndroid } from "react-native"
 import { List, TextInput, useTheme } from "react-native-paper"
 
@@ -8,6 +9,7 @@ import type ListLRProps from "@/src/types/paperListItem"
 import haptics from "@/src/utils/haptics"
 
 export default function TestSourceItem() {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch()
   const appTheme = useTheme()
 
@@ -22,9 +24,9 @@ export default function TestSourceItem() {
 
     dispatch(setVideoSource(showSource))
     ToastAndroid.show(
-      "Video source set", ToastAndroid.SHORT
+      t('settings.videoSource.set'), ToastAndroid.SHORT
     )
-  }, [dispatch, showSource])
+  }, [dispatch, showSource, t])
 
   const renderInput = useCallback((props: any) => (
     <TextInput
@@ -59,7 +61,7 @@ export default function TestSourceItem() {
 
   return (
     <List.Item
-      title="Test Video Source"
+      title={t('settings.videoSource.title')}
       left={renderSourceIcon}
       description={renderInput}
     />
