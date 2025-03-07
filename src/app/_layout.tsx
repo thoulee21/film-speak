@@ -15,6 +15,7 @@ import { useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { View } from 'react-native';
 import 'react-native-gesture-handler';
 import {
@@ -82,6 +83,8 @@ Sentry.init({
 
 function RootLayoutNav() {
   const appTheme = useTheme();
+  const { t } = useTranslation();
+
   return (
     <View style={{
       flex: 1,
@@ -98,7 +101,7 @@ function RootLayoutNav() {
       }}>
         <Stack.Screen name="(tabs)" options={{
           headerShown: false,
-          headerTitle: 'Home',
+          headerTitle: t('navigation.home'),
         }} />
         <Stack.Screen name="subtitles" options={{
           ...TransitionPresets.ModalPresentationIOS,
@@ -108,26 +111,26 @@ function RootLayoutNav() {
           headerTitle: 'DevOptions',
         }} />
         <Stack.Screen name="about" options={{
-          headerTitle: 'About',
+          headerTitle: t('navigation.about'),
         }} />
         <Stack.Screen name="dev/appdata" options={{
-          headerTitle: 'App Data',
+          headerTitle: t('dev.appData'),
           gestureEnabled: false,
         }} />
         <Stack.Screen name="dev/cache" options={{
-          headerTitle: 'Cache',
+          headerTitle: t('dev.cache'),
         }} />
         <Stack.Screen name='videoEnhance' options={{
-          headerTitle: 'Video Enhancement',
+          headerTitle: t('videoEnhance.title'),
           gestureEnabled: false,
         }} />
         <Stack.Screen name="dev/logcat" options={{
-          headerTitle: 'Logcat',
+          headerTitle: t('navigation.logcat'),
           headerBackButtonDisplayMode: 'minimal',
           headerTitleAlign: 'left',
         }} />
         <Stack.Screen name="dev/aniGallery" options={{
-          headerTitle: 'AniGallery',
+          headerTitle: t('navigation.aniGallery'),
         }} />
       </Stack>
     </View>
