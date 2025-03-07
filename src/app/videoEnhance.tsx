@@ -28,7 +28,6 @@ import {
   setVolumeFactor,
 } from "@/src/store/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
-import haptics from "@/src/utils/haptics";
 
 const MIN = 1.0;
 const MAX = 20.0;
@@ -99,7 +98,6 @@ export default function VideoEnhanceScreen() {
             onSlidingComplete={(value) => {
               dispatch(setVolumeFactor(value));
             }}
-            onValueChange={haptics.heavy}
             style={styles.slider}
             thumbTintColor={appTheme.colors.primary}
             minimumTrackTintColor={appTheme.colors.onPrimaryContainer}

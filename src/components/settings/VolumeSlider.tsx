@@ -8,7 +8,6 @@ import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { resetVolume, selectVolume, setVolume } from "@/src/store/slices/volume";
 import { selectVolumeFactor } from "@/src/store/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
-import haptics from "@/src/utils/haptics";
 
 const MIN = 0;
 const MAX = 1;
@@ -76,7 +75,6 @@ export default function VolumeSlider() {
         onSlidingComplete={(value) => {
           dispatch(setVolume(value));
         }}
-        onValueChange={haptics.heavy}
         style={styles.slider}
         thumbTintColor={appTheme.colors.primary}
         minimumTrackTintColor={appTheme.colors.onPrimaryContainer}
