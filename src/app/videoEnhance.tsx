@@ -16,7 +16,7 @@ import {
   useTheme,
 } from "react-native-paper";
 
-import VolumeSlider from "@/src/components/settings/VolumeSlider";
+import VolumeSlider from "@/src/components/videoEnhance/VolumeSlider";
 import {
   useAppDispatch,
   useAppSelector,
