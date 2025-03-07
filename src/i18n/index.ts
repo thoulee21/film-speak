@@ -58,7 +58,7 @@ const getSystemLanguage = (): LanguageCode => {
     }
   }
 
-  return LanguageCode.EN_US;
+  return LanguageCode.SYSTEM;
 };
 
 const languageDetector = {
