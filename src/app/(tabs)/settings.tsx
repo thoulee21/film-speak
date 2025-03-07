@@ -2,7 +2,7 @@ import { Link, router } from 'expo-router';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Divider, IconButton, List, useTheme } from 'react-native-paper';
+import { Divider, IconButton, List } from 'react-native-paper';
 
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import VolumeSlider from '@/src/components/settings/VolumeSlider';
@@ -12,7 +12,6 @@ import type ListLRProps from '@/src/types/paperListItem';
 
 export default function Setting() {
   const { t } = useTranslation();
-  const appTheme = useTheme();
   const devModeEnabled = useAppSelector(selectDevMode);
 
   const renderRightIcon = useCallback(({ color, style }: ListLRProps) => (
@@ -38,12 +37,6 @@ export default function Setting() {
   return (
     <ScrollView style={styles.container}>
       <List.Section>
-        <List.Subheader
-          style={{ color: appTheme.colors.primary }}
-        >
-          {t('navigation.settings')}
-        </List.Subheader>
-
         <ShowSubtitleSwitchItem />
         <VolumeSlider />
         <Divider />
