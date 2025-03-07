@@ -47,7 +47,6 @@
   },
   "about": {
     "version": "版本",
-    "copyright": "版權所有",
     "poweredBy": "由 Microsoft Cognitive Services 提供支持",
     "contactMe": "聯繫我",
     "checkUpdate": "檢查更新",

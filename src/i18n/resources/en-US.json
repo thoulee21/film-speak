@@ -47,7 +47,6 @@
   },
   "about": {
     "version": "Version",
-    "copyright": "Copyright",
     "poweredBy": "Powered by Microsoft Cognitive Services",
     "contactMe": "Contact Me",
     "checkUpdate": "Check for updates",

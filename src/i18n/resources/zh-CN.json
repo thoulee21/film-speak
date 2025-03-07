@@ -47,7 +47,6 @@
   },
   "about": {
     "version": "版本",
-    "copyright": "版权所有",
     "poweredBy": "由 Microsoft Cognitive Services 提供支持",
     "contactMe": "联系我",
     "checkUpdate": "检查更新",

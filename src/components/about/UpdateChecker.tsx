@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useState
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Alert,
   StyleSheet,
@@ -26,6 +27,7 @@ import type ListLRProps from '@/src/types/paperListItem';
 import haptics from '@/src/utils/haptics';
 
 const UpdateChecker = () => {
+  const { t } = useTranslation();
   const appTheme = useTheme();
   const isDev = useAppSelector(selectDevMode);
 
@@ -95,7 +97,7 @@ const UpdateChecker = () => {
         showUpdateDialog();
       } else {
         ToastAndroid.show(
-          'No updates available',
+          t('about.upToDate'),
           ToastAndroid.SHORT
         );
       }
@@ -143,7 +145,7 @@ const UpdateChecker = () => {
   return (
     <>
       <List.Item
-        title="Check for updates"
+        title={t('about.checkUpdate')}
         description={description}
         onPress={handleUpdatePress}
         onLongPress={showCurrent}
@@ -192,7 +194,7 @@ const UpdateChecker = () => {
               textColor={appTheme.colors.outline}
               onPress={hideUpdateDialog}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
 
             <Button
@@ -200,7 +202,7 @@ const UpdateChecker = () => {
                 ? () => RNRestart.Restart()
                 : fetchUpdateAndRestart}
             >
-              OK
+              {t('common.ok')}
             </Button>
           </Dialog.Actions>
         </Dialog>

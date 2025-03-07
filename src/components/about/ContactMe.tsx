@@ -1,10 +1,12 @@
 import React, { useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Linking } from 'react-native';
 import { List, useTheme } from 'react-native-paper';
 
 import packageData from '@/package.json';
 
 const ContactMe = () => {
+  const { t } = useTranslation();
   const appTheme = useTheme();
 
   const OpenIcon = useCallback((props: any) => (
@@ -17,7 +19,7 @@ const ContactMe = () => {
 
   return (
     <List.Section
-      title="Contact Me"
+      title={t('about.contactMe')}
       titleStyle={{ color: appTheme.colors.primary }}
     >
       <List.Item
