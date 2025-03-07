@@ -42,8 +42,7 @@
     "generate": "Generating subtitle...",
     "welcome": "Welcome to FilmSpeak!\nPlease select a video file or share a video to get started.",
     "removeHistory": "Remove history subtitles can delete cached files related to them",
-    "noSubtitles": "No subtitles found",
-    "seconds": "s"
+    "noSubtitles": "No subtitles found"
   },
   "about": {
     "version": "Version",

@@ -42,8 +42,7 @@
     "generate": "正在生成字幕...",
     "welcome": "歡迎使用 FilmSpeak！\n請選擇視頻文件或分享視頻以開始使用",
     "removeHistory": "移除歷史字幕將會刪除相關的緩存文件",
-    "noSubtitles": "未找到字幕",
-    "seconds": "秒"
+    "noSubtitles": "未找到字幕"
   },
   "about": {
     "version": "版本",
