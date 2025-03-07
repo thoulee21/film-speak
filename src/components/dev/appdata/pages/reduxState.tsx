@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 
-import { DataList } from "@/src/components/appData/DataList";
+import { DataList } from "@/src/components/dev/appdata/DataList";
 import { store } from "@/src/redux/store";
 
 const ReduxState = () => {

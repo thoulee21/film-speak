@@ -3,7 +3,7 @@ import React, { useCallback, useRef } from 'react';
 import { FlatList, Platform, StyleSheet, View } from 'react-native';
 import { ActivityIndicator } from 'react-native-paper';
 
-import { DataItem, DataItemType } from '@/src/components/appData/DataItem';
+import { DataItem, DataItemType } from '@/src/components/dev/appdata/DataItem';
 
 export const DataList = ({ dataItems }: {
   dataItems: DataItemType[]

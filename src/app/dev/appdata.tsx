@@ -5,9 +5,9 @@ import { StyleSheet, View } from 'react-native';
 import { ActivityIndicator, Button } from 'react-native-paper';
 import Animated, { Easing, FadeIn, FadeOut } from 'react-native-reanimated';
 
-import LocalStorage from '@/src/components/appData/pages/localStorage';
-import PackageData from '@/src/components/appData/pages/packageData';
-import ReduxState from '@/src/components/appData/pages/reduxState';
+import LocalStorage from '@/src/components/dev/appdata/pages/localStorage';
+import PackageData from '@/src/components/dev/appdata/pages/packageData';
+import ReduxState from '@/src/components/dev/appdata/pages/reduxState';
 import { formatDataSize } from '@/src/utils/formatDataSize';
 import { reduxStorage } from '@/src/utils/mmkvStorage';
 

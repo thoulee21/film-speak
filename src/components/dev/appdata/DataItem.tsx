@@ -2,9 +2,9 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import { Avatar, Card, IconButton, Text, useTheme } from 'react-native-paper';
 
-import { ArrayDataList } from '@/src/components/appData/ArrayDataList';
-import { DataMoreBtn } from '@/src/components/appData/DataMoreButton';
-import { JSONViewer } from '@/src/components/appData/JsonViewer';
+import { ArrayDataList } from '@/src/components/dev/appdata/ArrayDataList';
+import { DataMoreBtn } from '@/src/components/dev/appdata/DataMoreButton';
+import { JSONViewer } from '@/src/components/dev/appdata/JsonViewer';
 
 export interface DataItemType {
   name: string,

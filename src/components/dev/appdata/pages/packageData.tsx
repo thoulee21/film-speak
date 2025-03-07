@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import packageJson from '@/package.json';
-import { DataList } from "@/src/components/appData/DataList";
+import { DataList } from "@/src/components/dev/appdata/DataList";
 
 const PackageData = () => {
   const packageData = useMemo(() => (

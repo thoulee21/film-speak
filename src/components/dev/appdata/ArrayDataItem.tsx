@@ -3,8 +3,8 @@ import { StyleSheet } from 'react-native';
 import { Avatar, Card, Text } from 'react-native-paper';
 import { MD3Theme } from 'react-native-paper/src/types';
 
-import { DataMoreBtn } from '@/src/components/appData/DataMoreButton';
-import { JSONViewer } from '@/src/components/appData/JsonViewer';
+import { DataMoreBtn } from '@/src/components/dev/appdata/DataMoreButton';
+import { JSONViewer } from '@/src/components/dev/appdata/JsonViewer';
 
 export const ArrayDataItem = ({ item, index, appTheme }: {
   item: any,
