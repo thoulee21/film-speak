@@ -2,7 +2,7 @@
   "expo": {
     "name": "FilmSpeak",
     "slug": "film-speak",
-    "version": "1.3.6",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -20,7 +20,7 @@
     },
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1003006"
+      "buildNumber": "2000000"
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +28,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.thoulee.filmspeak",
-      "versionCode": 1003006
+      "versionCode": 2000000
     },
     "web": {
       "bundler": "metro",
