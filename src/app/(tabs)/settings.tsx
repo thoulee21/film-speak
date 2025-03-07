@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List } from 'react-native-paper';
 
 import TestSourceItem from '@/src/components/dev/TestSourceItem';
+import CacheItem from '@/src/components/settings/CacheItem';
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/store/slices/devMode';
@@ -38,6 +39,7 @@ export default function Setting() {
     <ScrollView style={styles.container}>
       <List.Section>
         <ShowSubtitleSwitchItem />
+
         <Link href="/lang" asChild>
           <List.Item
             title={t('settings.languageSelect')}
@@ -61,6 +63,7 @@ export default function Setting() {
         </Link>
 
         <TestSourceItem />
+        <CacheItem />
       </List.Section>
       <Divider />
 
