@@ -9,7 +9,7 @@ export default function LangScreen() {
   return (
     <>
       <Stack.Screen options={{
-        title: t('settings.languageSelect')
+        title: t('settings.language')
       }} />
 
       <LanguageSelector />
