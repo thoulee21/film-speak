@@ -33,7 +33,7 @@ import '@/src/i18n';
 import ColorTheme from '@/src/constants/colorTheme';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
-import { persister, store } from '@/src/redux/store';
+import { persister, store } from '@/src/store/store';
 import { logFilePath } from '@/src/utils/logger';
 
 export {

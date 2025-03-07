@@ -3,7 +3,7 @@ import { View } from 'react-native';
 import { List, Switch } from 'react-native-paper';
 
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
-import { selectDevMode, toggleDevMode } from '@/src/redux/slices/devMode';
+import { selectDevMode, toggleDevMode } from '@/src/store/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
 import haptics from '@/src/utils/haptics';
 

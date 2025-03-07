@@ -3,7 +3,7 @@ import { ToastAndroid } from "react-native"
 import { List, TextInput, useTheme } from "react-native-paper"
 
 import { useAppDispatch } from "@/src/hooks/redux"
-import { setVideoSource } from "@/src/redux/slices/videoSource"
+import { setVideoSource } from "@/src/store/slices/videoSource"
 import type ListLRProps from "@/src/types/paperListItem"
 import haptics from "@/src/utils/haptics"
 

@@ -40,11 +40,11 @@ import {
 import {
   selectVideoSource,
   setVideoSource,
-} from '@/src/redux/slices/videoSource';
-import { selectVolume } from '@/src/redux/slices/volume';
+} from '@/src/store/slices/videoSource';
+import { selectVolume } from '@/src/store/slices/volume';
 import {
   selectVolumeFactor,
-} from '@/src/redux/slices/volumeFactor';
+} from '@/src/store/slices/volumeFactor';
 import handleInputVideo from '@/src/utils/handleInputVideo';
 import haptics from '@/src/utils/haptics';
 import { playerLog } from '@/src/utils/logger';

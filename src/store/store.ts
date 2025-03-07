@@ -6,7 +6,7 @@ import {
 } from '@reduxjs/toolkit';
 import { persistReducer, persistStore } from 'redux-persist';
 
-import { devModeSlice } from '@/src/redux/slices/devMode';
+import { devModeSlice } from '@/src/store/slices/devMode';
 import { MMKVStorage } from '@/src/utils/mmkvStorage';
 import { showSubtitleSlice } from './slices/showSubtitle';
 import { subtitlesSlice } from './slices/subtitles';

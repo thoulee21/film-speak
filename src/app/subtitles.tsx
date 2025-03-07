@@ -9,7 +9,7 @@ import LottieAnimation from "@/src/components/LottieAnimation";
 import SelectVideoButton from '@/src/components/SelectVideoButton';
 import SubtitleItem from "@/src/components/subtitles/item";
 import { useAppSelector } from "@/src/hooks/redux";
-import { selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
+import { selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
 
 export default function Subtitles() {
   const appTheme = useTheme();

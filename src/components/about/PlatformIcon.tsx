@@ -3,7 +3,7 @@ import { Platform } from 'react-native';
 import { List, useTheme } from 'react-native-paper';
 
 import { useAppSelector } from '@/src/hooks/redux';
-import { selectDevMode } from '@/src/redux/slices/devMode';
+import { selectDevMode } from '@/src/store/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
 
 const PlatformIcon = ({ color, style }: ListLRProps) => {

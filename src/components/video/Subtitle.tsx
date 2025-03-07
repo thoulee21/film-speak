@@ -12,8 +12,8 @@ import LottieAnimation from "@/src/components/LottieAnimation";
 import SelectVideoButton from "@/src/components/SelectVideoButton";
 import SubtitleItem from "@/src/components/video/SubtitleItem";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { addSubtitle, selectSubtitles } from "@/src/redux/slices/subtitles";
-import { selectVideoSource } from "@/src/redux/slices/videoSource";
+import { addSubtitle, selectSubtitles } from "@/src/store/slices/subtitles";
+import { selectVideoSource } from "@/src/store/slices/videoSource";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 

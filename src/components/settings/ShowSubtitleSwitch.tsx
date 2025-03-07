@@ -3,7 +3,7 @@ import { List, Switch } from 'react-native-paper';
 import { useTranslation } from 'react-i18next';
 
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
-import { selectShowSubtitle, setShowSubtitle } from '@/src/redux/slices/showSubtitle';
+import { selectShowSubtitle, setShowSubtitle } from '@/src/store/slices/showSubtitle';
 import haptics from '@/src/utils/haptics';
 
 const ShowSubtitleSwitchItem = () => {

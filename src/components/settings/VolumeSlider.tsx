@@ -5,8 +5,8 @@ import { StyleSheet, View } from "react-native";
 import { Caption, IconButton, List, Text, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { resetVolume, selectVolume, setVolume } from "@/src/redux/slices/volume";
-import { selectVolumeFactor } from "@/src/redux/slices/volumeFactor";
+import { resetVolume, selectVolume, setVolume } from "@/src/store/slices/volume";
+import { selectVolumeFactor } from "@/src/store/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
 import haptics from "@/src/utils/haptics";
 

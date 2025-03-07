@@ -26,7 +26,7 @@ import {
   resetVolumeFactor,
   selectVolumeFactor,
   setVolumeFactor,
-} from "@/src/redux/slices/volumeFactor";
+} from "@/src/store/slices/volumeFactor";
 import type ListLRProps from "@/src/types/paperListItem";
 import haptics from "@/src/utils/haptics";
 

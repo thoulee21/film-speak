@@ -7,7 +7,7 @@ import { Divider, IconButton, List } from 'react-native-paper';
 import TestSourceItem from '@/src/components/dev/TestSourceItem';
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
-import { selectDevMode } from '@/src/redux/slices/devMode';
+import { selectDevMode } from '@/src/store/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
 
 export default function Setting() {

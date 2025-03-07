@@ -5,8 +5,8 @@ import { DeviceEventEmitter, type StyleProp, type ViewStyle } from "react-native
 import { Button } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { setVideoSource } from "@/src/redux/slices/videoSource";
-import { selectVolumeFactor } from "@/src/redux/slices/volumeFactor";
+import { setVideoSource } from "@/src/store/slices/videoSource";
+import { selectVolumeFactor } from "@/src/store/slices/volumeFactor";
 import handleInputVideo from "@/src/utils/handleInputVideo";
 
 export default function SelectVideoButton({

@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import StateKeys from '@/src/constants/stateKeys';
-import { RootState } from '@/src/redux/store';
+import { RootState } from '@/src/store/store';
 
 export const initialState = {
   value: 5.0,

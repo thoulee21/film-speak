@@ -7,8 +7,8 @@ import { Alert, StyleSheet, ToastAndroid } from "react-native";
 import { Avatar, Button, Caption, Card, Menu, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/redux/slices/subtitles";
-import { selectVideoSource, setVideoSource } from "@/src/redux/slices/videoSource";
+import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
+import { selectVideoSource, setVideoSource } from "@/src/store/slices/videoSource";
 import { formatDataSize } from "@/src/utils/formatDataSize";
 import haptics from "@/src/utils/haptics";
 

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 
 import { DataList } from "@/src/components/dev/appdata/DataList";
-import { store } from "@/src/redux/store";
+import { store } from "@/src/store/store";
 
 const ReduxState = () => {
   const state: { [key: string]: any } = store.getState();

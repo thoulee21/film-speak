@@ -22,7 +22,7 @@ import {
 import RNRestart from 'react-native-restart';
 
 import { useAppSelector } from '@/src/hooks/redux';
-import { selectDevMode } from '@/src/redux/slices/devMode';
+import { selectDevMode } from '@/src/store/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
 import haptics from '@/src/utils/haptics';
 

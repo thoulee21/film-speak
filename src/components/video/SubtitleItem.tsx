@@ -11,7 +11,7 @@ import {
 import type { Line } from "srt-parser-2";
 
 import { useAppSelector } from "@/src/hooks/redux";
-import { selectShowSubtitle } from "@/src/redux/slices/showSubtitle";
+import { selectShowSubtitle } from "@/src/store/slices/showSubtitle";
 import type ListLRProps from "@/src/types/paperListItem";
 import formateTime from "@/src/utils/formatTime";
 import haptics from "@/src/utils/haptics";

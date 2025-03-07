@@ -5,7 +5,7 @@ import { BottomNavigation } from "react-native-paper";
 
 import Touchable from "@/src/components/tabbar/Touchable";
 import { useAppSelector } from "@/src/hooks/redux";
-import { selectDevMode } from "@/src/redux/slices/devMode";
+import { selectDevMode } from "@/src/store/slices/devMode";
 
 export default function MaterialBottomBar({
   navigation,

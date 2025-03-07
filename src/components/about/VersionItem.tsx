@@ -7,7 +7,7 @@ import { List, Portal, Snackbar } from 'react-native-paper';
 import { version } from '@/package.json';
 import PlatformIcon from '@/src/components/about/PlatformIcon';
 import { useAppDispatch, useAppSelector } from '@/src/hooks/redux';
-import { selectDevMode, setDevMode } from '@/src/redux/slices/devMode';
+import { selectDevMode, setDevMode } from '@/src/store/slices/devMode';
 import ListLRProps from '@/src/types/paperListItem';
 import haptics from '@/src/utils/haptics';
 import upperFirst from '@/src/utils/upperFirst';

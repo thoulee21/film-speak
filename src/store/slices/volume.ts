@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 import StateKeys from '@/src/constants/stateKeys';
-import { RootState } from '@/src/redux/store';
+import { RootState } from '@/src/store/store';
 
 const initialState = {
   // number from 0 to 1, -1 for unset
