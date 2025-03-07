@@ -67,6 +67,10 @@
   "videoEnhance": {
     "title": "Video Enhancement",
     "description": "Adjust video enhancement factors",
-    "factors": "Enhancement Factors"
+    "factors": "Enhancement Factors",
+    "banner": "The changes you make here will not affect the video processed earlier. To apply the changes, you need to reprocess the video.",
+    "volFactor": {
+      "description": "Increase or decrease the video factor, default is 5.0"
+    }
   }
 }

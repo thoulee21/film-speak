@@ -59,7 +59,11 @@
   "videoEnhance": {
     "title": "视频增强",
     "description": "调整视频增强因子",
-    "factors": "增强因子"
+    "factors": "增强因子",
+    "volFactor": {
+      "description": "增加或减少视频系数，默认值为5.0"
+    },
+    "banner": "您在此处所做的更改不会影响之前处理的视频。要应用更改，您需要重新处理视频。"
   },
   "action": {
     "copy": "复制到剪贴板",
