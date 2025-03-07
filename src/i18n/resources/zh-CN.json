@@ -56,10 +56,8 @@
   },
   "dev": {
     "clearLogs": "清除日志",
-    "testSource": "测试源",
     "appData": "应用数据",
-    "cache": "缓存",
-    "videoEnhance": "视频增强"
+    "cache": "缓存"
   },
   "videoEnhance": {
     "title": "视频增强",

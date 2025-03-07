@@ -56,10 +56,8 @@
   },
   "dev": {
     "clearLogs": "清除日誌",
-    "testSource": "測試源",
     "appData": "應用數據",
-    "cache": "緩存",
-    "videoEnhance": "視頻增強"
+    "cache": "緩存"
   },
   "videoEnhance": {
     "title": "視頻增強",

@@ -56,10 +56,8 @@
   },
   "dev": {
     "clearLogs": "Clear logs",
-    "testSource": "Test Source",
     "appData": "App Data",
-    "cache": "Cache",
-    "videoEnhance": "Video Enhancement"
+    "cache": "Cache"
   },
   "action": {
     "copy": "Copy to clipboard",
