@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Divider, IconButton, List } from 'react-native-paper';
+import { Divider, IconButton, List, useTheme } from 'react-native-paper';
 
 import CacheItem from '@/src/components/settings/CacheItem';
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
@@ -11,6 +11,7 @@ import { selectDevMode } from '@/src/store/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
 
 export default function Setting() {
+  const appTheme = useTheme();
   const { t } = useTranslation();
   const devModeEnabled = useAppSelector(selectDevMode);
 
@@ -36,7 +37,10 @@ export default function Setting() {
 
   return (
     <ScrollView style={styles.container}>
-      <List.Section>
+      <List.Section
+        title='General'
+        titleStyle={{ color: appTheme.colors.primary }}
+      >
         <ShowSubtitleSwitchItem />
 
         <Link href="/lang" asChild>
@@ -51,7 +55,10 @@ export default function Setting() {
       </List.Section>
       <Divider />
 
-      <List.Section>
+      <List.Section
+        title='Features'
+        titleStyle={{ color: appTheme.colors.primary }}
+      >
         <Link href="/videoEnhance" asChild>
           <List.Item
             title={t('videoEnhance.title')}
@@ -65,7 +72,10 @@ export default function Setting() {
       </List.Section>
       <Divider />
 
-      <List.Section>
+      <List.Section
+        title='About'
+        titleStyle={{ color: appTheme.colors.primary }}
+      >
         {devModeEnabled && (
           <Link href="/dev" asChild>
             <List.Item
