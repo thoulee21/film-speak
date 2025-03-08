@@ -32,7 +32,7 @@ export const DataMoreBtn = ({ data, props }: {
     >
       <Menu.Item
         leadingIcon="clipboard-outline"
-        title="Copy"
+        title={t('action.copy')}
         onPress={() => {
           Clipboard.setString(JSON.stringify(data));
 
