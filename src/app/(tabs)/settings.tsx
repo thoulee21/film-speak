@@ -73,7 +73,7 @@ export default function Setting() {
       <Divider />
 
       <List.Section
-        title='About'
+        title={t('navigation.about')}
         titleStyle={{ color: appTheme.colors.primary }}
       >
         {devModeEnabled && (
