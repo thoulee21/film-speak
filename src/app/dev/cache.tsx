@@ -137,7 +137,10 @@ export default function CacheScreen() {
         icon="home-outline"
         disabled={path.uri === ROOT_DIR.uri}
         onPress={() => {
-          router.dismissAll();
+          router.dismissTo({
+            pathname: '/dev/cache',
+            params: { path: ROOT_DIR.uri }
+          });
         }}
       />
     )
