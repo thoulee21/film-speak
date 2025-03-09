@@ -47,3 +47,4 @@ export const log = logger.createLogger({
 
 export const rootLog = log.extend('root');
 export const playerLog = log.extend('player');
+export const s2tLog = log.extend('speech2text');

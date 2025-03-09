@@ -6,6 +6,8 @@ import {
   type FFmpegSession,
 } from "ffmpeg-kit-react-native";
 
+import { s2tLog } from '@/src/utils/logger';
+
 export default async function (
   videoUri: string,
   onComplete: (session: FFmpegSession, audioUri: string) => void
@@ -19,7 +21,7 @@ export default async function (
   // 如果 videoUri 是 content:// URI，则将其转换为 file:// URI
   if (videoUri.startsWith('content://')) {
     videoUri = await FFmpegKitConfig.getSafParameterForRead(videoUri);
-    console.debug('Selected video URI:', videoUri);
+    s2tLog.debug('Selected video URI:', videoUri);
   }
 
   await FFmpegKit.executeAsync(

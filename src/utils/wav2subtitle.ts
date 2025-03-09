@@ -13,6 +13,8 @@ import {
 import { PermissionsAndroid, Platform } from "react-native";
 import SrtParser2, { type Line } from "srt-parser-2";
 
+import { s2tLog } from "@/src/utils/logger";
+
 // Azure 语音服务 key、region
 const KEY = '7b9805a40281436c9c2c03068a5c5785';
 const REGION = 'southeastasia';
@@ -116,21 +118,21 @@ class Wav2SubtitleConverter {
     if (!this.recognizer) await this.init(fileUri);
 
     this.recognizer!.sessionStarted = (s, e) => {
-      console.log("Session started: " + e.sessionId);
+      s2tLog.info("Session started: " + e.sessionId);
     };
 
     this.recognizer!.sessionStopped = (s, e) => {
-      console.log("Session stopped: " + e.sessionId);
+      s2tLog.info("Session stopped: " + e.sessionId);
     };
 
     this.recognizer!.canceled = (s, e) => {
       const stop = () => {
         this.recognizer!.stopContinuousRecognitionAsync(
           () => {
-            console.log("Stop continuous recognition.");
+            s2tLog.info("Stop continuous recognition.");
           },
           (err) => {
-            console.warn(err);
+            s2tLog.warn(err);
           }
         );
 
@@ -140,12 +142,12 @@ class Wav2SubtitleConverter {
       }
 
       if (CancellationReason.Error === e.reason) {
-        console.warn(e.errorDetails);
+        s2tLog.warn(e.errorDetails);
         stop();
       }
 
       if (CancellationReason.EndOfStream === e.reason) {
-        console.log("End of speech");
+        s2tLog.info("End of speech");
         stop();
       }
     }
@@ -165,16 +167,16 @@ class Wav2SubtitleConverter {
       );
 
       this.subtitle += caption;
-      console.debug("RECOGNIZED: Text=" + e.result.text);
+      s2tLog.debug("RECOGNIZED: Text=" + e.result.text);
     }
 
     // 开始识别
     this.recognizer!.startContinuousRecognitionAsync(
       () => {
-        console.log("Start continuous recognition ...");
+        s2tLog.info("Start continuous recognition ...");
       },
       (err) => {
-        console.warn(err);
+        s2tLog.warn(err);
       }
     );
   }
@@ -187,20 +189,20 @@ class Wav2SubtitleConverter {
           PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
         ]);
 
-        console.debug("grants", grants)
+        s2tLog.debug("grants", grants)
         if (
           grants["android.permission.WRITE_EXTERNAL_STORAGE"] === PermissionsAndroid.RESULTS.GRANTED &&
           grants["android.permission.READ_EXTERNAL_STORAGE"] === PermissionsAndroid.RESULTS.GRANTED
         ) {
-          console.log("Permissions granted");
+          s2tLog.info("Permissions granted");
           return true;
         } else {
-          console.log("Permissions denied");
-          return;
+          s2tLog.warn("Permissions denied");
+          return false;
         }
       } catch (err) {
-        console.warn(err);
-        return;
+        s2tLog.warn(err);
+        return false;
       }
     }
     return true;

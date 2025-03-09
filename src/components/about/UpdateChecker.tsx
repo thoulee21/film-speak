@@ -25,6 +25,7 @@ import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/store/slices/devMode';
 import type ListLRProps from '@/src/types/paperListItem';
 import haptics from '@/src/utils/haptics';
+import { rootLog } from '@/src/utils/logger';
 
 const UpdateChecker = () => {
   const { t } = useTranslation();
@@ -81,7 +82,7 @@ const UpdateChecker = () => {
       await Updates.fetchUpdateAsync();
       RNRestart.Restart();
     } catch (err) {
-      console.error(err);
+      rootLog.error(err);
       ToastAndroid.show(
         JSON.stringify(err),
         ToastAndroid.LONG
@@ -102,7 +103,7 @@ const UpdateChecker = () => {
         );
       }
     } catch (err) {
-      console.error(err);
+      rootLog.error(err);
       ToastAndroid.show(
         JSON.stringify(err),
         ToastAndroid.SHORT
