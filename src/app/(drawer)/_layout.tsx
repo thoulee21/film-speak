@@ -46,10 +46,7 @@ export default function TabLayout() {
 
   return (
     <Portal.Host>
-      <Drawer
-        backBehavior='none'
-        drawerContent={renderDrawerContent}
-      >
+      <Drawer drawerContent={renderDrawerContent}>
         <Drawer.Screen
           name="index"
           options={{
