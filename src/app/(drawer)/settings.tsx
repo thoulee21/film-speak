@@ -27,10 +27,6 @@ export default function Setting() {
     <List.Icon color={color} style={style} icon="developer-board" />
   ), []);
 
-  const renderAppIcon = useCallback(({ color, style }: ListLRProps) => (
-    <List.Icon color={color} style={style} icon="information-outline" />
-  ), []);
-
   const renderVideoEnhanceIcon = useCallback((props: ListLRProps) => (
     <List.Icon {...props} icon="video-plus-outline" />
   ), []);
@@ -69,13 +65,7 @@ export default function Setting() {
         </Link>
 
         <CacheItem />
-      </List.Section>
-      <Divider />
 
-      <List.Section
-        title={t('navigation.about')}
-        titleStyle={{ color: appTheme.colors.primary }}
-      >
         {devModeEnabled && (
           <Link href="/dev" asChild>
             <List.Item
@@ -86,15 +76,6 @@ export default function Setting() {
             />
           </Link>
         )}
-
-        <Link href="/about" asChild>
-          <List.Item
-            title={t('navigation.about')}
-            description={t('settings.learnMore')}
-            left={renderAppIcon}
-            right={renderRightIcon}
-          />
-        </Link>
       </List.Section>
     </ScrollView>
   );
