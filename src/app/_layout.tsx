@@ -16,11 +16,11 @@ import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { View } from 'react-native';
+import { useColorScheme, View } from 'react-native';
 import 'react-native-gesture-handler';
 import {
-  PaperProvider,
   adaptNavigationTheme,
+  PaperProvider,
   useTheme,
 } from 'react-native-paper';
 import 'react-native-reanimated';
@@ -31,7 +31,6 @@ import { PersistGate } from 'redux-persist/integration/react';
 import '@/src/i18n';
 
 import ColorTheme from '@/src/constants/colorTheme';
-import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
 import { persister, store } from '@/src/store/store';
 import { logFilePath } from '@/src/utils/logger';
