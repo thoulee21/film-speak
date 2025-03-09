@@ -1,15 +1,18 @@
 import { useLocalSearchParams } from "expo-router";
+import Drawer from "expo-router/drawer";
 import { useCallback, useState } from "react";
 import { useTranslation } from 'react-i18next';
-import { StyleSheet, View, type ListRenderItemInfo } from "react-native";
-import { Banner, FAB, Icon, List, Portal, useTheme } from "react-native-paper";
+import { Alert, StyleSheet, View, type ListRenderItemInfo } from "react-native";
+import { Banner, FAB, Icon, IconButton, List, Portal, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
 import SubtitleItem from "@/src/components/subtitles/item";
 import { useAppSelector } from "@/src/hooks/redux";
+import { useRemoveSubtitle } from "@/src/hooks/useRemoveSubtitle";
 import useSelectFile from "@/src/hooks/useSelectFile";
 import { selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
+import haptics from "@/src/utils/haptics";
 
 export default function Subtitles() {
   const appTheme = useTheme();
@@ -17,6 +20,7 @@ export default function Subtitles() {
 
   const { t } = useTranslation();
   const selectFile = useSelectFile();
+  const removeSubtitle = useRemoveSubtitle();
 
   const subtitles = useAppSelector(selectSubtitles);
   const [cacheBannerVisible, setCacheBannerVisible] = useState(
@@ -29,8 +33,39 @@ export default function Subtitles() {
     <SubtitleItem item={item} />
   ), []);
 
+  const onPressClear = useCallback(() => {
+    haptics.warning();
+    Alert.alert(
+      'Clear subtitles',
+      'Are you sure you want to clear all subtitles?',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Clear',
+          style: 'destructive',
+          onPress: () => {
+            subtitles.forEach((subtitle) => {
+              removeSubtitle(subtitle);
+            });
+          }
+        }
+      ]
+    );
+  }, [removeSubtitle, subtitles]);
+
   return (
     <Portal.Host>
+      <Drawer.Screen options={{
+        headerRight: () => (
+          <IconButton
+            icon="delete-forever-outline"
+            iconColor={appTheme.colors.error}
+            disabled={subtitles.length === 0}
+            onPress={onPressClear}
+          />
+        )
+      }} />
+
       <View style={styles.root}>
         <Banner
           visible={cacheBannerVisible}

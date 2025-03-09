@@ -1,35 +1,30 @@
-import Clipboard from "@react-native-clipboard/clipboard";
 import { File } from "expo-file-system/next";
-import * as Sharing from 'expo-sharing';
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Alert, StyleSheet, ToastAndroid } from "react-native";
-import { Avatar, Button, Caption, Card, Menu, useTheme } from "react-native-paper";
+import { Alert, StyleSheet, View } from "react-native";
+import { Avatar, Button, Card, useTheme } from "react-native-paper";
 
+import MoreMenu from "@/src/components/subtitles/moreMenu";
+import ShareMenu from "@/src/components/subtitles/shareMenu";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { removeSubtitle, selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
-import { selectVideoSource, setVideoSource } from "@/src/store/slices/videoSource";
+import { useRemoveSubtitle } from "@/src/hooks/useRemoveSubtitle";
+import { type Subtitle } from "@/src/store/slices/subtitles";
+import {
+  selectVideoSource,
+  setVideoSource,
+} from "@/src/store/slices/videoSource";
 import { formatDataSize } from "@/src/utils/formatDataSize";
 import haptics from "@/src/utils/haptics";
 
 export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
+
   const { t } = useTranslation();
+  const performRemove = useRemoveSubtitle();
 
-  const subtitles = useAppSelector(selectSubtitles);
   const videoSource = useAppSelector(selectVideoSource);
-
-  const [menuVisible, setMenuVisible] = useState(false);
-  const [isShareAvailable, setIsShareAvailable] = useState(false);
-
   const selected = videoSource === item.fileUri;
-
-  useEffect(() => {
-    (async () => {
-      setIsShareAvailable(await Sharing.isAvailableAsync());
-    })();
-  }, []);
 
   const selectSubtitle = useCallback(() => {
     haptics.light();
@@ -39,49 +34,34 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
     }
   }, [dispatch, item.fileUri, videoSource]);
 
-  const copyToClipboard = useCallback(() => {
-    haptics.heavy();
-    Clipboard.setString(item.fileUri);
+  const cacheSize = useMemo(() => {
+    const videoFileSize = new File(item.fileUri).size || 0;
+    const coverFileSize = new File(item.coverUri).size || 0;
+    const wavFileSize = new File(item.audioUri).size || 0;
 
-    ToastAndroid.show(
-      t('action.fileUri'),
-      ToastAndroid.SHORT
-    );
-  }, [item.fileUri, t]);
+    return videoFileSize + coverFileSize + wavFileSize;
+  }, [item.audioUri, item.coverUri, item.fileUri]);
 
-  const performRemove = useCallback(async () => {
-    haptics.medium();
-
-    const wavFile = new File(item.audioUri);
-    const coverFile = new File(item.coverUri);
-
-    wavFile.exists && wavFile.delete();
-    coverFile.exists && coverFile.delete();
-
-    if (!item.fileUri.startsWith("http")) {
-      const cachedVideo = new File(item.fileUri);
-      cachedVideo.exists && cachedVideo.delete();
-    }
-
-    if (selected) {
-      if (subtitles.length - 1 > 0) {
-        dispatch(setVideoSource(subtitles[0].fileUri));
-      } else {
-        dispatch(setVideoSource(undefined))
-      }
-    }
-    dispatch(removeSubtitle(item.fileUri));
-
-    ToastAndroid.show(
+  const onPressDelete = useCallback(() => {
+    Alert.alert(
       t('common.remove'),
-      ToastAndroid.SHORT
+      t('error.removeSubtitleConfirm'),
+      [
+        { text: t('common.cancel'), style: "cancel", },
+        {
+          text: t('common.remove'),
+          style: "destructive",
+          onPress: () => {
+            haptics.medium();
+            performRemove(item);
+          },
+        },
+      ]
     );
-  }, [dispatch, item.audioUri, item.coverUri, item.fileUri, selected, subtitles, t]);
+  }, [item, performRemove, t]);
 
   return (
     <Card
-      onPress={selectSubtitle}
-      onLongPress={copyToClipboard}
       mode={selected ? "elevated" : "contained"}
       style={[styles.card, {
         backgroundColor: selected
@@ -90,13 +70,15 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
       }]}
     >
       <Card.Cover source={{ uri: item.coverUri }} />
+
       <Card.Title
         title={new Date(item.createAt).toLocaleString()}
-        subtitle={`${item.value.length} line(s)`}
+        subtitle={`${item.value.length} line(s) · ${formatDataSize(cacheSize)}`}
+        subtitleStyle={{ color: appTheme.colors.onSurfaceDisabled }}
         left={({ size }) => (
           <Avatar.Icon
             size={size}
-            icon={selected ? "check" : "subtitles-outline"}
+            icon="subtitles-outline"
             style={{
               backgroundColor: selected
                 ? appTheme.colors.primary
@@ -104,93 +86,28 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
             }}
           />
         )}
-        right={() => {
-          const videoFileSize = new File(item.fileUri).size || 0;
-          const coverFileSize = new File(item.coverUri).size || 0;
-          const wavFileSize = new File(item.audioUri).size || 0;
-          const cacheSizeSum = videoFileSize + coverFileSize + wavFileSize;
-
-          return (
-            <Caption style={styles.cacheSize}>
-              {formatDataSize(cacheSizeSum)}
-            </Caption>
-          )
-        }}
+        right={({ size }) => (
+          <View style={{ flexDirection: "row" }}>
+            <ShareMenu item={item} size={size} />
+            <MoreMenu item={item} size={size} />
+          </View>
+        )}
       />
 
       <Card.Actions>
-        <Menu
-          visible={menuVisible}
-          onDismiss={() => setMenuVisible(false)}
-          mode="elevated"
-          anchorPosition="bottom"
-          anchor={
-            <Button
-              icon="share-outline"
-              mode="outlined"
-              disabled={!isShareAvailable}
-              onPress={() => {
-                haptics.light();
-                setMenuVisible(true);
-              }}
-            >
-              {t('common.share')}
-            </Button>
-          }
-        >
-          <Menu.Item
-            title={t('action.audioShare')}
-            leadingIcon="music-note-outline"
-            onPress={async () => {
-              await Sharing.shareAsync(item.audioUri, {
-                dialogTitle: t('action.audioShare'),
-                mimeType: "audio/wav",
-              });
-              setMenuVisible(false);
-            }}
-          />
-          <Menu.Item
-            title={t('action.coverShare')}
-            leadingIcon="image-outline"
-            onPress={async () => {
-              await Sharing.shareAsync(item.coverUri, {
-                dialogTitle: t('action.coverShare'),
-                mimeType: "image/png",
-              });
-              setMenuVisible(false);
-            }}
-          />
-          <Menu.Item
-            title={t('action.videoShare')}
-            leadingIcon="video-outline"
-            onPress={async () => {
-              await Sharing.shareAsync(item.fileUri, {
-                dialogTitle: t('action.videoShare'),
-                mimeType: "video/mp4",
-              });
-              setMenuVisible(false);
-            }}
-          />
-        </Menu>
-
         <Button
           icon="delete-outline"
-          onPress={() => {
-            Alert.alert(
-              t('common.remove'),
-              t('error.removeSubtitleConfirm'),
-              [
-                { text: t('common.cancel'), style: "cancel", },
-                {
-                  text: t('common.remove'),
-                  style: "destructive",
-                  onPress: performRemove,
-                },
-              ]
-            );
-          }}
+          onPress={onPressDelete}
         >
           {t('common.delete')}
+        </Button>
+
+        <Button
+          icon="check"
+          onPress={selectSubtitle}
+          disabled={selected}
+        >
+          使用
         </Button>
       </Card.Actions>
     </Card>
@@ -201,8 +118,4 @@ const styles = StyleSheet.create({
   card: {
     marginVertical: 5,
   },
-  cacheSize: {
-    fontSize: 15,
-    marginRight: 16,
-  }
 })
