@@ -34,7 +34,7 @@ import ColorTheme from '@/src/constants/colorTheme';
 import { useColorScheme } from '@/src/hooks/useColorScheme';
 import { JsStack as Stack } from '@/src/layouts/js-stack';
 import { persister, store } from '@/src/store/store';
-import { logFilePath } from '@/src/utils/logger';
+import { logFilePath, rootLog } from '@/src/utils/logger';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -144,6 +144,14 @@ function RootLayout() {
 
       if (!fileExists) {
         await FileSystem.writeAsStringAsync(logFilePath, '');
+        rootLog.info('Log file created.');
+      } else {
+        const logFile = new File(logFilePath);
+        if (logFile.size && logFile.size > 1024 * 1024) {
+          // Clear the log file if it exceeds 1MB.
+          await FileSystem.writeAsStringAsync(logFilePath, '');
+          rootLog.info('Log file cleared due to size limit.');
+        }
       }
     };
 
