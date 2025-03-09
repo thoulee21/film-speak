@@ -2,7 +2,7 @@
   "expo": {
     "name": "FilmSpeak",
     "slug": "film-speak",
-    "version": "2.0.1",
+    "version": "2.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -20,12 +20,12 @@
     },
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "2000001"
+      "buildNumber": "2001000"
     },
     "android": {
       "icon": "./assets/images/icon.png",
       "package": "com.thoulee.filmspeak",
-      "versionCode": 2000001,
+      "versionCode": 2001000,
       "intentFilters": [
         {
           "action": "SEND",
