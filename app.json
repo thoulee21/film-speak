@@ -25,7 +25,16 @@
     "android": {
       "icon": "./assets/images/icon.png",
       "package": "com.thoulee.filmspeak",
-      "versionCode": 2000001
+      "versionCode": 2000001,
+      "intentFilters": [
+        {
+          "action": "SEND",
+          "category": "DEFAULT",
+          "data": {
+            "mimeType": "video/*"
+          }
+        }
+      ]
     },
     "web": {
       "bundler": "metro",
@@ -34,7 +43,6 @@
     },
     "plugins": [
       "./plugin/gradle-properties",
-      "./plugin/android-manifest",
       "expo-router",
       [
         "react-native-video",
@@ -61,6 +69,20 @@
           "project": "film-speak",
           "organization": "thouworks"
         }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "compileSdkVersion": 35,
+            "targetSdkVersion": 35,
+            "buildToolsVersion": "35.0.0",
+            "enableProguardInReleaseBuilds": true
+          },
+          "ios": {
+            "deploymentTarget": "15.1"
+          }
+        }
       ]
     ],
     "experiments": {
@@ -75,11 +97,12 @@
       }
     },
     "owner": "thoulee",
-    "runtimeVersion": "1.0.0",
+    "runtimeVersion": {
+      "policy": "sdkVersion"
+    },
     "updates": {
       "url": "https://u.expo.dev/6c832a57-bb37-4208-9672-223a964aaa88",
       "requestHeaders": {
-        "expo-runtime-version": "1.0.0",
         "expo-channel-name": "production"
       }
     }
