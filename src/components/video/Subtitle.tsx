@@ -4,7 +4,7 @@ import { File, Paths } from "expo-file-system/next";
 import { FFmpegKit, type FFmpegSession } from "ffmpeg-kit-react-native";
 import React, { useCallback, useMemo, useState, } from "react";
 import { useTranslation } from "react-i18next";
-import { FlatList, StyleSheet, View } from "react-native";
+import { FlatList, StyleSheet, ToastAndroid, View } from "react-native";
 import { Caption, Divider } from "react-native-paper";
 import { type Line } from "srt-parser-2";
 
@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { addSubtitle, selectSubtitles } from "@/src/store/slices/subtitles";
 import { selectVideoSource } from "@/src/store/slices/videoSource";
 import extractAudioFromVideo from "@/src/utils/extractAudioFromVideo";
+import haptics from "@/src/utils/haptics";
 import Wav2SubtitleConverter from "@/src/utils/wav2subtitle";
 
 interface SubtitleProps {
@@ -51,16 +52,21 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
       );
 
       const saveSubtitleMetadata = () => {
-        const subtitleMatedata = {
+        dispatch(addSubtitle({
           fileUri: videoFileUri,
           value: lines,
           createAt: Date.now(),
           coverUri: coverFile.uri,
           audioUri
-        };
+        }));
 
-        dispatch(addSubtitle(subtitleMatedata));
-      }
+        haptics.success();
+        ToastAndroid.showWithGravity(
+          'Subtitle generated',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER
+        );
+      };
 
       const outputPattern = `${cacheDirectory}cover_${uriHash.slice(0, 6)}_%03d.jpg`;
       await FFmpegKit.executeAsync(
