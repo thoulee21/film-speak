@@ -135,7 +135,6 @@ export default function Subtitle({ onItemPress }: SubtitleProps) {
           />
         )
       }
-      // 避免字幕项被 FAB 遮挡
       ListFooterComponent={
         <View style={styles.paddingHor}>
           {!videoFileUri && <SelectVideoButton />}
