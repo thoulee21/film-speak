@@ -23,10 +23,7 @@
       "buildNumber": "2000001"
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
+      "icon": "./assets/images/icon.png",
       "package": "com.thoulee.filmspeak",
       "versionCode": 2000001
     },
