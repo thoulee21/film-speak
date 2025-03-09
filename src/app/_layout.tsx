@@ -41,10 +41,6 @@ export {
   ErrorBoundary
 } from 'expo-router';
 
-export const unstable_settings = {
-  initialRouteName: '(tabs)',
-};
-
 // Prevent the splash screen from auto-hiding before loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -99,13 +95,9 @@ function RootLayoutNav() {
         freezeOnBlur: true,
         headerTitleAlign: 'center',
       }}>
-        <Stack.Screen name="(tabs)" options={{
+        <Stack.Screen name="(drawer)" options={{
           headerShown: false,
           headerTitle: t('navigation.home'),
-        }} />
-        <Stack.Screen name="subtitles" options={{
-          ...TransitionPresets.ModalPresentationIOS,
-          headerShown: false,
         }} />
         <Stack.Screen name="dev/index" options={{
           headerTitle: 'DevOptions',

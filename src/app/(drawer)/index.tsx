@@ -1,4 +1,3 @@
-import { router, useNavigation } from 'expo-router';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { OrientationLock } from 'expo-screen-orientation';
 import * as SplashScreen from 'expo-splash-screen';
@@ -18,13 +17,9 @@ import {
 import {
   ActivityIndicator,
   Dialog,
-  FAB,
   Portal,
-  Text,
+  Text
 } from 'react-native-paper';
-import {
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
 import ShareMenu, {
   type ShareCallback
 } from 'react-native-share-menu';
@@ -46,14 +41,11 @@ import {
   selectVolumeFactor,
 } from '@/src/store/slices/volumeFactor';
 import handleInputVideo from '@/src/utils/handleInputVideo';
-import haptics from '@/src/utils/haptics';
 import { playerLog } from '@/src/utils/logger';
 
 export default function VideoScreen() {
   const dispatch = useAppDispatch();
   const playerRef = useRef<VideoRef>(null);
-  const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
 
   const volume = useAppSelector(selectVolume);
   const volumeFactor = useAppSelector(selectVolumeFactor);
@@ -61,12 +53,6 @@ export default function VideoScreen() {
 
   const [clip, setClip] = useState<Line>();
   const [isVideoProcessing, setIsVideoProcessing] = useState(false);
-
-  useEffect(() => {
-    navigation.setOptions({
-      headerShown: typeof source === 'undefined'
-    })
-  }, [navigation, source]);
 
   const handleShare: ShareCallback = useCallback(async (
     item
@@ -123,16 +109,13 @@ export default function VideoScreen() {
   }, []);
 
   return (
-    <View style={[
-      styles.root,
-      { paddingTop: insets.top }
-    ]}>
+    <View style={styles.root}>
       {source && (
         <VideoPlayer
           ref={playerRef}
           source={{ uri: source }}
           style={{
-            height: '35%',
+            height: '28.5%',
             width: '100%',
             backgroundColor: 'black'
           }}
@@ -197,16 +180,6 @@ export default function VideoScreen() {
       />
 
       <Portal>
-        <FAB
-          icon="subtitles-outline"
-          style={styles.fab}
-          visible={typeof source !== 'undefined' && !isVideoProcessing}
-          onPress={() => {
-            haptics.medium();
-            router.push('/subtitles');
-          }}
-        />
-
         <Dialog
           visible={isVideoProcessing}
           dismissable={false}
