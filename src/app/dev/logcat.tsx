@@ -1,22 +1,21 @@
-import { useNavigation } from '@react-navigation/native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import * as FileSystem from 'expo-file-system';
+import { Stack } from 'expo-router';
 import React, {
   useCallback,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
-  Animated,
+  FlatList,
   RefreshControl,
   StyleSheet,
   ToastAndroid,
+  TouchableOpacity,
   View,
-  type NativeSyntheticEvent,
-  type TextInputChangeEventData
 } from 'react-native';
 import {
   Button,
@@ -34,9 +33,33 @@ import packageData from '@/package.json';
 import haptics from '@/src/utils/haptics';
 import { logFilePath, rootLog } from '@/src/utils/logger';
 
+const LogLine = ({ item }: { item: string }) => {
+  const { t } = useTranslation();
+
+  const copyToClipboard = useCallback(() => {
+    haptics.heavy();
+    Clipboard.setString(item);
+
+    ToastAndroid.showWithGravity(
+      t('action.copied'),
+      ToastAndroid.SHORT,
+      ToastAndroid.CENTER
+    );
+  }, [item, t]);
+
+  return (
+    <TouchableOpacity
+      onLongPress={copyToClipboard}
+    >
+      <Caption>
+        {item}
+      </Caption>
+    </TouchableOpacity>
+  )
+};
+
 const Logcat = () => {
-  const navigation = useNavigation();
-  const logsRef = useRef<Animated.FlatList>(null);
+  const logsRef = useRef<FlatList>(null);
   const appTheme = useTheme();
   const { t } = useTranslation();
 
@@ -79,24 +102,6 @@ const Logcat = () => {
     </View>
   ), [appTheme.colors.error, logContent, saveLogs]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: renderHeaderRight,
-      headerSearchBarOptions: {
-        placeholder: 'Search log',
-        onChangeText(
-          e: NativeSyntheticEvent<TextInputChangeEventData>
-        ) {
-          const text = e.nativeEvent.text;
-          setKeyword(text);
-        },
-        onClose: () => {
-          setKeyword('');
-        },
-      }
-    });
-  }, [navigation, renderHeaderRight]);
-
   useEffect(() => {
     try {
       const readLog = async () => {
@@ -113,38 +118,19 @@ const Logcat = () => {
         });
       }
     } catch (e) {
-      rootLog.error({ id: uuid(), message: e, });
+      rootLog.error(e);
       setIsLoaded(true);
     }
   }, [isLoaded]);
 
   const clearLogs = async () => {
     await FileSystem.writeAsStringAsync(logFilePath, '');
-
-    rootLog.info({
-      id: uuid(),
-      message: "Start a new logging session",
-    });
-
     setIsLoaded(false);
   }
 
-  const renderItem = useCallback(({
-    item
-  }: {
-    item: string;
-  }) => {
-    const key = uuid();
-    return (
-      <Caption
-        key={key}
-        style={styles.row}
-        selectable
-      >
-        {item}
-      </Caption>
-    );
-  }, []);
+  const renderItem = useCallback(({ item }: { item: string }) => (
+    <LogLine item={item} />
+  ), []);
 
   const renderEmpty = () => (
     <Text style={styles.loading}>
@@ -153,23 +139,44 @@ const Logcat = () => {
   );
 
   const filteredLogLines = useMemo(() => {
-    if (!keyword) { return logContent.split('\n'); }
+    if (!keyword) {
+      return logContent.split('\n');
+    }
 
-    return logContent.split('\n').filter(
-      (line) => line.toLowerCase().includes(keyword.toLowerCase())
+    return (
+      logContent
+        .split('\n')
+        .filter((line) => (
+          line
+            .toLowerCase()
+            .includes(keyword.toLowerCase())
+        ))
     );
   }, [keyword, logContent]);
 
   return (
     <Portal.Host>
-      <Animated.FlatList
+      <Stack.Screen options={{
+        headerRight: renderHeaderRight,
+        headerSearchBarOptions: {
+          placeholder: 'Search log',
+          onChangeText(e) {
+            const text = e.nativeEvent.text;
+            setKeyword(text);
+          },
+          onClose: () => {
+            setKeyword('');
+          },
+        }
+      }} />
+
+      <FlatList
         ref={logsRef}
         data={filteredLogLines}
         style={styles.root}
         contentContainerStyle={styles.content}
         renderItem={renderItem}
         onRefresh={() => { setIsLoaded(false); }}
-        keyExtractor={() => uuid()}
         refreshing={!isLoaded}
         initialNumToRender={33}
         refreshControl={
@@ -181,6 +188,7 @@ const Logcat = () => {
           />
         }
         ListEmptyComponent={renderEmpty}
+        indicatorStyle={appTheme.dark ? 'white' : 'black'}
         persistentScrollbar
       />
 
@@ -191,6 +199,7 @@ const Logcat = () => {
           style={styles.fab}
           onPress={() => {
             if (logsRef.current) {
+              haptics.light();
               logsRef.current.scrollToEnd();
             }
           }}
@@ -248,9 +257,6 @@ const styles = StyleSheet.create({
   },
   loading: {
     marginTop: '50%',
-  },
-  row: {
-    flexDirection: 'row',
   },
   fab: {
     position: 'absolute',
