@@ -5,6 +5,7 @@ import { ScrollView, StyleSheet } from 'react-native';
 import { Divider, IconButton, List, useTheme } from 'react-native-paper';
 
 import CacheItem from '@/src/components/settings/CacheItem';
+import ColorSchemeItem from '@/src/components/settings/ColorSchemeItem';
 import ShowSubtitleSwitchItem from '@/src/components/settings/ShowSubtitleSwitch';
 import { useAppSelector } from '@/src/hooks/redux';
 import { selectDevMode } from '@/src/store/slices/devMode';
@@ -48,8 +49,10 @@ export default function Setting() {
             right={renderRightIcon}
           />
         </Link>
+
+        <ColorSchemeItem />
+        <Divider />
       </List.Section>
-      <Divider />
 
       <List.Section
         title='Features'
