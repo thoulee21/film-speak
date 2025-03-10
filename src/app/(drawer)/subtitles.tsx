@@ -1,31 +1,27 @@
-import { useLocalSearchParams } from "expo-router";
 import Drawer from "expo-router/drawer";
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useTranslation } from 'react-i18next';
 import { Alert, StyleSheet, View, type ListRenderItemInfo } from "react-native";
-import { Banner, FAB, Icon, IconButton, List, Portal, useTheme } from "react-native-paper";
+import { FAB, IconButton, List, Portal, useTheme } from "react-native-paper";
 import Reanimated, { LinearTransition } from 'react-native-reanimated';
 
 import LottieAnimation from "@/src/components/LottieAnimation";
 import SubtitleItem from "@/src/components/subtitles/item";
-import { useAppSelector } from "@/src/hooks/redux";
+import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { useRemoveSubtitle } from "@/src/hooks/useRemoveSubtitle";
 import useSelectFile from "@/src/hooks/useSelectFile";
 import { selectSubtitles, type Subtitle } from "@/src/store/slices/subtitles";
+import { setVideoSource } from "@/src/store/slices/videoSource";
 import haptics from "@/src/utils/haptics";
 
 export default function Subtitles() {
-  const appTheme = useTheme();
-  const { inform } = useLocalSearchParams();
-
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const appTheme = useTheme();
+
   const selectFile = useSelectFile();
   const removeSubtitle = useRemoveSubtitle();
-
   const subtitles = useAppSelector(selectSubtitles);
-  const [cacheBannerVisible, setCacheBannerVisible] = useState(
-    (subtitles.length > 1) && inform === 'true'
-  );
 
   const renderItem = useCallback(({
     item
@@ -47,11 +43,12 @@ export default function Subtitles() {
             subtitles.forEach((subtitle) => {
               removeSubtitle(subtitle);
             });
+            dispatch(setVideoSource(undefined));
           }
         }
       ]
     );
-  }, [removeSubtitle, subtitles]);
+  }, [dispatch, removeSubtitle, subtitles]);
 
   return (
     <Portal.Host>
@@ -67,23 +64,6 @@ export default function Subtitles() {
       }} />
 
       <View style={styles.root}>
-        <Banner
-          visible={cacheBannerVisible}
-          icon={(props) => (
-            <Icon
-              {...props}
-              source="information-outline"
-              color={appTheme.colors.secondary}
-            />
-          )}
-          actions={[{
-            label: t('common.ok'),
-            onPress: () => setCacheBannerVisible(false),
-          }]}
-        >
-          {t('subtitle.removeHistory')}
-        </Banner>
-
         <Reanimated.FlatList
           data={subtitles}
           renderItem={renderItem}
