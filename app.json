@@ -63,14 +63,6 @@
       ],
       "expo-asset",
       [
-        "@sentry/react-native/expo",
-        {
-          "url": "https://sentry.io/",
-          "project": "film-speak",
-          "organization": "thouworks"
-        }
-      ],
-      [
         "expo-build-properties",
         {
           "android": {

@@ -18,7 +18,7 @@
     "postversion": "react-native-version --generate-build",
     "build:android": "expo prebuild && cd android && .\\gradlew clean && .\\gradlew assembleRelease",
     "deploy:android": "adb install ./android/app/build/outputs/apk/release/app-release.apk",
-    "create:update": "eas update --channel production --platform android --auto && sentry-expo-upload-sourcemaps dist"
+    "create:update": "eas update --channel production --platform android --auto"
   },
   "jest": {
     "preset": "jest-expo"
@@ -32,7 +32,6 @@
     "@react-navigation/native": "^7.0.14",
     "@react-navigation/stack": "^7.1.1",
     "@reduxjs/toolkit": "^2.5.0",
-    "@sentry/react-native": "~6.3.0",
     "expo": "^52.0.37",
     "expo-asset": "~11.0.1",
     "expo-build-properties": "~0.13.2",

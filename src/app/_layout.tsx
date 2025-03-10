@@ -7,11 +7,8 @@ import {
   HeaderStyleInterpolators,
   TransitionPresets,
 } from '@react-navigation/stack';
-import * as Sentry from '@sentry/react-native';
-import { isRunningInExpoGo } from 'expo';
 import * as FileSystem from 'expo-file-system';
 import { File } from 'expo-file-system/next';
-import { useNavigationContainerRef } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
@@ -43,39 +40,6 @@ export {
 
 // Prevent the splash screen from auto-hiding before loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-const navigationIntegration = Sentry.reactNavigationIntegration({
-  enableTimeToInitialDisplay: !isRunningInExpoGo(),
-});
-
-Sentry.init({
-  enabled: !__DEV__,
-  dsn: 'https://3d6106f276a8cdfb240e2a6282ce777c@o4507198225383424.ingest.de.sentry.io/4508592129441872',
-  environment: __DEV__ ? 'development' : 'production',
-  // Set tracesSampleRate to 1.0 to capture 100% of transactions for tracing.
-  // We recommend adjusting this value in production.
-  tracesSampleRate: 1.0,
-  // profilesSampleRate is relative to tracesSampleRate.
-  // Here, we'll capture profiles for 100% of transactions.
-  profilesSampleRate: 1.0,
-  attachScreenshot: true,
-  attachViewHierarchy: true,
-  _experiments: {
-    replaysSessionSampleRate: 1.0,
-    replaysOnErrorSampleRate: 1.0,
-  },
-  integrations: [
-    navigationIntegration,
-    Sentry.mobileReplayIntegration({
-      maskAllImages: false,
-      maskAllText: false,
-      maskAllVectors: false,
-    }),
-    Sentry.reactNativeTracingIntegration(),
-  ],
-  // Tracks slow and frozen frames in the application
-  enableNativeFramesTracking: !isRunningInExpoGo(),
-});
 
 function RootLayoutNav() {
   const appTheme = useTheme();
@@ -126,17 +90,8 @@ function RootLayoutNav() {
   );
 }
 
-function RootLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
-
-  // Capture the NavigationContainer ref and register it with the integration.
-  const ref = useNavigationContainerRef();
-
-  useEffect(() => {
-    if (ref?.current) {
-      navigationIntegration.registerNavigationContainer(ref);
-    }
-  }, [ref]);
 
   useEffect(() => {
     const createLogFile = async () => {
@@ -190,5 +145,3 @@ function RootLayout() {
     </ReduxProvider>
   );
 }
-
-export default Sentry.wrap(RootLayout);
