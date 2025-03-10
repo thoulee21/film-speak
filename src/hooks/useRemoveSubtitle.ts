@@ -17,12 +17,13 @@ import {
 
 export const useRemoveSubtitle = () => {
   const dispatch = useAppDispatch();
+
   const subtitles = useAppSelector(selectSubtitles);
   const videoSource = useAppSelector(selectVideoSource);
 
-
   const performRemove = useCallback(async (item: Subtitle) => {
     const selected = videoSource === item.fileUri;
+
     const wavFile = new File(item.audioUri);
     const coverFile = new File(item.coverUri);
 
