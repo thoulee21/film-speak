@@ -1,12 +1,13 @@
 import * as FileSystem from 'expo-file-system';
 import { File } from "expo-file-system/next";
 import React, { useCallback, useEffect, useState } from "react";
-import { List } from "react-native-paper";
+import { ActivityIndicator, List } from "react-native-paper";
 
 import { formatDataSize } from "@/src/utils/formatDataSize";
 
 export default function CacheItem() {
   const [cacheSize, setCacheSize] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // 统计Cache文件夹下所有.mp4,.wav,.jpg文件的大小
   const getCacheSize = useCallback(async () => {
@@ -37,20 +38,33 @@ export default function CacheItem() {
 
   useEffect(() => {
     const fetchCacheSize = async () => {
+      setIsLoaded(false);
+
       const size = await getCacheSize();
       setCacheSize(size);
     };
 
-    fetchCacheSize();
-  }, [getCacheSize]);
+    if (!isLoaded) {
+      fetchCacheSize().then(() => {
+        setIsLoaded(true);
+      });
+    }
+  }, [getCacheSize, isLoaded]);
 
   return (
     <List.Item
       title='媒体缓存'
       description={formatDataSize(cacheSize)}
       left={(props) => (
-        <List.Icon {...props} icon='cached' />
+        isLoaded ? (
+          <List.Icon {...props} icon='cached' />
+        ) : (
+          <ActivityIndicator {...props} />
+        )
       )}
+      onPress={() => {
+        setIsLoaded(false);
+      }}
     />
   );
 }
