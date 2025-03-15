@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import {
   FlatList,
   RefreshControl,
+  Share,
   StyleSheet,
   ToastAndroid,
   TouchableOpacity,
@@ -27,7 +28,6 @@ import {
   Text,
   useTheme
 } from 'react-native-paper';
-import { v7 as uuid } from 'uuid';
 
 import packageData from '@/package.json';
 import haptics from '@/src/utils/haptics';
@@ -68,26 +68,19 @@ const Logcat = () => {
   const [logContent, setLogContent] = useState('');
   const [keyword, setKeyword] = useState('');
 
-  const saveLogs = useCallback(async () => {
-    const savePath = `${FileSystem.documentDirectory
-      }/${packageData.name}_${uuid().slice(0, 8)}.log`;
-
-    await FileSystem.writeAsStringAsync(
-      savePath, logContent
-    );
-    ToastAndroid.showWithGravity(
-      `Logs saved successfully to ${savePath}`,
-      ToastAndroid.SHORT,
-      ToastAndroid.CENTER
-    );
+  const shareLogs = useCallback(async () => {
+    Share.share({
+      message: logContent,
+      title: `${packageData.name} logs`,
+    });
   }, [logContent]);
 
   const renderHeaderRight = useCallback(() => (
     <View style={{ flexDirection: 'row' }}>
       <IconButton
-        icon="content-save-outline"
+        icon="share-variant"
         disabled={!logContent}
-        onPress={saveLogs}
+        onPress={shareLogs}
       />
 
       <IconButton
@@ -100,7 +93,7 @@ const Logcat = () => {
         }}
       />
     </View>
-  ), [appTheme.colors.error, logContent, saveLogs]);
+  ), [appTheme.colors.error, logContent, shareLogs]);
 
   useEffect(() => {
     try {

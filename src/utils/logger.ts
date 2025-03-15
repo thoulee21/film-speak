@@ -6,7 +6,7 @@ import {
   logger,
 } from 'react-native-logs';
 
-export const logFilePath = `${FileSystem.documentDirectory}log.txt`;
+export const logFilePath = `${FileSystem.documentDirectory}log`;
 
 const transports = [
   fileAsyncTransport,
@@ -14,13 +14,7 @@ const transports = [
 ];
 
 export const log = logger.createLogger({
-  transport: transports
-    .filter((t) => {
-      if (__DEV__) {
-        return t !== consoleTransport;
-      }
-      return true;
-    }),
+  transport: transports,
   transportOptions: {
     FS: {
       documentDirectory: FileSystem.documentDirectory,
