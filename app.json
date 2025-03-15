@@ -90,7 +90,7 @@
     },
     "owner": "thoulee",
     "runtimeVersion": {
-      "policy": "sdkVersion"
+      "policy": "fingerprint"
     },
     "updates": {
       "url": "https://u.expo.dev/6c832a57-bb37-4208-9672-223a964aaa88",
