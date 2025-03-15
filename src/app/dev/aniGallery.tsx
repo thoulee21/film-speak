@@ -62,8 +62,8 @@ const AniGallery = () => {
         screenOptions={{
           tabBarShowLabel: false,
           tabBarShowIcon: false,
-          tabBarStyle: styles.tabBarIndicator,
-          tabBarIndicatorStyle: styles.tabBarIndicator,
+          tabBarStyle: styles.line,
+          tabBarIndicatorStyle: styles.line,
         }}
       >
         {AniPages}
@@ -75,7 +75,7 @@ const AniGallery = () => {
 export default AniGallery;
 
 const styles = StyleSheet.create({
-  tabBarIndicator: {
+  line: {
     height: 4,
     borderRadius: 10,
   },
