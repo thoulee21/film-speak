@@ -62,7 +62,7 @@ export default function DevScreen() {
         <Link href="/dev/logcat" asChild>
           <List.Item
             title="Logcat"
-            description="View the log file"
+            description="View app logs"
             left={renderLogcatIcon}
             right={renderRightIcon}
           />
