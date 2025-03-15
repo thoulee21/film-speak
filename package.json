@@ -69,13 +69,13 @@
     "react-native-safe-area-context": "4.12.0",
     "react-native-screens": "~4.4.0",
     "react-native-share-menu": "^6.0.0",
-    "react-native-video": "^6.9.0",
+    "react-native-video": "^6.10.2",
     "react-native-web": "~0.19.13",
     "react-redux": "^9.2.0",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "srt-parser-2": "^1.2.3",
-    "uuid": "^11.0.4"
+    "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
