@@ -53,7 +53,7 @@ export default function DevScreen() {
         <Link href="/dev/cache" asChild>
           <List.Item
             title="Cache"
-            description="View files and directories that are under the cache directory"
+            description="View the cache data of the app, and more"
             left={renderCacheIcon}
             right={renderRightIcon}
           />
