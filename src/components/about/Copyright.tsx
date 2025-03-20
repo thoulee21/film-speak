@@ -25,10 +25,6 @@ const CopyrightItem = () => {
           visible={visible}
           dismissable={false}
         >
-          <Dialog.Icon
-            icon="information-outline"
-            size={40}
-          />
           <Dialog.Title>
             {displayName}
           </Dialog.Title>
