@@ -22,6 +22,7 @@ export default function ShareMenu({ item, size }: { item: Subtitle, size: number
     <Menu
       visible={shareMenuVisible}
       onDismiss={() => setShareMenuVisible(false)}
+      statusBarHeight={-45}
       anchor={
         <IconButton
           icon="share-variant"

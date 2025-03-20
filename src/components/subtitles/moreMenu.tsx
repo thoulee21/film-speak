@@ -1,18 +1,24 @@
 import Clipboard from "@react-native-clipboard/clipboard";
 import { useCallback, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { ToastAndroid } from "react-native";
-import { IconButton, Menu } from "react-native-paper";
+import { Alert, ToastAndroid } from "react-native";
+import { IconButton, Menu, useTheme } from "react-native-paper";
 
+import { useRemoveSubtitle } from "@/src/hooks/useRemoveSubtitle";
 import type { Subtitle } from "@/src/store/slices/subtitles";
 import haptics from "@/src/utils/haptics";
 
 export default function MoreMenu({ item, size }: { item: Subtitle, size: number }) {
+  const appTheme = useTheme();
   const { t } = useTranslation();
-  const [moreMenuVisible, setMoreMenuVisible] = useState(false);
+  const performRemove = useRemoveSubtitle();
+
+  const [
+    moreMenuVisible,
+    setMoreMenuVisible,
+  ] = useState(false);
 
   const copyToClipboard = useCallback(() => {
-    haptics.heavy();
     Clipboard.setString(item.fileUri);
 
     ToastAndroid.show(
@@ -21,10 +27,29 @@ export default function MoreMenu({ item, size }: { item: Subtitle, size: number 
     );
   }, [item.fileUri, t]);
 
+  const onPressDelete = useCallback(() => {
+    Alert.alert(
+      t('common.remove'),
+      t('error.removeSubtitleConfirm'),
+      [
+        { text: t('common.cancel'), style: "cancel", },
+        {
+          text: t('common.remove'),
+          style: "destructive",
+          onPress: () => {
+            haptics.medium();
+            performRemove(item);
+          },
+        },
+      ]
+    );
+  }, [item, performRemove, t]);
+
   return (
     <Menu
       visible={moreMenuVisible}
       onDismiss={() => setMoreMenuVisible(false)}
+      statusBarHeight={-45}
       anchor={
         <IconButton
           icon="dots-vertical"
@@ -39,7 +64,21 @@ export default function MoreMenu({ item, size }: { item: Subtitle, size: number 
       <Menu.Item
         title="Copy File URI"
         leadingIcon="content-copy"
-        onPress={copyToClipboard}
+        onPress={() => {
+          haptics.heavy();
+          copyToClipboard();
+          setMoreMenuVisible(false);
+        }}
+      />
+      <Menu.Item
+        title={t('common.remove')}
+        leadingIcon="delete-outline"
+        titleStyle={{ color: appTheme.colors.error }}
+        onPress={() => {
+          haptics.medium();
+          onPressDelete();
+          setMoreMenuVisible(false);
+        }}
       />
     </Menu>
   )

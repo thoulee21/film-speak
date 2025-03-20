@@ -1,13 +1,11 @@
 import { File } from "expo-file-system/next";
 import { useCallback, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import { Alert, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button, Card, useTheme } from "react-native-paper";
 
 import MoreMenu from "@/src/components/subtitles/moreMenu";
 import ShareMenu from "@/src/components/subtitles/shareMenu";
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
-import { useRemoveSubtitle } from "@/src/hooks/useRemoveSubtitle";
 import { type Subtitle } from "@/src/store/slices/subtitles";
 import {
   selectVideoSource,
@@ -19,9 +17,6 @@ import haptics from "@/src/utils/haptics";
 export default function SubtitleItem({ item }: { item: Subtitle }) {
   const dispatch = useAppDispatch();
   const appTheme = useTheme();
-
-  const { t } = useTranslation();
-  const performRemove = useRemoveSubtitle();
 
   const videoSource = useAppSelector(selectVideoSource);
   const selected = videoSource === item.fileUri;
@@ -42,31 +37,13 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
     return videoFileSize + coverFileSize + wavFileSize;
   }, [item.audioUri, item.coverUri, item.fileUri]);
 
-  const onPressDelete = useCallback(() => {
-    Alert.alert(
-      t('common.remove'),
-      t('error.removeSubtitleConfirm'),
-      [
-        { text: t('common.cancel'), style: "cancel", },
-        {
-          text: t('common.remove'),
-          style: "destructive",
-          onPress: () => {
-            haptics.medium();
-            performRemove(item);
-          },
-        },
-      ]
-    );
-  }, [item, performRemove, t]);
-
   return (
     <Card
       mode={selected ? "elevated" : "contained"}
       style={[styles.card, {
         backgroundColor: selected
-          ? appTheme.colors.secondaryContainer
-          : appTheme.colors.surfaceVariant,
+          ? appTheme.colors.primaryContainer
+          : appTheme.colors.surfaceDisabled,
       }]}
     >
       <Card.Cover source={{ uri: item.coverUri }} />
@@ -85,14 +62,8 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
 
       <Card.Actions>
         <Button
-          icon="delete-outline"
-          onPress={onPressDelete}
-        >
-          {t('common.delete')}
-        </Button>
-
-        <Button
-          icon="check"
+          mode="contained"
+          icon={selected ? "check-outline" : "check"}
           onPress={selectSubtitle}
           disabled={selected}
         >
