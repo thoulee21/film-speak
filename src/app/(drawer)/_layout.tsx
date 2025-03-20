@@ -8,7 +8,7 @@ import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, StyleSheet, View } from 'react-native';
 import {
-  Icon,
+  Avatar,
   Drawer as PaperDrawer,
   useTheme,
 } from 'react-native-paper';
@@ -47,17 +47,43 @@ export default function TabLayout() {
     </View>
   ), [appTheme.colors.primary]);
 
+  const renderDrawIcon = useCallback(({
+    focused, icon, color, iconColor
+  }: {
+    focused: boolean,
+    icon: string,
+    color: string,
+    iconColor: string
+  }) => (
+    <Avatar.Icon
+      size={40}
+      color={focused ? 'white' : iconColor}
+      style={{
+        backgroundColor: focused ? color : 'transparent'
+      }}
+      icon={focused ? icon : `${icon}-outline`}
+    />
+  ), []);
+
   return (
-    <Drawer drawerContent={renderDrawerContent}>
+    <Drawer
+      drawerContent={renderDrawerContent}
+      screenOptions={() => ({
+        drawerItemStyle: { marginVertical: 2 },
+        drawerHideStatusBarOnOpen: true,
+      })}
+    >
       <Drawer.Screen
         name="index"
         options={{
           title: packageData.displayName,
-          drawerIcon: (props) => (
-            <Icon
-              {...props}
-              source={props.focused ? 'video' : 'video-outline'}
-            />
+          drawerIcon: ({ focused, color }) => (
+            renderDrawIcon({
+              focused,
+              iconColor: color,
+              icon: 'video',
+              color: 'royalblue'
+            })
           ),
         }}
       />
@@ -65,11 +91,13 @@ export default function TabLayout() {
         name="subtitles"
         options={{
           title: t('navigation.subtitles'),
-          drawerIcon: (props) => (
-            <Icon
-              {...props}
-              source={props.focused ? 'subtitles' : 'subtitles-outline'}
-            />
+          drawerIcon: ({ focused, color }) => (
+            renderDrawIcon({
+              focused,
+              iconColor: color,
+              icon: 'subtitles',
+              color: 'violet'
+            })
           ),
         }}
       />
@@ -77,11 +105,13 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: t('navigation.settings'),
-          drawerIcon: (props) => (
-            <Icon
-              {...props}
-              source={props.focused ? 'cog' : 'cog-outline'}
-            />
+          drawerIcon: ({ focused, color }) => (
+            renderDrawIcon({
+              focused,
+              iconColor: color,
+              icon: 'cog',
+              color: 'tomato'
+            })
           ),
         }}
       />
@@ -89,11 +119,13 @@ export default function TabLayout() {
         name="about"
         options={{
           title: t('navigation.about'),
-          drawerIcon: (props) => (
-            <Icon
-              {...props}
-              source={props.focused ? 'information' : 'information-outline'}
-            />
+          drawerIcon: ({ focused, color }) => (
+            renderDrawIcon({
+              focused,
+              iconColor: color,
+              icon: 'information',
+              color: 'orangered'
+            })
           ),
         }}
       />
