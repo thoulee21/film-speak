@@ -10,7 +10,7 @@ import VersionItem from "@/src/components/about/VersionItem";
 
 export default function AboutScreen() {
   const { t } = useTranslation();
-  
+
   return (
     <ScrollView>
       <VersionItem />

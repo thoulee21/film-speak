@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import {
   ActivityIndicator,
+  Avatar,
   Button,
   Chip,
   Dialog,
@@ -45,6 +46,7 @@ const UpdateChecker = () => {
     lastCheckForUpdateTimeSinceRestart: lastCheck,
     availableUpdate,
   } = Updates.useUpdates();
+  const isProcessing = isChecking || isDownloading;
 
   const showUpdateDialog = useCallback(() => {
     setDialogVisible(true);
@@ -120,25 +122,33 @@ const UpdateChecker = () => {
       ? 'Update pending...'
       : isChecking
         ? 'Checking for updates...'
-        : 'Last check: ' + lastCheck?.toLocaleString() || 'Never checked';
+        : 'Last check: ' + (lastCheck ? lastCheck.toLocaleString() : 'Unknown');
 
   const renderUpdateIcon = useCallback((props: ListLRProps) => {
     const updateIcon = isUpdatePending
       ? 'progress-download'
       : 'cloud-download-outline';
 
+    if (isProcessing) {
+      return (
+        <ActivityIndicator style={props.style} color='violet' size={40} />
+      );
+    }
+
     return (
-      <List.Icon
-        {...props}
+      <Avatar.Icon
+        style={[props.style, {
+          backgroundColor: 'violet',
+          borderRadius: isUpdatePending
+            ? appTheme.roundness : 80,
+        }]}
+        color='white'
+        size={40}
         icon={updateIcon}
-        color={isUpdatePending
-          ? appTheme.colors.primary
-          : props.color}
       />
     );
-  }, [appTheme.colors.primary, isUpdatePending]);
+  }, [appTheme.roundness, isProcessing, isUpdatePending]);
 
-  const isProcessing = isChecking || isDownloading;
   const renderActivityIndicator = useCallback((props: ListLRProps) => (
     isProcessing ? <ActivityIndicator {...props} /> : null
   ), [isProcessing]);
