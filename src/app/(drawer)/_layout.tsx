@@ -48,19 +48,16 @@ export default function TabLayout() {
   ), [appTheme.colors.primary]);
 
   const renderDrawIcon = useCallback(({
-    focused, icon, color, iconColor
+    focused, icon, color
   }: {
     focused: boolean,
     icon: string,
     color: string,
-    iconColor: string
   }) => (
     <Avatar.Icon
       size={40}
-      color={focused ? 'white' : iconColor}
-      style={{
-        backgroundColor: focused ? color : 'transparent'
-      }}
+      color='white'
+      style={{ backgroundColor: color }}
       icon={focused ? icon : `${icon}-outline`}
     />
   ), []);
@@ -77,10 +74,9 @@ export default function TabLayout() {
         name="index"
         options={{
           title: packageData.displayName,
-          drawerIcon: ({ focused, color }) => (
+          drawerIcon: ({ focused }) => (
             renderDrawIcon({
               focused,
-              iconColor: color,
               icon: 'video',
               color: 'royalblue'
             })
@@ -91,10 +87,9 @@ export default function TabLayout() {
         name="subtitles"
         options={{
           title: t('navigation.subtitles'),
-          drawerIcon: ({ focused, color }) => (
+          drawerIcon: ({ focused }) => (
             renderDrawIcon({
               focused,
-              iconColor: color,
               icon: 'subtitles',
               color: 'violet'
             })
@@ -105,10 +100,9 @@ export default function TabLayout() {
         name="settings"
         options={{
           title: t('navigation.settings'),
-          drawerIcon: ({ focused, color }) => (
+          drawerIcon: ({ focused }) => (
             renderDrawIcon({
               focused,
-              iconColor: color,
               icon: 'cog',
               color: 'tomato'
             })
@@ -119,10 +113,9 @@ export default function TabLayout() {
         name="about"
         options={{
           title: t('navigation.about'),
-          drawerIcon: ({ focused, color }) => (
+          drawerIcon: ({ focused }) => (
             renderDrawIcon({
               focused,
-              iconColor: color,
               icon: 'information',
               color: 'orangered'
             })
