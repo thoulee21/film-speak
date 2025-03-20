@@ -1,7 +1,7 @@
 import React, { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
-import { Caption, IconButton, List, Text, useTheme } from "react-native-paper";
+import { Avatar, Caption, IconButton, List, Text, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import {
@@ -23,10 +23,13 @@ export default function VolFactorSlider() {
   const appTheme = useTheme();
   const volumeFactor = useAppSelector(selectVolumeFactor);
 
-  const renderVolumeFactorIcon = useCallback((
-    props: ListLRProps
-  ) => (
-    <List.Icon {...props} icon="volume-high" />
+  const renderVolumeFactorIcon = useCallback(({ style }: ListLRProps) => (
+    <Avatar.Icon
+      style={[style, { backgroundColor: 'hotpink' }]}
+      size={40}
+      color="white"
+      icon="volume-high"
+    />
   ), []);
 
   return (

@@ -2,7 +2,7 @@ import Slider from "@react-native-community/slider";
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { StyleSheet, View } from "react-native";
-import { Caption, IconButton, List, Text, useTheme } from "react-native-paper";
+import { Avatar, Caption, IconButton, List, Text, useTheme } from "react-native-paper";
 
 import { useAppDispatch, useAppSelector } from "@/src/hooks/redux";
 import { resetVolume, selectVolume, setVolume } from "@/src/store/slices/volume";
@@ -23,10 +23,13 @@ export default function VolumeSlider() {
 
   const showVolumeValue = volume === -1 ? (1 / volumeFactor) : volume;
 
-  const renderVolumeIcon = useCallback((
-    props: ListLRProps
-  ) => (
-    <List.Icon {...props} icon="volume-low" />
+  const renderVolumeIcon = useCallback(({ style }: ListLRProps) => (
+    <Avatar.Icon
+      style={[style, { backgroundColor: 'blueviolet' }]}
+      size={40}
+      color="white"
+      icon="volume-low"
+    />
   ), []);
 
   return (
