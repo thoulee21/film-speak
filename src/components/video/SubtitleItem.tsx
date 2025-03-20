@@ -66,27 +66,24 @@ const SubtitleItem = ({
     }
   }, [item, onItemPress, selectedID, setSelectedID]);
 
-  const renderIndicator = useCallback(({
-    color, style
-  }: ListLRProps) => (
+  const renderIndicator = useCallback(({ style }: ListLRProps) => (
     selectedID !== item.id ? (
       <Avatar.Text
+        style={[style, { backgroundColor: 'royalblue' }]}
+        color="white"
         size={40}
         label={item.id}
-        color={color}
-        style={[style, {
-          backgroundColor: appTheme.colors.secondaryContainer,
-        }]}
       />
     ) : (
       <ActivityIndicator size={40} style={style} />
     )
-  ), [appTheme.colors.secondaryContainer, item.id, selectedID]);
+  ), [item.id, selectedID]);
 
   return (
     <List.Item
       title={renderTitleSection}
       description={showSubtitle && item.text.trim()}
+      descriptionNumberOfLines={15}
       style={{
         backgroundColor: selectedID === item.id
           ? appTheme.colors.secondaryContainer
