@@ -73,8 +73,8 @@
     "copy": "複製到剪貼板",
     "copied": "已複製到剪貼板",
     "fileUri": "文件路徑已複製",
-    "audioShare": "分享音頻文件",
-    "coverShare": "分享封面圖片",
-    "videoShare": "分享視頻文件"
+    "audioShare": "音頻文件",
+    "coverShare": "封面",
+    "videoShare": "視頻文件"
   }
 }

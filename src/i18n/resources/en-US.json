@@ -64,9 +64,9 @@
     "copy": "Copy to clipboard",
     "copied": "Copied to clipboard",
     "fileUri": "File URI copied",
-    "audioShare": "Share audio file",
-    "coverShare": "Share cover image",
-    "videoShare": "Share video file"
+    "audioShare": "Audio file",
+    "coverShare": "Cover image",
+    "videoShare": "Video file"
   },
   "videoEnhance": {
     "title": "Video Enhancement",
