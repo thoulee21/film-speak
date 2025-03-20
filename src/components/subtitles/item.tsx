@@ -2,7 +2,7 @@ import { File } from "expo-file-system/next";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Alert, StyleSheet, View } from "react-native";
-import { Avatar, Button, Card, useTheme } from "react-native-paper";
+import { Button, Card, useTheme } from "react-native-paper";
 
 import MoreMenu from "@/src/components/subtitles/moreMenu";
 import ShareMenu from "@/src/components/subtitles/shareMenu";
@@ -75,17 +75,6 @@ export default function SubtitleItem({ item }: { item: Subtitle }) {
         title={new Date(item.createAt).toLocaleString()}
         subtitle={`${item.value.length} line(s) · ${formatDataSize(cacheSize)}`}
         subtitleStyle={{ color: appTheme.colors.onSurfaceDisabled }}
-        left={({ size }) => (
-          <Avatar.Icon
-            size={size}
-            icon="subtitles-outline"
-            style={{
-              backgroundColor: selected
-                ? appTheme.colors.primary
-                : appTheme.colors.backdrop,
-            }}
-          />
-        )}
         right={({ size }) => (
           <View style={{ flexDirection: "row" }}>
             <ShareMenu item={item} size={size} />
