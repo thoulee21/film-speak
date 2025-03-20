@@ -1,6 +1,6 @@
 import React, { useCallback } from "react"
-import { Appearance } from "react-native"
-import { IconButton, List } from "react-native-paper"
+import { Appearance, View } from "react-native"
+import { Avatar, IconButton, List } from "react-native-paper"
 
 import { useColorScheme } from "@/src/hooks/useColorScheme"
 
@@ -15,16 +15,21 @@ export default function ColorSchemeItem() {
     <List.Item
       title="Color Scheme"
       description="Manually toggle between light and dark, overrides the system setting"
-      left={(props) => (
-        <List.Icon {...props} icon="palette-outline" />
+      left={({ style }) => (
+        <Avatar.Icon
+          style={[style, { backgroundColor: "brown" }]}
+          size={40}
+          icon="palette"
+        />
       )}
       right={(props) => (
-        <IconButton
-          {...props}
-          mode="contained"
-          icon={colorScheme === "dark" ? "brightness-4" : "brightness-7"}
-          onPress={toggleColorScheme}
-        />
+        <View pointerEvents="none" style={props.style}>
+          <IconButton
+            {...props}
+            mode="contained"
+            icon={colorScheme === "dark" ? "brightness-4" : "brightness-7"}
+          />
+        </View>
       )}
       onPress={toggleColorScheme}
     />

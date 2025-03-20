@@ -1,9 +1,10 @@
 import * as FileSystem from 'expo-file-system';
 import { File } from "expo-file-system/next";
 import React, { useCallback, useEffect, useState } from "react";
-import { ActivityIndicator, List } from "react-native-paper";
+import { ActivityIndicator, Avatar, List } from "react-native-paper";
 
 import { formatDataSize } from "@/src/utils/formatDataSize";
+import haptics from '@/src/utils/haptics';
 
 export default function CacheItem() {
   const [cacheSize, setCacheSize] = useState(0);
@@ -55,15 +56,25 @@ export default function CacheItem() {
     <List.Item
       title='媒体缓存'
       description={formatDataSize(cacheSize)}
-      left={(props) => (
+      left={({ style }) => (
         isLoaded ? (
-          <List.Icon {...props} icon='cached' />
+          <Avatar.Icon
+            style={[style, { backgroundColor: 'hotpink' }]}
+            size={40}
+            color='white'
+            icon='cached'
+          />
         ) : (
-          <ActivityIndicator {...props} />
+          <ActivityIndicator
+            style={style}
+            size={40}
+            color='hotpink'
+          />
         )
       )}
       onPress={() => {
         setIsLoaded(false);
+        haptics.light();
       }}
     />
   );

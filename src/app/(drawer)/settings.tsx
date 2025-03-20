@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollView, StyleSheet } from 'react-native';
-import { Divider, IconButton, List, useTheme } from 'react-native-paper';
+import { Avatar, Divider, IconButton, List, useTheme } from 'react-native-paper';
 
 import CacheItem from '@/src/components/settings/CacheItem';
 import ColorSchemeItem from '@/src/components/settings/ColorSchemeItem';
@@ -24,12 +24,21 @@ export default function Setting() {
     />
   ), []);
 
-  const renderDevIcon = useCallback(({ color, style }: ListLRProps) => (
-    <List.Icon color={color} style={style} icon="developer-board" />
+  const renderDevIcon = useCallback(({ style }: ListLRProps) => (
+    <Avatar.Icon
+      style={[style, { backgroundColor: 'coral' }]}
+      size={40}
+      color='white'
+      icon="developer-board"
+    />
   ), []);
 
-  const renderVideoEnhanceIcon = useCallback((props: ListLRProps) => (
-    <List.Icon {...props} icon="video-plus-outline" />
+  const renderVideoEnhanceIcon = useCallback(({ style }: ListLRProps) => (
+    <Avatar.Icon
+      style={[style, { backgroundColor: 'crimson' }]}
+      size={40}
+      icon="video-plus"
+    />
   ), []);
 
   return (
@@ -43,8 +52,12 @@ export default function Setting() {
         <Link href="/lang" asChild>
           <List.Item
             title={t('settings.languageSelect')}
-            left={({ color, style }) => (
-              <List.Icon color={color} style={style} icon="translate" />
+            left={({ style }) => (
+              <Avatar.Icon
+                style={[style, { backgroundColor: 'orangered' }]}
+                size={40}
+                icon="translate"
+              />
             )}
             right={renderRightIcon}
           />
