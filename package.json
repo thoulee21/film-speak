@@ -75,7 +75,8 @@
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",
     "srt-parser-2": "^1.2.3",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "expo-insights": "~0.8.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
