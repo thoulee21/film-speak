@@ -48,17 +48,13 @@ export default function TabLayout() {
   ), [appTheme.colors.primary]);
 
   const renderDrawIcon = useCallback(({
-    focused, icon, color
-  }: {
-    focused: boolean,
-    icon: string,
-    color: string,
-  }) => (
+    icon, color
+  }: { icon: string, color: string }) => (
     <Avatar.Icon
       size={40}
       color='white'
       style={{ backgroundColor: color }}
-      icon={focused ? icon : `${icon}-outline`}
+      icon={icon}
     />
   ), []);
 
@@ -68,58 +64,49 @@ export default function TabLayout() {
       screenOptions={() => ({
         drawerItemStyle: { marginVertical: 2 },
         drawerHideStatusBarOnOpen: true,
+        drawerStatusBarAnimation: 'fade',
+        drawerActiveBackgroundColor: appTheme.colors.primaryContainer,
+        drawerActiveTintColor: appTheme.colors.onPrimaryContainer,
       })}
     >
       <Drawer.Screen
         name="index"
         options={{
           title: packageData.displayName,
-          drawerIcon: ({ focused }) => (
-            renderDrawIcon({
-              focused,
-              icon: 'video',
-              color: 'royalblue'
-            })
-          ),
+          drawerIcon: () => renderDrawIcon({
+            icon: 'video',
+            color: 'royalblue'
+          })
         }}
       />
       <Drawer.Screen
         name="subtitles"
         options={{
           title: t('navigation.subtitles'),
-          drawerIcon: ({ focused }) => (
-            renderDrawIcon({
-              focused,
-              icon: 'subtitles',
-              color: 'violet'
-            })
-          ),
+          drawerIcon: () => renderDrawIcon({
+            icon: 'subtitles',
+            color: 'violet'
+          })
         }}
       />
       <Drawer.Screen
         name="settings"
         options={{
           title: t('navigation.settings'),
-          drawerIcon: ({ focused }) => (
-            renderDrawIcon({
-              focused,
-              icon: 'cog',
-              color: 'tomato'
-            })
-          ),
+          drawerIcon: () => renderDrawIcon({
+            icon: 'cog',
+            color: 'tomato'
+          })
         }}
       />
       <Drawer.Screen
         name="about"
         options={{
           title: t('navigation.about'),
-          drawerIcon: ({ focused }) => (
-            renderDrawIcon({
-              focused,
-              icon: 'information',
-              color: 'orangered'
-            })
-          ),
+          drawerIcon: () => renderDrawIcon({
+            icon: 'information',
+            color: 'orangered'
+          })
         }}
       />
     </Drawer>
