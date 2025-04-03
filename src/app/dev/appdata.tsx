@@ -1,3 +1,4 @@
+import { Stack } from 'expo-router';
 import React from 'react';
 import { useTheme } from 'react-native-paper';
 import {
@@ -17,27 +18,31 @@ import { reduxStorage } from '@/src/utils/mmkvStorage';
 export default function AppDataScreen() {
   const appTheme = useTheme();
   return (
-    <TabsProvider>
-      <PaperTabs
-        style={{
-          backgroundColor: appTheme.colors.elevation.level2,
-        }}
-      >
-        <TabScreen label='Storage'>
-          <LocalStorage />
-        </TabScreen>
+    <>
+      <Stack.Screen options={{ headerShadowVisible: false }} />
 
-        <TabScreen
-          label='State'
-          badge={formatDataSize(reduxStorage.size)}
+      <TabsProvider>
+        <PaperTabs
+          style={{
+            backgroundColor: appTheme.colors.elevation.level2,
+          }}
         >
-          <ReduxState />
-        </TabScreen>
+          <TabScreen label='Storage'>
+            <LocalStorage />
+          </TabScreen>
 
-        <TabScreen label='Package'>
-          <PackageData />
-        </TabScreen>
-      </PaperTabs>
-    </TabsProvider>
+          <TabScreen
+            label='State'
+            badge={formatDataSize(reduxStorage.size)}
+          >
+            <ReduxState />
+          </TabScreen>
+
+          <TabScreen label='Package'>
+            <PackageData />
+          </TabScreen>
+        </PaperTabs>
+      </TabsProvider>
+    </>
   );
 }
