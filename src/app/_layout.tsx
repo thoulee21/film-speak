@@ -1,4 +1,4 @@
-import Clarity from "@microsoft/react-native-clarity";
+import { initialize as clarityInitialize } from "@microsoft/react-native-clarity";
 import {
   DarkTheme,
   DefaultTheme,
@@ -36,10 +36,10 @@ import { logFilePath, rootLog } from "@/src/utils/logger";
 
 export {
   // Catch any errors thrown by the Layout component.
-  ErrorBoundary,
+  ErrorBoundary
 } from "expo-router";
 
-Clarity.initialize("r8ph9c7eh7");
+clarityInitialize("r8ph9c7eh7");
 
 // Prevent the splash screen from auto-hiding before loading is complete.
 SplashScreen.preventAutoHideAsync();
